@@ -1,0 +1,38 @@
+.frame-pack {
+    margin-top: 20px;
+    padding: 0 !important;
+
+    .card {
+        // width: 30%;
+        background: transparent;
+        border: none;
+
+        .card-header {
+            width: 100%;
+            background-color: red;
+            color: yellow;
+            border-top: 1px solid #fff;
+            text-transform: uppercase;
+        }
+
+        .card-body {
+            width: 100%;
+            background-color: #ffdd15;
+            font-size: 20px;
+            font-weight: 600;
+
+            .content-up {
+                text-align: right;
+                padding: 0 15px;
+            }
+
+            .content-down {
+                margin-top: 20px;
+
+                .select-count{
+                    font-weight: 100;
+                }
+            }
+        }
+    }
+}

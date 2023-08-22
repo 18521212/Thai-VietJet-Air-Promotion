@@ -1,0 +1,65 @@
+.header {
+    height: auto;
+    width: auto;
+    min-height: 80px;
+    background: #e61f20;
+    display: flex;
+    // background-image: url("../../../assets/Logo/bottom-right-corner.png");
+    // background-image: url("https://github.com/18521212/image-ThaiVietJet/blob/master/Logo/bottom-right-corner.png?raw=true");
+    background-repeat: no-repeat;
+    background-size: 130px 80px;
+    background-position: 100% 100%;
+    font-size: 1.1rem;
+
+    .navbar {
+        background-color: transparent !important;
+        font-family: "myb", Tahoma, Geneva, sans-serif;
+        padding: .5rem 1rem;
+        min-height: 80px;
+        align-items: center;
+        box-shadow: 0 1px 5px #000;
+
+        .navbar-brand {
+            // border: 1px solid black;
+            padding-top: .3125rem;
+            padding-bottom: .3125rem;
+            margin-right: 1rem;
+            width: 30%;
+
+            img {
+                height: auto;
+                width: 80%;
+            }
+        }
+
+        .navbar-toggler {
+            color: white;
+        }
+
+        .menu {
+            // border: 1px solid violet;
+
+            .nav-link {
+                color: #fff !important;
+
+                &.shopping {
+                    background-color: #fd0;
+                    border-radius: 5px;
+                    text-align: center;
+                }
+            }
+
+            .sl-lan {
+                border: none !important;
+                outline: none !important;
+                background: transparent !important;
+            }
+
+            @media screen and (min-width: 1200px) {
+                .sl-lan {
+                    border: none;
+                }
+            }
+        }
+    }
+}

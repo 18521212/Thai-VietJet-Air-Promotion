@@ -1,0 +1,22 @@
+hr {
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+.footer {
+    height: 50px;
+    width: 100%;
+    // border: 1px solid green;
+    display: flex;
+    justify-content: center;
+
+    .link-panel {
+        display: flex;
+        gap: 7px;
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+    }
+}
