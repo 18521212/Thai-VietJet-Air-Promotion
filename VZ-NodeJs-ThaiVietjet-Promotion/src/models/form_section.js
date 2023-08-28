@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            Form_Section.hasOne(models.Menu, { foreignKey: 'headerId' })
+            Form_Section.belongsTo(models.Form, { foreignKey: 'customer_form_id' })
         }
     };
     Form_Section.init({
@@ -18,9 +18,10 @@ module.exports = (sequelize, DataTypes) => {
         instruct: DataTypes.STRING,
         customer_form_id: DataTypes.INTEGER,
         frame_card_id: DataTypes.INTEGER,
-        break_down_id: DataTypes.INTEGER,
-        checkbox_id: DataTypes.INTEGER,
-        button_submit_id: DataTypes.INTEGER
+        breakdownId: DataTypes.INTEGER,
+        checkboxId: DataTypes.INTEGER,
+        button_submit_id: DataTypes.INTEGER,
+        name: DataTypes.STRING
     }, {
         sequelize,
         modelName: 'Form_Section',

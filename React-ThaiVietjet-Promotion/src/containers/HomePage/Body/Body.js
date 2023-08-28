@@ -11,7 +11,9 @@ import FrameCard from "./Child/FrameCard";
 import PurchaseBreakdown from "./Child/PurchaseBreakdown";
 import Footer from "../Footer/Footer";
 
-import { getAllBanners } from "../../../services/userService";
+import { getAllBanners, getAllTextInput, getFormSectionById } from "../../../services/userService";
+
+import _ from 'lodash';
 
 class Body extends Component {
     constructor(props) {
@@ -26,19 +28,9 @@ class Body extends Component {
             selectedNoPack12: '',
             selectedNoPack24: '',
 
-            fakeInputData: [
-                { input1: '' },
-                { input2: '' },
-            ],
+            dataInputCustomerForm: '',
+            inputCustomerForm: {},
 
-            inputCustomerForm: {
-                middleGivenName: '',
-                familyName: '',
-                email: '',
-                phone: '',
-                passengerMiddleGivenName: '',
-                passengerFamilyName: '',
-            },
             vat: 0,
             total: 0,
 
@@ -60,13 +52,7 @@ class Body extends Component {
     componentDidMount() {
         this.buildDataSelect();
         this.getData();
-        let stateCopy2 = { ...this.state };
-        this.state.fakeInputData.map((item, index) => {
-            stateCopy2[Object.keys(item)[0]] = ''
-        })
-        this.setState({
-            stateCopy2
-        })
+        this.initCustomerFormInputState();
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -106,6 +92,46 @@ class Body extends Component {
             banner_mobile: image_mobile,
             banner_desktop: image_desktop
         })
+
+
+    }
+
+    initCustomerFormInputState = async () => {
+        // get data
+        let formSection = await getFormSectionById(1);
+        console.log('formSection:', formSection.data.Form.Form_Detail)
+        let listInput = formSection.data.Form.Form_Detail;
+        listInput.sort((a, b) => a.order - b.order);
+
+        let { inputCustomerForm } = this.state;
+        let stateCopy = {
+            ...inputCustomerForm,
+        }
+
+        // map state
+        listInput.map((item, index) => {
+            if (item.Input.typeInput === 'text') {
+                stateCopy[_.camelCase(item.Input.Text_Input.title)] = '';
+            }
+            if (item.Input.typeInput === 'dropdown') {
+                let title = item.Input.Dropdown.title;
+                stateCopy[_.camelCase('selected' + title)] = '';// object
+                stateCopy[_.camelCase('option' + title)] = [];
+
+                // map dropdown data
+                item.Input.Dropdown.dataDropdown.map((item, index) => {
+                    let option = { value: item.value, label: item.label }
+                    stateCopy[_.camelCase('option' + title)].push(option)
+                })
+                // set default selected option
+                stateCopy[_.camelCase('selected' + title)] = stateCopy[_.camelCase('option' + title)][0];
+            }
+        })
+
+        this.setState({
+            inputCustomerForm: stateCopy,
+            dataInputCustomerForm: listInput
+        })
     }
 
     buildDataSelect = async () => {
@@ -124,7 +150,7 @@ class Body extends Component {
 
     handleOnChangeSelect = (selectLanguageObject, action) => {
         let stateCopy = { ...this.state };
-        stateCopy[action.name] = selectLanguageObject;
+        stateCopy.inputCustomerForm[action.name] = selectLanguageObject;
         this.setState({
             ...stateCopy
         })
@@ -132,7 +158,7 @@ class Body extends Component {
 
     handleOnChangeText = (event) => {
         let stateCopy = { ...this.state };
-        stateCopy[event.target.name] = event.target.value;
+        stateCopy.inputCustomerForm[event.target.name] = event.target.value;
         this.setState({
             ...stateCopy
         })
@@ -166,13 +192,13 @@ class Body extends Component {
     }
 
     render() {
-        console.log('state:', this.state)
+        // console.log('state:', this.state)
         let {
             banner_desktop, banner_mobile,
             showPack, listPack, inputCustomerForm,
             selectedTitle, selectedNoPack4, selectedNoPack6,
             selectedNoPack12, selectedNoPack24, vat, total,
-            optionTitle
+            optionTitle, dataInputCustomerForm
         } = this.state;
         let {
             middleGivenName, familyName,
@@ -225,6 +251,9 @@ class Body extends Component {
                                         passengerMiddleGivenName={passengerMiddleGivenName}
                                         passengerFamilyName={passengerFamilyName}
                                         optionTitle={optionTitle}
+
+                                        dataInputCustomerForm={dataInputCustomerForm}
+                                        inputCustomerForm={inputCustomerForm}
 
                                         handleOnChangeSelect={this.handleOnChangeSelect}
                                         // handleOnChangeText={this.handleOnChangeText}

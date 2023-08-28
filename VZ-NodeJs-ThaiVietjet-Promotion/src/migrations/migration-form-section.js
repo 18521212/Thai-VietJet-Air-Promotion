@@ -13,7 +13,6 @@ module.exports = {
             },
             instruct: {
                 type: Sequelize.STRING,
-                allowNull: false
             },
             customer_form_id: {
                 type: Sequelize.INTEGER
@@ -21,14 +20,17 @@ module.exports = {
             frame_card_id: {
                 type: Sequelize.INTEGER
             },
-            break_down_id: {
+            breakdownId: {
                 type: Sequelize.INTEGER
             },
-            checkbox_id: {
+            checkboxId: {
                 type: Sequelize.INTEGER
             },
             button_submit_id: {
                 type: Sequelize.INTEGER
+            },
+            name: {
+                type: Sequelize.STRING
             },
             createdAt: {
                 allowNull: false,
