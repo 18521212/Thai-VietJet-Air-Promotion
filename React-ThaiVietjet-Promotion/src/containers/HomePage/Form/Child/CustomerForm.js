@@ -118,6 +118,12 @@ class CustomerForm extends Component {
                     {dataInputCustomerForm && dataInputCustomerForm.length > 0 &&
                         dataInputCustomerForm.map((item, index) => {
                             if (item.Input.typeInput === 'dropdown') {
+                                let stateName = _.camelCase('selected' + item.Input.Dropdown.title)
+                                let optionStateName = _.camelCase('option' + item.Input.Dropdown.title)
+                                let name = {
+                                    parentState: 'inputCustomerForm',
+                                    name: _.camelCase('selected' + item.Input.Dropdown.title)
+                                }
                                 return (
                                     <div
                                         className={`form-group 
@@ -125,10 +131,9 @@ class CustomerForm extends Component {
                                     >
                                         <label>{item.Input.Dropdown.title}</label>
                                         <Select
-                                            value={inputCustomerForm[_.camelCase('selected' + item.Input.Dropdown.title)]}
-                                            placeholder={selectedTitle.label}
-                                            options={inputCustomerForm[_.camelCase('option' + item.Input.Dropdown.title)]}
-                                            name={_.camelCase('selected' + item.Input.Dropdown.title)}
+                                            value={inputCustomerForm[stateName]}
+                                            options={inputCustomerForm[optionStateName]}
+                                            name={name}
                                             onChange={this.handleOnChangeSelect}
                                             styles={{
                                                 indicatorSeparator: () => { },

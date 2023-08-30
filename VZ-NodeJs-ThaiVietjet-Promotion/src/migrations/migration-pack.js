@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable('Banners', {
+        await queryInterface.createTable('Packs', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
@@ -12,11 +12,21 @@ module.exports = {
                 type: Sequelize.STRING,
                 allowNull: false
             },
-            image: {
-                type: Sequelize.STRING
+            maxNumber: {
+                type: Sequelize.INTEGER,
+                allowNull: false
             },
-            type: {
-                type: Sequelize.STRING
+            price: {
+                type: Sequelize.FLOAT,
+                allowNull: false
+            },
+            currency: {
+                type: Sequelize.STRING,
+                defaultValue: 'THB'
+            },
+            numberRedeem: {
+                type: Sequelize.INTEGER,
+                allowNull: false
             },
             createdAt: {
                 allowNull: false,
@@ -27,15 +37,8 @@ module.exports = {
                 type: Sequelize.DATE
             }
         });
-
-        //add column type to table banner
-        // await queryInterface.addColumn(
-        //     'Banners',
-        //     'type',
-        //     { type: Sequelize.STRING }
-        // );
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('Banners');
+        await queryInterface.dropTable('Packs');
     }
 };

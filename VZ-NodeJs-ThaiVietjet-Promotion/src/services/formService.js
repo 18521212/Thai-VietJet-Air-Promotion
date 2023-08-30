@@ -595,6 +595,54 @@ let createRowDataDropdown = (data) => {
     })
 }
 
+// pack
+
+let createPack = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.name || !data.maxNumber || !data.price
+                || !data.numberRedeem) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required parameters'
+                })
+            } else {
+                // create pack
+                await db.Pack.create({
+                    name: data.name,
+                    maxNumber: data.maxNumber,
+                    price: data.price,
+                    currency: data.currency,
+                    numberRedeem: data.numberRedeem
+                })
+
+                resolve({
+                    errCode: 0,
+                    errMessage: 'Create pack succeed'
+                })
+            }
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
+let getAllPack = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = await db.Pack.findAll()
+
+            resolve({
+                errCode: 0,
+                errMessage: 'Ok',
+                data
+            })
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
 module.exports = {
     createFormSection: createFormSection,
     getAllFormSection: getAllFormSection,
@@ -617,4 +665,7 @@ module.exports = {
     createDropdown: createDropdown,
     getDropdownById: getDropdownById,
     createRowDataDropdown: createRowDataDropdown,
+
+    createPack: createPack,
+    getAllPack: getAllPack,
 }

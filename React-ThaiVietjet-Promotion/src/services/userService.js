@@ -27,7 +27,13 @@ const getAllTextInput = () => {
     return axios.get('/api/get-all-text-input')
 }
 
+// pack
+
+const getAllPack = () => {
+    return axios.get('/api/get-all-pack')
+}
+
 export {
     getAllBanners, getAllMenuItemById, getAllHeader,
-    getAllTextInput, getFormSectionById
+    getAllTextInput, getFormSectionById, getAllPack
 }

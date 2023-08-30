@@ -222,6 +222,34 @@ let createRowDataDropdown = async (req, res) => {
     }
 }
 
+// pack
+
+let createPack = async (req, res) => {
+    try {
+        let data = await formService.createPack(req.body);
+        return res.status(200).json(data)
+    } catch (e) {
+        console.log(e)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
+
+let getAllPack = async (req, res) => {
+    try {
+        let data = await formService.getAllPack();
+        return res.status(200).json(data)
+    } catch (e) {
+        console.log(e)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
+
 module.exports = {
     createFormSection: createFormSection,
     getAllFormSection: getAllFormSection,
@@ -244,4 +272,7 @@ module.exports = {
     createDropdown: createDropdown,
     getDropdownById: getDropdownById,
     createRowDataDropdown: createRowDataDropdown,
+
+    createPack: createPack,
+    getAllPack: getAllPack,
 }

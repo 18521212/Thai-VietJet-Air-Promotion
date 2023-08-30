@@ -13,9 +13,6 @@ class Header extends Component {
         this.toggle = this.toggle.bind(this);
 
         this.state = {
-            selectedLanguage: '',
-            dropdownOpenShopping: false,
-            dropdownOpenTravelInfo: false,
             menuItem: '',
             menuLanguage: '',
             header: '',
@@ -44,7 +41,6 @@ class Header extends Component {
         // console.log('check menu item:', menuItem.data, menuItem, menuLanguage)
 
         let header = await getAllHeader();
-        console.log('header:', header)
 
         this.setState({
             menuItem: menuItem,
@@ -75,31 +71,50 @@ class Header extends Component {
 
     render() {
 
-        let { selectedLanguage, optionLanguage, dropdownOpenShopping,
+        let { optionLanguage, dropdownOpenShopping,
             dropdownOpenTravelInfo, menuItem, menuLanguage, header } = this.state;
         let mainUrl = 'https://vietjetthai.com';
         let giftUrl = 'https://gift.th.vietjetair.com';
         return (
             <>
-                <div className="header" style={{ backgroundImage: `url(${header.imageBackground})` }}>
-                    <nav className="navbar navbar-expand-lg navbar-dark bg-dark container-fluid">
-                        <a className="navbar-brand col-xl-4 col-9" href={mainUrl}>
+                <header
+                    className="bg-header"
+                    style={{ backgroundImage: `url(${header.imageBackground})` }}
+                >
+                    <nav className="navbar navbar-expand-lg navbar-dark bg-dark container-fluid sticky-top">
+                        <a className="navbar-brand" href={mainUrl}>
                             <img src={logo} alt='logo' />
                         </a>
-                        <button className="navbar-toggler col-2" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <button
+                            className="navbar-toggler col-2"
+                            type="button"
+                            data-toggle="collapse"
+                            data-target="#navbarSupportedContent"
+                            aria-controls="navbarSupportedContent"
+                            aria-expanded="false"
+                            aria-label="Toggle navigation"
+                        >
                             <span className="navbar-toggler-icon"></span>
                         </button>
 
-                        <div className="menu collapse navbar-collapse col-xl-8" id="navbarSupportedContent">
+                        <div className="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul className="navbar-nav mr-auto">
                                 {menuItem && menuItem.length > 0 &&
                                     menuItem.map((item, index) => {
                                         return (
                                             <>
-                                                <li className={`nav-item ${item.Sub_Menus.length > 0 ? 'dropdown' : ''}`} key={index}>
-                                                    <a className={`nav-link 
-                                                    ${item.Sub_Menus.length > 0 ? 'dropdown-toggle' : ''}
-                                                     ${item.text === 'Shopping' ? 'shopping' : ''}`}
+                                                <li
+                                                    className={`nav-item ${item.Sub_Menus.length > 0 ? 'dropdown' : ''} 
+                                                    
+                                                    `}
+                                                    key={index}
+                                                >
+                                                    <a
+                                                        className={
+                                                            `${item.Sub_Menus.length > 0 ? 'dropdown-toggle' : ''} ` +
+                                                            `${item.text === 'Shopping' ? 'shopping' : ''} ` +
+                                                            'nav-link'
+                                                        }
                                                         href={`${item.Sub_Menus.length > 0 ? '#' : item.link ? item.link : '#'}`}
                                                         id="navbarDropdown1"
                                                         role="button"
@@ -151,7 +166,7 @@ class Header extends Component {
                         </div>
 
                     </nav>
-                </div >
+                </header >
             </>
         )
     }

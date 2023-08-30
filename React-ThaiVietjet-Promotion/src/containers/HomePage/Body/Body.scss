@@ -1,84 +1,30 @@
 .body {
-    height: auto;
-    width: 100%;
-    font-family: "Dax" !important; //
+    font-family: "Dax" !important;
+    font-size: 14px;
+    color: #696969;
+    //
 
-    .image-container {
+    padding-top: 10px;
+    background: url('../../../assets/Background/background.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 
-        .advertise-image {
-            width: 100%;
-            height: auto;
-        }
-    }
+    position: relative;
 
     .main-content-container {
+        margin-top: 20px;
 
-        .main-background {
-            padding-top: 10px;
-            background: url('../../../assets/Background/background.png');
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: center;
-        }
+    }
 
-        .register-purchase {
-            background: url('../../../assets/Background/background_bottom.jpg');
-            background-repeat: no-repeat;
-            background-size: cover;
+    .img-container {
+        height: auto;
 
-            .title {
-                .title-contact {
-                    color: #1f4995;
-                    text-transform: uppercase;
-                    font-size: 160%; //
-                    text-align: center; //
-                    font-weight: 700; //
-                    line-height: normal; //
-                }
-            }
+        position: absolute;
+        bottom: 0;
 
-            .form-container {
-                // border: 1px solid black; //
-
-                .inner-form {
-                    border: 1px solid yellow;
-                    height: auto;
-                    max-width: 1200px;
-                    margin: 0 auto;
-                    border: none;
-                    padding: 30px 45px;
-
-                    .instruct-form {
-                        font-weight: bolder;
-                        color: #696969;
-                    }
-
-                    form {
-                        margin-top: 15px;
-                    }
-
-                    .form-check {
-                        margin-top: 40px;
-                        .checkbox-confirm {
-                            margin-right: 5px;
-                        }
-                    }
-
-                    .btn-submit {
-                        background-color: #ffdd15;
-                        color: #55534c;
-                        border-radius: 10px;
-                        font-size: 25px;
-                        padding: 3px 50px;
-                        border: 5px solid hsla(0, 0%, 100%, .9);
-
-                        &:hover {
-                            background: #dc0102;
-                            color: white
-                        }
-                    }
-                }
-            }
+        img {
+            height: auto;
         }
     }
 }

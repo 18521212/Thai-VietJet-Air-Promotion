@@ -1,6 +1,7 @@
 import { Component } from "react";
 import './PurchaseBreakdown.scss';
 import NumberFormat from 'react-number-format';
+import _ from 'lodash';
 
 class PurchaseBreakdown extends Component {
     constructor(props) {
@@ -11,28 +12,25 @@ class PurchaseBreakdown extends Component {
     }
 
     render() {
-        let { listPack, selectedNoPack4, selectedNoPack6,
-            selectedNoPack12, selectedNoPack24, vat,
-            total } = this.props;
+        let { packData, inputFrameCard, vat, total } = this.props;
         return (
             <div className="container-fluid p-0">
                 <div className="purchase-breakdown col-xl-6 col-12">
                     <div>
                         <h4>Purchase Breakdown</h4>
-                        {listPack && listPack.length > 0 &&
-                            listPack.map((item, index) => {
-                                let id = item.id;
-                                let selectedNoPack = this.props['selectedNoPack' + item.id].value;
+                        {packData && packData.length > 0 &&
+                            packData.map((item, index) => {
+                                let stateName = _.camelCase('selected' + item.name)
                                 return (
                                     <div className="row mb-2" key={index}>
-                                        <span className="col">PACK {id} X {selectedNoPack}</span>
+                                        <span className="col">{item.name} X {inputFrameCard[stateName].value}</span>
                                         <span className="col text-right">
                                             <NumberFormat
                                                 className='currency'
-                                                value={item.price * selectedNoPack}
+                                                value={item.price * inputFrameCard[stateName].value}
                                                 displayType='text'
                                                 thousandSeparator={true}
-                                                suffix={' THB'}
+                                                suffix={` ${item.currency}`}
                                                 decimalSeparator={'.'}
                                                 decimalScale={2}
                                                 fixedDecimalScale={true}

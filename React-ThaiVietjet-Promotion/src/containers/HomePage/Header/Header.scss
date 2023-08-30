@@ -1,65 +1,83 @@
-.header {
-    height: auto;
-    width: auto;
-    min-height: 80px;
-    background: #e61f20;
-    display: flex;
-    // background-image: url("../../../assets/Logo/bottom-right-corner.png");
-    // background-image: url("https://github.com/18521212/image-ThaiVietJet/blob/master/Logo/bottom-right-corner.png?raw=true");
-    background-repeat: no-repeat;
-    background-size: 130px 80px;
-    background-position: 100% 100%;
-    font-size: 1.1rem;
+  .dropdown {
+      .shopping {
+          background: linear-gradient(#fad305, #fd0, #fd0, #fad305);
+          border-radius: 5px;
+          text-align: center;
+          padding: .375rem .75rem;
+          border: 1px solid transparent;
+      }
+  }
 
-    .navbar {
-        background-color: transparent !important;
-        font-family: "myb", Tahoma, Geneva, sans-serif;
-        padding: .5rem 1rem;
-        min-height: 80px;
-        align-items: center;
-        box-shadow: 0 1px 5px #000;
+  // .dropdown .shopping 4x2 8 point
 
-        .navbar-brand {
-            // border: 1px solid black;
-            padding-top: .3125rem;
-            padding-bottom: .3125rem;
-            margin-right: 1rem;
-            width: 30%;
+  .bg-header {
+      min-height: 80px;
+      background: #e61f20;
+      background-repeat: no-repeat;
+      background-position: 100% 100%;
+      font-size: 1.1rem;
+      background-size: 110px 70px;
 
-            img {
-                height: auto;
-                width: 80%;
-            }
-        }
+      .sticky-top {
+          box-shadow: 0 1px 5px #000;
+      }
 
-        .navbar-toggler {
-            color: white;
-        }
+      .navbar {
+          background-color: transparent !important;
+          font-family: "myb", Tahoma, Geneva, sans-serif;
+          padding: .5rem 1rem;
+          min-height: 80px;
+          align-items: center;
+          //
 
-        .menu {
-            // border: 1px solid violet;
+          .navbar-brand {
+              font-size: 1.25rem;
+              width: 30%;
+              margin-right: 1rem;
+              padding-top: .3125rem;
+              padding-bottom: .3125rem;
+              //
 
-            .nav-link {
-                color: #fff !important;
+              img {
+                  height: auto;
+                  max-width: 100%;
+                  width: 300px;
+                  //
+              }
+          }
 
-                &.shopping {
-                    background-color: #fd0;
-                    border-radius: 5px;
-                    text-align: center;
-                }
-            }
+          .navbar-toggler {}
 
-            .sl-lan {
-                border: none !important;
-                outline: none !important;
-                background: transparent !important;
-            }
+          .navbar-collapse {
+              .nav-link {
+                  color: #fff !important;
+              }
 
-            @media screen and (min-width: 1200px) {
-                .sl-lan {
-                    border: none;
-                }
-            }
-        }
-    }
-}
+              // .shopping {
+              //     background: linear-gradient(#fad305, #fd0, #fd0, #fad305);
+              //     border-radius: 5px;
+              //     text-align: center;
+              //     padding: .375rem .75rem;
+              //     border: 1px solid transparent;
+              // } // .header .navbar .navbar-collapse .shopping 4x4 point
+
+              .sl-lan {
+                  border: none !important;
+                  outline: none !important;
+                  background: transparent !important;
+              }
+
+              @media screen and (min-width: 1200px) {
+                  .sl-lan {
+                      border: none;
+                  }
+              }
+          }
+      }
+  }
+
+  @media screen and (max-width: 1199px) {
+      .bg-header {
+          background-size: 130px 80px;
+      }
+  }

@@ -1,6 +1,7 @@
 import { Component } from "react";
 import Select from 'react-select';
 import './FrameCard.scss'
+import _ from 'lodash';
 
 class FrameCard extends Component {
     constructor(props) {
@@ -15,29 +16,30 @@ class FrameCard extends Component {
     }
 
     render() {
-        let { listPack, selectedNoPack4, selectedNoPack6,
-            selectedNoPack12, selectedNoPack24 } = this.props;
+        let { packData, inputFrameCard } = this.props;
         return (
             <>
                 <div className="frame-pack container-fluid">
                     <div className="row">
-                        {listPack && listPack.length > 0 &&
-                            listPack.map((item, index) => {
-                                let option = [];
-                                let selectedNoPack = this.props['selectedNoPack' + item.id]
-                                for (let i = 0; i <= item.code_number; i++) {
-                                    option.push({ value: i, label: i })
+                        {packData && packData.length > 0 &&
+                            packData.map((item, index) => {
+                                let price = item.price;
+                                let stateName = _.camelCase('selected' + item.name);
+                                let optionStateName = _.camelCase('option' + item.name);// space
+                                let name = {
+                                    parentState: 'inputFrameCard',
+                                    name: stateName
                                 }
                                 return (
                                     <div className="card col-xl-4 col-12" key={index}>
                                         <div className="card-header">
-                                            <span>{item.pack_name}</span>
+                                            <span>{item.name}</span>
                                         </div>
                                         <div className="card-body">
                                             <div className="row">
                                                 <div className="col"></div>
                                                 <div className="content-up col-7">
-                                                    <span>Price {item.price} THB</span>
+                                                    <span>Price {price} THB</span>
                                                 </div>
                                             </div>
 
@@ -45,10 +47,9 @@ class FrameCard extends Component {
                                                 <div className="form-group row">
                                                     <label className="col">Number</label>
                                                     <Select className="select-count col"
-                                                        value={selectedNoPack}
-                                                        placeholder={selectedNoPack.value}
-                                                        options={option}
-                                                        name={'selectedNoPack' + item.id}
+                                                        value={inputFrameCard[stateName]}
+                                                        options={inputFrameCard[optionStateName]}
+                                                        name={name}
                                                         onChange={this.handleOnChangeSelect}
                                                         styles={{
                                                             indicatorSeparator: () => { },

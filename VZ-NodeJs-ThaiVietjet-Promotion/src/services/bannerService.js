@@ -3,15 +3,16 @@ const db = require('../models');
 let createBanner = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.image) {
+            if (!data.image || !data.name || !data.type) {
                 resolve({
                     errCode: 1,
                     errMessage: 'Missing required parameters'
                 })
             } else {
                 await db.Banner.create({
+                    name: data.name,
                     image: data.image,
-                    type: data.type
+                    type: data.type // consider allow null
                 })
 
                 resolve({

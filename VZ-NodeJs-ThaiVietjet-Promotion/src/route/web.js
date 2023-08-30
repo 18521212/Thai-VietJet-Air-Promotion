@@ -47,6 +47,9 @@ let initWebRoutes = (app) => {
     router.post('/api/create-row-data-dropdown', formController.createRowDataDropdown)
     // delete dropdown // delete data dropdown
 
+    router.post('/api/create-pack', formController.createPack)
+    router.get('/api/get-all-pack', formController.getAllPack)
+
     return app.use("/", router) //su dung tat ca fie router ma chung ta khai bao
 }
 

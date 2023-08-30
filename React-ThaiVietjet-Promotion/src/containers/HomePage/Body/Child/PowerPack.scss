@@ -1,38 +1,32 @@
 .power-pack {
-    margin: 0 auto;
-    max-width: 1000px;
+    // inner gold
 
     .title-power-pack {
         background-color: red;
-        border-top-right-radius: 15px;
-        border-top-left-radius: 15px;
         padding: 10px;
 
         h3 {
             color: white;
-            font-size: 30px;
+            font-size: 36px;
             font-weight: 100;
+            margin: 10px 0 15px;
+            font-family: "myFirstFont",sans-serif;
         }
     }
 
     .content {
-        background-color: white;
         border-bottom-left-radius: 15px;
         border-bottom-right-radius: 15px;
         height: auto;
-        padding: 5px 15px 25px;
 
         .content-power-pack {}
 
         .list-pack {
             background: white;
 
-
-
             .pack {
                 height: auto;
                 border-bottom: 1px solid white;
-                background: violet;
                 overflow: hidden;
 
                 &:first-child {
