@@ -31,7 +31,7 @@ let createFormSection = (data) => {
             reject(e);
         }
     })
-}
+} // need to edit form section table
 
 let getAllFormSection = () => {
     return new Promise(async (resolve, reject) => {
@@ -48,14 +48,17 @@ let getAllFormSection = () => {
                                         model: db.Input,
                                         include: [
                                             {
-                                                model: db.Text_Input
+                                                model: db.Text_Input,
+                                                include: [
+                                                    { model: db.Text_Translation, as: 'titleDataText_Input' },
+                                                    { model: db.Text_Translation, as: 'placeHolderDataText_Input' }
+                                                ]
                                             },
                                             {
                                                 model: db.Dropdown,
                                                 include: [
-                                                    {
-                                                        model: db.Row_Dataset_Dropdown, as: 'dataDropdown'
-                                                    }
+                                                    { model: db.Row_Dataset_Dropdown, as: 'dataDropdown' },
+                                                    { model: db.Text_Translation, as: 'titleDataDropdown' }
                                                 ]
                                             }
                                         ]
@@ -103,14 +106,17 @@ let getFormSectionById = (id) => {
                                             model: db.Input,
                                             include: [
                                                 {
-                                                    model: db.Text_Input
+                                                    model: db.Text_Input,
+                                                    include: [
+                                                        { model: db.Text_Translation, as: 'titleDataText_Input' },
+                                                        { model: db.Text_Translation, as: 'placeHolderDataText_Input' }
+                                                    ]
                                                 },
                                                 {
                                                     model: db.Dropdown,
                                                     include: [
-                                                        {
-                                                            model: db.Row_Dataset_Dropdown, as: 'dataDropdown'
-                                                        }
+                                                        { model: db.Row_Dataset_Dropdown, as: 'dataDropdown' },
+                                                        { model: db.Text_Translation, as: 'titleDataDropdown' }
                                                     ]
                                                 }
                                             ]
@@ -252,7 +258,7 @@ let addInputIntoForm = (data) => {
                         formId: data.formId,
                         inputId: data.inputId,
                         order: data.order,
-                        widthXLScreen: data.widthXLScreen
+                        widthMdScreen: data.widthMdScreen
                     })
 
                     resolve({
@@ -270,7 +276,7 @@ let addInputIntoForm = (data) => {
 let updateFormDetail = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.formId || !data.inputId || (!data.order && !data.widthXLScreen)) {
+            if (!data.formId || !data.inputId || (!data.order && !data.widthMdScreen)) {
                 resolve({
                     errCode: 1,
                     errMessage: 'Missing required parameters'
@@ -283,18 +289,20 @@ let updateFormDetail = (data) => {
                     },
                 })
 
-                await formDetail.update({
-                    order: data.order && data.order,
-                    widthXLScreen: data.widthXLScreen && data.widthXLScreen
-                })
+                const result = db.sequelize.transaction(async (t) => {
+                    await formDetail.update({
+                        order: data.order && data.order,
+                        widthMdScreen: data.widthMdScreen && data.widthMdScreen
+                    }, { transaction: t })
 
-                await formDetail.save()
+                    await formDetail.save({ transaction: t })
 
-                formDetail = await db.Form_Detail.findOne({
-                    where: {
-                        formId: data.formId,
-                        inputId: data.inputId,
-                    },
+                    formDetail = await db.Form_Detail.findOne({
+                        where: {
+                            formId: data.formId,
+                            inputId: data.inputId,
+                        },
+                    }, { transaction: t })
                 })
 
                 resolve({
@@ -393,54 +401,72 @@ let deleteInputById = (inputId) => {
                         errCode: 0,
                         errMessage: 'Input does not exist',
                     })
-                } else {
-                    let valid = 1;
+                    return;
+                }
+
+                const result = await db.sequelize.transaction(async (t) => {
+                    await db.Input.destroy({
+                        where: {
+                            id: inputId
+                        }
+                    }, { transaction: t })
+
                     if (input.typeInput === 'text') {
+                        // delete text_translation text, placeHolder
+                        await db.Text_Translation.destroy({
+                            where: {
+                                id: [input.Text_Input.title, input.Text_Input.placeHolder]
+                            }
+                        }, { transaction: t })
+
                         // delete text input
                         await db.Text_Input.destroy({
                             where: {
                                 inputId: inputId
                             }
-                        })
-                        resolve({
-                            errCode: 0,
-                            errMessage: `Delete text input with inputId: ${inputId} succeed`,
-                        })
+                        }, { transaction: t })
+
                     } else if (input.typeInput === 'dropdown') {
+                        // delete text_translation dropdown
+                        await db.Text_Translation.destroy({
+                            where: {
+                                id: input.Dropdown.title
+                            }
+                        }, { transaction: t })
+
+                        // delete datadropdown
+                        await db.Row_Dataset_Dropdown.destroy({
+                            where: {
+                                dropdownId: input.Dropdown.id
+                            }
+                        }, { transaction: t })
+
                         // delete dropdown
                         await db.Dropdown.destroy({
                             where: {
                                 inputId: inputId
                             }
-                        })
-                        resolve({
-                            errCode: 0,
-                            errMessage: 'Ok',
-                        })
+                        }, { transaction: t })
+
                     } else {
                         resolve({
                             errCode: 0,
                             errMessage: `Type Input: ${input.typeInput} does not exist, please choose another Type Input`,
                         })
-                        valid = 0;
+                        return;
                     }
+                })
 
-                    if (valid === 1) {
-                        // delete input
-                        await db.Input.destroy({
-                            where: {
-                                id: inputId
-                            }
-                        })
-                    }
-                    // procedure check callback
-                }
+                resolve({
+                    errCode: 0,
+                    errMessage: `Delete Input with id: ${inputId} succeed`
+                })
             }
         } catch (e) {
             reject(e);
         }
     })
-}
+} // transaction
 
 // text input
 
@@ -453,15 +479,29 @@ let createTextInput = (data) => {
                     errMessage: 'Missing required parameters'
                 })
             } else {
-                // create input, input instance
-                let input = await db.Input.create({
-                    typeInput: 'text'
-                });
-                let textInput = await db.Text_Input.create({
-                    title: data.title,
-                    placeHolder: data.placeHolder,
-                    typeText: data.typeText,
-                    inputId: input.id
+                let textInput;
+                const result = await db.sequelize.transaction(async (t) => {
+                    // create input, input instance
+                    let input = await db.Input.create({
+                        typeInput: 'text'
+                    }, { transaction: t });
+
+                    let titleText_Translation = await db.Text_Translation.create({
+                        valueEn: data.title,
+                        valueTh: data.titleTh ? data.titleTh : data.title
+                    }, { transaction: t })
+
+                    let placeHolderText_Translation = await db.Text_Translation.create({
+                        valueEn: data.placeHolder,
+                        valueTh: data.placeHolderTh ? data.placeHolderTh : data.placeHolder
+                    }, { transaction: t })
+
+                    textInput = await db.Text_Input.create({
+                        title: titleText_Translation.id,
+                        placeHolder: placeHolderText_Translation.id,
+                        typeText: data.typeText,
+                        inputId: input.id
+                    }, { transaction: t })
                 })
 
                 resolve({
@@ -478,9 +518,7 @@ let createTextInput = (data) => {
 let getAllTextInput = () => {
     return new Promise(async (resolve, reject) => {
         try {
-            let data = await db.Text_Input.findAll({
-
-            })
+            let data = await db.Text_Input.findAll()
 
             resolve({
                 errCode: 0,
@@ -504,13 +542,22 @@ let createDropdown = (data) => {
                     errMessage: 'Missing required parameters'
                 })
             } else {
-                // create input, input instance
-                let input = await db.Input.create({
-                    typeInput: 'dropdown'
-                });
-                let dropdown = await db.Dropdown.create({
-                    title: data.title,
-                    inputId: input.id // check procedure roll back if input.id incorrect
+                let dropdown;
+                const result = await db.sequelize.transaction(async (t) => {
+                    // create input, input instance
+                    let input = await db.Input.create({
+                        typeInput: 'dropdown'
+                    }, { transaction: t });
+
+                    let titleText_Translation = await db.Text_Translation.create({
+                        valueEn: data.title,
+                        valueTh: data.titleTh ? data.titleTh : data.title
+                    }, { transaction: t })
+
+                    dropdown = await db.Dropdown.create({
+                        title: titleText_Translation.id,
+                        inputId: input.id // check procedure roll back if input.id incorrect
+                    }, { transaction: t })
                 })
 
                 resolve({
@@ -643,6 +690,92 @@ let getAllPack = () => {
     })
 }
 
+let deletePackById = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!id) {
+                resolve({
+                    errCode: 0,
+                    errMessage: 'Missing required parameters',
+                })
+                return;
+            }
+            await db.Pack.destroy({
+                where: {
+                    id: id
+                }
+            })
+
+            resolve({
+                errCode: 0,
+                errMessage: `Remove pack with id: ${id} succeed`,
+            })
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
+let fetchData = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const result = await db.sequelize.transaction(async (t) => {
+                await db.Text_Translation.truncate();
+
+                await db.Text_Translation.bulkCreate([
+                    { valueTh: "คำนำหน้า", valueEn: "Title" },
+
+                    { valueTh: "ชื่อจริงและชื่อกลาง (กรอกเป็นภาษาอังกฤษ)", valueEn: "Middle and Given Name" },
+                    { valueTh: "นามสกุล (กรอกเป็นภาษาอังกฤษ)", valueEn: "Family Name" },
+                    { valueTh: "ที่อยู่อีเมล์", valueEn: "Email" },
+                    { valueTh: "เบอร์โทรศัพท์", valueEn: "Phone" },
+                    { valueTh: "Passenger Middle and Given Name", valueEn: "Passenger Middle and Given Name" },
+                    { valueTh: "Passenger Family Name", valueEn: "Passenger Family Name" },
+
+                    { valueTh: "Enter your middle and given name", valueEn: "Enter your middle and given name" },
+                    { valueTh: "Enter your name", valueEn: "Enter your name" },
+                    { valueTh: "Enter your email", valueEn: "Enter your email" },
+                    { valueTh: "eg. +665555551212", valueEn: "eg. +665555551212" },
+                    { valueTh: "Enter Passenger middle and given name", valueEn: "Enter Passenger middle and given name" },
+                    { valueTh: "Enter Passenger Name", valueEn: "Enter Passenger Name" },
+
+                    { valueTh: "Power Pack Love Connection", valueEn: "Power Pack Love Connection" },
+                    { valueTh: "Covid Test Voucher", valueEn: "Covid Test Voucher" },
+                    { valueTh: "SkyFUN Insurance", valueEn: "SkyFUN Insurance" },
+                    { valueTh: "Hotel Voucher", valueEn: "Hotel Voucher" },
+                    { valueTh: "Travel Voucher", valueEn: "Travel Voucher" },
+
+                    { valueTh: "โปรโมชัน", valueEn: "Promotion" },
+                    { valueTh: "เอกสารที่ใช้ในการเดินทาง", valueEn: "Travel Document" },
+                    { valueTh: "สนามบินและอาคารผู้โดยสาร", valueEn: "Airports and Terminal" },
+                    { valueTh: "ใบกำกับภาษี", valueEn: "Tax Invoice" },
+                    { valueTh: "การเลือกที่นั่ง", valueEn: "Seat selection" },
+                    { valueTh: "ผู้โดยสารที่ต้องการความช่วยเหลือพิเศษ", valueEn: "Physically Challenged Passenger" },
+                    { valueTh: "สินค้า อาหารเเละเครื่องดื่ม", valueEn: "Products Foods and Beverage" },
+                    { valueTh: "จัดส่งสัมภาระ", valueEn: "Baggage service" },
+                    { valueTh: "SKY BOSS", valueEn: "SKY BOSS" },
+
+                    { valueTh: "English", valueEn: "English" },
+                    { valueTh: "ภาษาไทย", valueEn: "Thai" },
+
+                    { valueTh: "การจองของฉัน", valueEn: "My Bookings" },
+                    { valueTh: "Shopping", valueEn: "Shopping" },
+                    { valueTh: "ข้อมูลการเดินทาง", valueEn: "Travel Info" },
+                    { valueTh: "เช็คอินออนไลน์", valueEn: "Web Check-in" },
+                    { valueTh: "Language", valueEn: "Language" },
+                ])
+            })
+
+            resolve({
+                errCode: 0,
+                errMessage: 'Ok',
+            })
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
 module.exports = {
     createFormSection: createFormSection,
     getAllFormSection: getAllFormSection,
@@ -668,4 +801,7 @@ module.exports = {
 
     createPack: createPack,
     getAllPack: getAllPack,
+    deletePackById: deletePackById,
+
+    fetchData: fetchData
 }

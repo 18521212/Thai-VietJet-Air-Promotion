@@ -17,7 +17,7 @@ module.exports = {
                 defaultValue: 0
             },
             text: {
-                type: Sequelize.STRING,
+                type: Sequelize.INTEGER,
                 allowNull: false
             },
             link: {

@@ -2,6 +2,9 @@ import { Component } from "react";
 import './Form.scss'
 import _ from 'lodash';
 
+import { connect } from 'react-redux';
+import { FormattedMessage } from 'react-intl';
+
 import CustomerForm from './Child/CustomerForm';
 import FrameCard from "./Child/FrameCard";
 import PurchaseBreakdown from "./Child/PurchaseBreakdown";
@@ -35,20 +38,20 @@ class Form extends Component {
         this.getDataAndMapState();
     }
 
-    componentDidUpdate(prevState) {
-        // if (JSON.stringify(prevState.inputFrameCard) !== JSON.stringify(this.state.inputFrameCard)) {//
-        //     let totalPrice = 0;
-        //     let { packData } = this.state;
-        //     packData.map((item, index) => {
-        //         let numberPack = this.state.inputFrameCard[_.camelCase('selected' + item.name)].value;
-        //         let pricePack = item.price;
-        //         totalPrice = totalPrice + numberPack * pricePack;
-        //     })
-        //     this.setState({
-        //         total: totalPrice,
-        //         vat: totalPrice / 10
-        //     })
-        // }
+    componentDidUpdate(prevProps, prevState) {
+        if (JSON.stringify(prevState.inputFrameCard) !== JSON.stringify(this.state.inputFrameCard)) {//
+            let totalPrice = 0;
+            let { packData } = this.state;
+            packData.map((item, index) => {
+                let numberPack = this.state.inputFrameCard[_.camelCase('selected' + item.name)].value;
+                let pricePack = item.price;
+                totalPrice = totalPrice + numberPack * pricePack;
+            })
+            this.setState({
+                total: totalPrice,
+                vat: totalPrice / 10
+            })
+        }
     }
 
     getDataAndMapState = async () => {
@@ -67,8 +70,7 @@ class Form extends Component {
         listInput.map((item, index) => {
             if (item.Input.typeInput === 'text') {
                 stateCopy[_.camelCase(item.Input.Text_Input.title)] = '';
-            }
-            if (item.Input.typeInput === 'dropdown') {
+            } else if (item.Input.typeInput === 'dropdown') {
                 let title = item.Input.Dropdown.title;
                 stateCopy[_.camelCase('selected' + title)] = '';// object
                 stateCopy[_.camelCase('option' + title)] = [];
@@ -90,9 +92,10 @@ class Form extends Component {
         // let stateCopy2 = {
         //     ...this.state.inputFrameCard,
         // }
+
         let { inputFrameCard } = this.state
         let stateCopy2 = {
-            inputFrameCard
+            ...inputFrameCard
         }
 
         packData.data.map((item, index) => {
@@ -106,10 +109,11 @@ class Form extends Component {
         })
 
         this.setState({
+            ...this.state,
             inputCustomerForm: stateCopy,
             dataInputCustomerForm: listInput,
             packData: packData.data,
-            inputFrameCard: stateCopy2
+            inputFrameCard: stateCopy2,
         })
     }
 
@@ -157,79 +161,88 @@ class Form extends Component {
     }
 
     render() {
-        let {
-            listPack,//
-            showPack, packData, inputFrameCard,
-            inputCustomerForm,
-            selectedTitle, selectedNoPack4, selectedNoPack6,
-            selectedNoPack12, selectedNoPack24, vat, total,
-            optionTitle, dataInputCustomerForm
+        let { packData, inputFrameCard,
+            inputCustomerForm, vat, total,
+            dataInputCustomerForm
         } = this.state;
-        let {
-            middleGivenName, familyName,
-            email, phone, passengerMiddleGivenName,
-            passengerFamilyName,
-        } = this.state.inputCustomerForm;
+        let { language } = this.props
         return (
             <>
-                <div className="register-purchase" id="register-purchase">
-                    <div className="title">
-                        <h4 className="title-contact">register and purchase</h4>
-                    </div>
+                <div className="form-container">
+                    <form action="#">
+                        <div className="row">
+                            <div className="col-sm-12">
+                                <h4 className="title-contact">register and purchase</h4>
+                            </div>
 
-                    <div className="form-container">
-                        <div className="inner-form">
-                            <strong className="instruct-form">Before you fill up the
-                                information of the person who you will want to send this gift to,
-                                please fill your information in to below boxes:
-                            </strong>
-                            <form action="#">
-                                <CustomerForm
-                                    dataInputCustomerForm={dataInputCustomerForm}
-                                    inputCustomerForm={inputCustomerForm}
+                            <div className="col-sm-12">
+                                <div className="inner-form">
+                                    <strong>Before you fill up the
+                                        information of the person who you will want to send this gift to,
+                                        please fill your information in to below boxes:
+                                    </strong>
 
-                                    handleOnChangeSelect={this.handleOnChangeSelect}
-                                    // handleOnChangeText={this.handleOnChangeText}
-                                    handleOnChangeText={this.handleOnChangeInputCustomerForm}
-                                />
+                                    <div className="main-form" style={{ marginTop: '15px' }}>
+                                        <CustomerForm
+                                            dataInputCustomerForm={dataInputCustomerForm}
+                                            inputCustomerForm={inputCustomerForm}
 
-                                <FrameCard
-                                    packData={packData}
-                                    inputFrameCard={inputFrameCard}
-
-                                    handleOnChangeSelect={this.handleOnChangeSelect}
-                                />
-
-                                <div className="container-fluid p-0">
-
-                                    <PurchaseBreakdown
-                                        packData={packData}
-                                        inputFrameCard={inputFrameCard}
-                                        vat={vat}
-                                        total={total}
-                                    />
-                                    <div className="form-check col-xl-6">
-                                        <input type="checkbox" className="checkbox-confirm" required></input>
-                                        <label htmlFor="form-check-label checkbox-confirm-label">
-                                            <a href="#">I accept the terms & conditions*</a>
-                                        </label><br />
-                                    </div>
-                                    <div className="col-6 text-right pr-0">
-                                        <input className="btn-submit" type="submit" value="Submit"
-                                            onClick={(event) => this.handleButtonSubmitOnClick(event)}
+                                            handleOnChangeSelect={this.handleOnChangeSelect}
+                                            // handleOnChangeText={this.handleOnChangeText}
+                                            handleOnChangeText={this.handleOnChangeInputCustomerForm}
                                         />
+
+                                        <div className="bottom-form">
+                                            <FrameCard
+                                                packData={packData}
+                                                inputFrameCard={inputFrameCard}
+
+                                                handleOnChangeSelect={this.handleOnChangeSelect}
+                                            />
+
+                                            <div className="row">
+                                                <div className="col-md-6 col-xs-12">
+                                                    <PurchaseBreakdown
+                                                        packData={packData}
+                                                        inputFrameCard={inputFrameCard}
+                                                        vat={vat}
+                                                        total={total}
+                                                    />
+                                                    <div className="col-12">
+                                                        <input type="checkbox" className="checkbox-confirm" required></input>
+                                                        <label htmlFor="form-check-label checkbox-confirm-label">
+                                                            <a href="#">I accept the terms & conditions*</a>
+                                                        </label><br />
+                                                    </div>
+
+                                                    <button className="button next" type="submit"
+                                                        onClick={(event) => this.handleButtonSubmitOnClick(event)}
+                                                    >
+                                                        Submit
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
                         </div>
-                    </div>
-
-                    {/* footer */}
-                    <Footer />
+                    </form>
                 </div>
             </>
         )
     }
 }
 
-export default Form;
+const mapStateToProps = state => {
+    return {
+        language: state.app.language
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Form);

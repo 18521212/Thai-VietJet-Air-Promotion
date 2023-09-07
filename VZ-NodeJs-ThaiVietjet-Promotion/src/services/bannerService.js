@@ -12,7 +12,7 @@ let createBanner = (data) => {
                 await db.Banner.create({
                     name: data.name,
                     image: data.image,
-                    type: data.type // consider allow null
+                    type: data.type
                 })
 
                 resolve({
@@ -26,7 +26,7 @@ let createBanner = (data) => {
     })
 }
 
-const getAllBanner = () => {
+let getAllBanner = () => {
     return new Promise(async (resolve, reject) => {
         try {
             let data = await db.Banner.findAll({

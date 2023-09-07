@@ -1,0 +1,13 @@
+{
+    "header": {
+        "language": "language"
+    },
+    "body": {
+        "selling-at": "Selling at",
+        "exclude-vat": "THB (Exclude VAT)",
+        "get": "Get",
+        "redeem": "Promo codes to redeem for round trip tickets.",
+        "average": "Average",
+        "round-trip": "THB/ round trip Exclude Tax and fees"
+    }
+}

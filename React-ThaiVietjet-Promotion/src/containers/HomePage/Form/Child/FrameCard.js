@@ -1,6 +1,7 @@
 import { Component } from "react";
 import Select from 'react-select';
 import './FrameCard.scss'
+import NumberFormat from 'react-number-format';
 import _ from 'lodash';
 
 class FrameCard extends Component {
@@ -19,34 +20,43 @@ class FrameCard extends Component {
         let { packData, inputFrameCard } = this.props;
         return (
             <>
-                <div className="frame-pack container-fluid">
-                    <div className="row">
-                        {packData && packData.length > 0 &&
-                            packData.map((item, index) => {
-                                let price = item.price;
-                                let stateName = _.camelCase('selected' + item.name);
-                                let optionStateName = _.camelCase('option' + item.name);// space
-                                let name = {
-                                    parentState: 'inputFrameCard',
-                                    name: stateName
-                                }
-                                return (
-                                    <div className="card col-xl-4 col-12" key={index}>
-                                        <div className="card-header">
-                                            <span>{item.name}</span>
-                                        </div>
-                                        <div className="card-body">
-                                            <div className="row">
-                                                <div className="col"></div>
-                                                <div className="content-up col-7">
-                                                    <span>Price {price} THB</span>
-                                                </div>
+                <div className="row">
+                    {packData && packData.length > 0 &&
+                        packData.map((item, index) => {
+                            let price = item.price;
+                            let stateName = _.camelCase('selected' + item.name);
+                            let optionStateName = _.camelCase('option' + item.name);// space
+                            let name = {
+                                parentState: 'inputFrameCard',
+                                name: stateName
+                            }
+                            return (
+                                <div className="card col-md-4 col-12" key={index}>
+                                    <div className="card-header">
+                                        <span>{item.name}</span>
+                                    </div>
+                                    <div className="card-body">
+                                        <div className="row prize">
+                                            <div className="col-md-6 col-5"></div>
+                                            <div className="sell col-md-6 col-7">
+                                                <span style={{ fontSize: '0.8em' }}>
+                                                    Price <span>
+                                                        <NumberFormat
+                                                            className='currency'
+                                                            value={price}
+                                                            displayType='text'
+                                                            thousandSeparator={true}
+                                                            suffix={` ${item.currency}`}
+                                                            fixedDecimalScale={true}
+                                                        />
+                                                    </span>
+                                                </span>
                                             </div>
 
-                                            <div className="content-down">
-                                                <div className="form-group row">
-                                                    <label className="col">Number</label>
-                                                    <Select className="select-count col"
+                                            <div className="col-12">
+                                                <div className="row form-group">
+                                                    <label className="col-6">Number</label>
+                                                    <Select className="select-number col-6 p-0"
                                                         value={inputFrameCard[stateName]}
                                                         options={inputFrameCard[optionStateName]}
                                                         name={name}
@@ -54,15 +64,23 @@ class FrameCard extends Component {
                                                         styles={{
                                                             indicatorSeparator: () => { },
                                                         }}
+                                                        menuPosition="fixed"
+                                                        theme={(theme) => ({
+                                                            ...theme,
+                                                            colors: {
+                                                                ...theme.colors,
+                                                                primary: 'grey'
+                                                            }
+                                                        })}
                                                     />
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                )
-                            })
-                        }
-                    </div>
+                                </div>
+                            )
+                        })
+                    }
                 </div>
             </>
         )

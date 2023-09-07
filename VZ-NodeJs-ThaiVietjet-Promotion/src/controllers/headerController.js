@@ -30,6 +30,8 @@ let getAllHeader = async (req, res) => {
     }
 }
 
+// menu item
+
 let createMenuItem = async (req, res) => {
     try {
         let data = await headerService.createMenuItem(req.body);
@@ -60,13 +62,51 @@ let getAllMenuItemByMenuId = async (req, res) => {
     }
 }
 
+let updateMenuItemById = async (req, res) => {
+    try {
+        let data = await headerService.updateMenuItemById(req.body);
+        return res.status(200).json(data)
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
+
+let deleteMenuItemById = async (req, res) => {
+    try {
+        let data = await headerService.deleteMenuItemById(req.body.id);
+        return res.status(200).json(data)
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
+
+// sub menu
+
 let createSubMenu = async (req, res) => {
     try {
-        console.log(req.body)
         let data = await headerService.createSubMenu(req.body);
+        return res.status(200).json(data)
+    } catch (e) {
+        console.log(e);
         return res.status(200).json({
-            data
+            errCode: -1,
+            errMessage: 'Error from the server'
         })
+    }
+}
+
+let deleteSubMenuById = async (req, res) => {
+    try {
+        let data = await headerService.deleteSubMenuById(req.body.id);
+        return res.status(200).json(data)
     } catch (e) {
         console.log(e);
         return res.status(200).json({
@@ -82,6 +122,9 @@ module.exports = {
 
     createMenuItem: createMenuItem,
     getAllMenuItemByMenuId: getAllMenuItemByMenuId,
+    updateMenuItemById: updateMenuItemById,
+    deleteMenuItemById: deleteMenuItemById,
 
-    createSubMenu: createSubMenu
+    createSubMenu: createSubMenu,
+    deleteSubMenuById: deleteSubMenuById,
 }

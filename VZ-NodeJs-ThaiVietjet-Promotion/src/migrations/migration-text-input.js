@@ -9,11 +9,11 @@ module.exports = {
                 type: Sequelize.INTEGER
             },
             title: {
-                type: Sequelize.STRING,
+                type: Sequelize.INTEGER,
                 allowNull: false
             },
             placeHolder: {
-                type: Sequelize.STRING,
+                type: Sequelize.INTEGER,
             },
             typeText: {
                 type: Sequelize.STRING,

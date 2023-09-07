@@ -7,13 +7,20 @@ import Form from './HomePage/Form/Form';
 import Footer from './HomePage/Footer/Footer';
 
 class App extends Component {
+    componentDidMount() {
+        document.title = "VietjetAir - Gift Voucher dev"
+    }
+
     render() {
         return (
             <>
                 <Header />
                 <Banner />
                 <Body />
-                <Form />
+                <section className="join-us" id="register-purchase">
+                    <Form />
+                    <Footer />
+                </section>
             </>
         )
     }

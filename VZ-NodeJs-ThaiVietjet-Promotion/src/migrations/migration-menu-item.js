@@ -17,10 +17,15 @@ module.exports = {
                 allowNull: false
             },
             text: {
-                type: Sequelize.STRING
+                type: Sequelize.INTEGER,
+                allowNull: false
             },
             link: {
                 type: Sequelize.STRING
+            },
+            highLight: {
+                type: Sequelize.STRING,
+                defaultValue: null
             },
             createdAt: {
                 allowNull: false,

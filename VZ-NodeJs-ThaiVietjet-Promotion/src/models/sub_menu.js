@@ -10,13 +10,15 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            Sub_Menu.belongsTo(models.Menu_Item, {foreignKey: 'menuParentId'})
+            Sub_Menu.belongsTo(models.Menu_Item, { foreignKey: 'menuParentId' })
+
+            Sub_Menu.belongsTo(models.Text_Translation, { foreignKey: 'text', as: 'textDataSub_Menu' })
         }
     };
     Sub_Menu.init({
         menuParentId: DataTypes.INTEGER,
         order: DataTypes.INTEGER,
-        text: DataTypes.STRING,
+        text: DataTypes.INTEGER,
         link: DataTypes.STRING
     }, {
         sequelize,

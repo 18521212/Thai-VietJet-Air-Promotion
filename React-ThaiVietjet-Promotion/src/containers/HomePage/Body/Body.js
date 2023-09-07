@@ -9,7 +9,7 @@ import PowerPack from './Child/PowerPack';
 
 import {
     getAllBanners, getAllTextInput, getFormSectionById,
-    getAllPack
+    getAllPack, getContentBodyById
 } from "../../../services/userService";
 
 import _ from 'lodash';
@@ -18,15 +18,8 @@ class Body extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            //hardcode data api
-            listPack: [
-                { id: '4', pack_name: 'pack 4', price: 6400, code_number: 6, avg_price: 1660 },
-                { id: '6', pack_name: 'pack 6', price: 9000, code_number: 3, avg_price: 1500 },
-                { id: '12', pack_name: 'pack 12', price: 16800, code_number: 2, avg_price: 1400 },
-                { id: '24', pack_name: 'pack 24', price: 30000, code_number: 1, avg_price: 1250 },
-            ],
-
             packData: '',
+            contentBodyData: ''
         }
     }
 
@@ -41,15 +34,18 @@ class Body extends Component {
     getDataAndMapState = async () => {
         // pack data
         let packData = await getAllPack();
+        // content body data
+        let contentBodyData = await getContentBodyById(1);
 
         this.setState({
             packData: packData.data,
+            contentBodyData: contentBodyData.data
         })
     }
 
     render() {
         let {
-            packData
+            packData, contentBodyData
         } = this.state;
 
         return (
@@ -59,6 +55,7 @@ class Body extends Component {
                 >
                     <PowerPack
                         packData={packData}
+                        contentBodyData={contentBodyData}
                     />
 
                     <span className="img-container">

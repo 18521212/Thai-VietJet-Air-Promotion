@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css?family=Dax: regular, bold, italic&');
+
+body {
+    font-family: "Dax" !important;
+    overflow: hidden;
+    overflow-y: scroll;
+    font-size: 14px !important;
+    color: #696969;
+}
+
+.join-us {
+    background: url('../assets/Background/background_bottom.jpg');
+    background-size: cover;
+    padding-top: 50px;
+    // position: relative; //
+
+}

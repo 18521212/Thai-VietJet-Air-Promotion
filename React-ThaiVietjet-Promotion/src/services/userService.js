@@ -17,10 +17,16 @@ const getAllBanners = () => {
     // return axios.get('http://localhost:3002/api/get-all-banners');
 }
 
+// body
+
+const getContentBodyById = (id) => {
+    return axios.get(`/api/content-body/${id}`)
+}
+
 // form section
 
 const getFormSectionById = (id) => {
-    return axios.get(`/api/get-form-section-by-id?id=${id}`)
+    return axios.get(`/api/form-sections/${id}`)
 }
 
 const getAllTextInput = () => {
@@ -30,10 +36,11 @@ const getAllTextInput = () => {
 // pack
 
 const getAllPack = () => {
-    return axios.get('/api/get-all-pack')
+    return axios.get('/api/packs')
 }
 
 export {
     getAllBanners, getAllMenuItemById, getAllHeader,
-    getAllTextInput, getFormSectionById, getAllPack
+    getAllTextInput, getFormSectionById, getAllPack,
+    getContentBodyById
 }

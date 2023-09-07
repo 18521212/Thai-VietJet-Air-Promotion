@@ -6,6 +6,11 @@ import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap
 
 import { getAllMenuItemById, getAllHeader } from "../../../services/userService";
 
+import { connect } from 'react-redux';
+import { LANGUAGES } from '../../../utils';
+import { FormattedMessage } from 'react-intl';
+import { changeLanguageApp } from '../../../store/actions';
+
 class Header extends Component {
     constructor(props) {
         super(props);
@@ -17,18 +22,11 @@ class Header extends Component {
             menuLanguage: '',
             header: '',
 
-            optionLanguage: [
-                { value: 'TH', label: 'Thai' },
-                { value: 'EN', label: 'English' },
-            ],
-
+            selectedLanguage: '',
         }
     }
 
     componentDidMount() {
-        this.setState({
-            selectedLanguage: this.state.optionLanguage[0]
-        })
         this.buildData()
     }
 
@@ -69,18 +67,22 @@ class Header extends Component {
         // }));
     }
 
-    render() {
+    handleOnChangeLanguage = (event) => {
+        let language = event.target.name
+        this.props.changeLanguageAppRedux(language)
+    }
 
-        let { optionLanguage, dropdownOpenShopping,
-            dropdownOpenTravelInfo, menuItem, menuLanguage, header } = this.state;
+    render() {
+        let { menuItem, menuLanguage, header } = this.state;
         let mainUrl = 'https://vietjetthai.com';
-        let giftUrl = 'https://gift.th.vietjetair.com';
+        let { language } = this.props;
         return (
             <>
                 <header
                     className="bg-header"
                     style={{ backgroundImage: `url(${header.imageBackground})` }}
                 >
+                    {/* <h1><FormattedMessage id="header.language" /></h1> */}
                     <nav className="navbar navbar-expand-lg navbar-dark bg-dark container-fluid sticky-top">
                         <a className="navbar-brand" href={mainUrl}>
                             <img src={logo} alt='logo' />
@@ -101,6 +103,16 @@ class Header extends Component {
                             <ul className="navbar-nav mr-auto">
                                 {menuItem && menuItem.length > 0 &&
                                     menuItem.map((item, index) => {
+                                        let attributes = item.Sub_Menus.length > 0 ?
+                                            {
+                                                'id': "navbarDropdown1",
+                                                'role': "button",
+                                                'data-toggle': "dropdown",
+                                                'aria-haspopup': "false",
+                                                'aria-expanded': "false"
+                                            }
+                                            :
+                                            {};
                                         return (
                                             <>
                                                 <li
@@ -112,26 +124,40 @@ class Header extends Component {
                                                     <a
                                                         className={
                                                             `${item.Sub_Menus.length > 0 ? 'dropdown-toggle' : ''} ` +
-                                                            `${item.text === 'Shopping' ? 'shopping' : ''} ` +
+                                                            `${item.highLight && 'highlight'} ` +
                                                             'nav-link'
                                                         }
                                                         href={`${item.Sub_Menus.length > 0 ? '#' : item.link ? item.link : '#'}`}
-                                                        id="navbarDropdown1"
-                                                        role="button"
-                                                        data-toggle="dropdown"
-                                                        aria-haspopup="false"
-                                                        aria-expanded="false"
-                                                    >{item.text}</a>
+                                                        {...attributes}
+                                                        // id="navbarDropdown1"
+                                                        // role="button"
+                                                        // data-toggle="dropdown"
+                                                        // aria-haspopup="false"
+                                                        // aria-expanded="false"
+                                                        style={{ background: item.highLight !== 'default' ? item.highLight : false }}
+                                                    >
+                                                        {language === 'en' ?
+                                                            item.textDataMenu_Item.valueEn
+                                                            :
+                                                            item.textDataMenu_Item.valueTh
+                                                        }
+                                                    </a>
                                                     {item.Sub_Menus && item.Sub_Menus.length > 0 &&
                                                         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                                                             {item.Sub_Menus.map((item, index) => {
                                                                 return (
-                                                                    <a className="dropdown-item" href={"#"}>{item.text}</a>
+                                                                    <a className="dropdown-item" href={"#"}>
+                                                                        {language === 'en' ?
+                                                                            item.textDataSub_Menu.valueEn
+                                                                            :
+                                                                            item.textDataSub_Menu.valueTh
+                                                                        }
+                                                                    </a>
                                                                 )
                                                             })}
                                                         </div>
                                                     }
-                                                </li>
+                                                </li >
                                             </>
                                         )
                                     })
@@ -144,14 +170,36 @@ class Header extends Component {
                                             <>
                                                 <li className="nav-item dropdown sl-lan">
                                                     <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        {item.Sub_Menus.length > 0 ? item.Sub_Menus[0].text : item.text}
+                                                        {item.Sub_Menus.length > 0 ?
+                                                            (language === 'en' ?
+                                                                item.Sub_Menus.filter(a => a.textDataSub_Menu.valueEn === 'English')[0].textDataSub_Menu.valueEn
+                                                                :
+                                                                item.Sub_Menus.filter(a => a.textDataSub_Menu.valueEn === 'Thai')[0].textDataSub_Menu.valueTh
+                                                            )
+                                                            :
+                                                            item.textDataMenu_Item.valueEn
+                                                        }
                                                     </a>
                                                     {item.Sub_Menus && item.Sub_Menus.length > 0 &&
                                                         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                                                             {item.Sub_Menus.map((item, index) => {
                                                                 return (
                                                                     <>
-                                                                        <a className="dropdown-item" href="#">{item.text}</a>
+                                                                        <a
+                                                                            className="dropdown-item"
+                                                                            href="#"
+                                                                            name={
+                                                                                item.textDataSub_Menu.valueEn === 'English' ? LANGUAGES.EN :
+                                                                                    item.textDataSub_Menu.valueEn === 'Thai' ? LANGUAGES.TH : LANGUAGES.TH
+                                                                            }
+                                                                            onClick={(event) => this.handleOnChangeLanguage(event)}
+                                                                        >
+                                                                            {item.textDataSub_Menu.valueEn === 'English' ?
+                                                                                item.textDataSub_Menu.valueEn
+                                                                                :
+                                                                                item.textDataSub_Menu.valueTh
+                                                                            }
+                                                                        </a>
                                                                     </>
                                                                 )
                                                             })}
@@ -172,15 +220,16 @@ class Header extends Component {
     }
 }
 
-export default Header;
+const mapStateToProps = state => {
+    return {
+        language: state.app.language
+    };
+};
 
-{/* <Select
-    value={selectedLanguage}
-    options={optionLanguage}
-    placeholder={selectedLanguage.label}
-    onChange={this.handleOnChangeSelect}
-    name={"selectedLanguage"}
-    styles={{
-        indicatorSeparator: () => { },
-    }}
-/> */}
+const mapDispatchToProps = dispatch => {
+    return {
+        changeLanguageAppRedux: (language) => dispatch(changeLanguageApp(language))
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

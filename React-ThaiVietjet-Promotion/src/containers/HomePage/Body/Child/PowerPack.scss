@@ -10,96 +10,71 @@
             font-size: 36px;
             font-weight: 100;
             margin: 10px 0 15px;
-            font-family: "myFirstFont",sans-serif;
+            font-family: "myFirstFont", sans-serif;
         }
     }
 
-    .content {
-        border-bottom-left-radius: 15px;
-        border-bottom-right-radius: 15px;
-        height: auto;
+    .list-pack {
+        background: white;
+        border-radius: .25rem;
+        overflow: hidden;
 
-        .content-power-pack {}
+        .card {
+            height: auto;
+            border-bottom: 1px solid white;
 
-        .list-pack {
-            background: white;
+            .card-header {
+                background-color: red;
+                font-size: 1.2rem;
+                border-top: 1px solid #fff;
+                border-radius: 0;
 
-            .pack {
-                height: auto;
-                border-bottom: 1px solid white;
-                overflow: hidden;
+                button {
+                    background-color: #da251c;
+                    border: 1px solid #fff;
+                    color: white;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    width: auto;
+                    height: 40px;
+                    box-shadow: inset 0 1px 0 #cb6a71, inset 0 -1px 2px #7e1c23;
+                    border-radius: 0;
 
-                &:first-child {
-                    border-top-left-radius: .25rem;
-                    border-top-right-radius: .25rem;
+                    cursor: pointer;
+
+                    &:hover {
+                        border: 1px solid yellow;
+                        color: yellow;
+                        background: #b22832;
+                    }
                 }
+            }
 
-                &:last-child {
-                    border-bottom-left-radius: .25rem;
-                    border-bottom-right-radius: .25rem;
-                }
+            .card-body {
+                border: none;
+                background: transparent;
+                background-color: #ffdd15;
+                font-family: 'jambono';
 
-                .content-up {
+                .content-left {}
+
+
+                .buy-now {
                     background-color: red;
-                    display: flex;
-                    font-size: 1.2rem;
-                    display: block;
-                    padding: .75rem 1.25rem;
-
-                    button {
-                        background-color: #da251c;
-                        border: 1px solid #fff;
-                        color: white;
-                        font-weight: 700;
-                        text-transform: uppercase;
-                        width: auto;
-                        height: 40px;
-                        box-shadow: inset 0 1px 0 #cb6a71, inset 0 -1px 2px #7e1c23;
-                        border-radius: 0;
-
-                        cursor: pointer;
-
-                        &:hover {
-                            border: 1px solid yellow;
-                            color: yellow;
-                            background: #b22832;
-                        }
-                    }
-                }
-
-                .card {
+                    border-radius: 10px;
                     border: none;
-                    background: transparent;
+                    color: #ffff02;
 
-                    .content-down {
-                        background: #ffdd15;
-                        // border-bottom-left-radius: 10px;
-                        // border-bottom-right-radius: 10px;
-
-                        .wrapper {
-                            padding: 20px 20px 4px 20px;
-
-                            .content-left {}
-
-                            .content-right {
-
-                                .buy-now {
-                                    background-color: red;
-                                    text-transform: uppercase;
-                                    color: #ffdd15;
-                                    border-radius: 15px;
-                                    border: none;
-                                    padding: 3px 20px;
-                                }
-                            }
-                        }
-                    }
+                    cursor: pointer;
+                    display: inline-block;
+                    font-size: 15px;
+                    padding: 3px 20px;
                 }
             }
         }
     }
+}
 
-    .img-container {
-        width: 100%;
-    }
+.img-container {
+    width: 100%;
 }

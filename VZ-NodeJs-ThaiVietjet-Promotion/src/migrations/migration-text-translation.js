@@ -1,27 +1,19 @@
 'use strict';
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable('Form_Details', {
+        await queryInterface.createTable('Text_Translations', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            formId: {
-                type: Sequelize.INTEGER,
+            valueTh: {
+                type: Sequelize.STRING
+            },
+            valueEn: {
+                type: Sequelize.STRING,
                 allowNull: false
-            },
-            inputId: {
-                type: Sequelize.INTEGER,
-            },
-            order: {
-                type: Sequelize.INTEGER,
-                defaultValue: 0
-            },
-            widthMdScreen: {
-                type: Sequelize.INTEGER,
-                defaultValue: 1
             },
             createdAt: {
                 allowNull: false,
@@ -34,6 +26,6 @@ module.exports = {
         });
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('Form_Details');
+        await queryInterface.dropTable('Text_Translations');
     }
 };

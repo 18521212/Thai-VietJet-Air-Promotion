@@ -13,10 +13,12 @@ module.exports = (sequelize, DataTypes) => {
             Dropdown.belongsTo(models.Input, { foreignKey: 'inputId' })
 
             Dropdown.hasMany(models.Row_Dataset_Dropdown, { foreignKey: 'dropdownId', as: 'dataDropdown' })
+
+            Dropdown.belongsTo(models.Text_Translation, { foreignKey: 'title', as: 'titleDataDropdown' })
         }
     };
     Dropdown.init({
-        title: DataTypes.STRING,
+        title: DataTypes.INTEGER,
         inputId: DataTypes.STRING
     }, {
         sequelize,

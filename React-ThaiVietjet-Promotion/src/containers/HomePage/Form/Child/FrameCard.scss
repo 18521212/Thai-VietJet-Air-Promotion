@@ -1,11 +1,7 @@
-.frame-pack {
-    margin-top: 20px;
-    padding: 0 !important;
-
     .card {
         // width: 30%;
-        background: transparent;
-        border: none;
+        background: transparent !important;
+        border: none !important;
 
         .card-header {
             width: 100%;
@@ -18,21 +14,23 @@
         .card-body {
             width: 100%;
             background-color: #ffdd15;
-            font-size: 20px;
-            font-weight: 600;
+            color: #4f4e4b;
+            padding-bottom: .25rem;
 
-            .content-up {
-                text-align: right;
-                padding: 0 15px;
-            }
+            .prize {
+                font-size: 20px;
+                margin-top: 0 !important;
+                font-weight: 600;
 
-            .content-down {
-                margin-top: 20px;
+                .sell {
+                    text-align: right;
+                }
 
-                .select-count{
+                .select-number {
+                    margin-bottom: 20px;
                     font-weight: 100;
+                    font-size: 1rem;
                 }
             }
         }
     }
-}

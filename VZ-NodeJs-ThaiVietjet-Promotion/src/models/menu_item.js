@@ -13,13 +13,16 @@ module.exports = (sequelize, DataTypes) => {
             Menu_Item.belongsTo(models.Menu, { foreignKey: 'menuId' })
 
             Menu_Item.hasMany(models.Sub_Menu, { foreignKey: 'menuParentId' })
+
+            Menu_Item.belongsTo(models.Text_Translation, { foreignKey: 'text', as: 'textDataMenu_Item' })
         }
     };
     Menu_Item.init({
         order: DataTypes.INTEGER,
         menuId: DataTypes.INTEGER,
-        text: DataTypes.STRING,
+        text: DataTypes.INTEGER,
         link: DataTypes.STRING,
+        highLight: DataTypes.STRING
     }, {
         sequelize,
         modelName: 'Menu_Item',

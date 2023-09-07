@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
         formId: DataTypes.INTEGER,
         inputId: DataTypes.INTEGER,
         order: DataTypes.INTEGER,
-        widthXLScreen: DataTypes.INTEGER,
+        widthMdScreen: DataTypes.INTEGER,
     }, {
         sequelize,
         modelName: 'Form_Detail',

@@ -3,6 +3,9 @@ import Select from 'react-select';
 import './CustomerForm.scss';
 import _ from 'lodash';
 
+import { connect } from 'react-redux';
+import { FormattedMessage } from 'react-intl';
+
 class CustomerForm extends Component {
     constructor(props) {
         super(props);
@@ -20,100 +23,9 @@ class CustomerForm extends Component {
     }
 
     render() {
-        let { selectedTitle, middleGivenName, familyName,
-            email, phone, passengerMiddleGivenName,
-            passengerFamilyName, optionTitle,
-            inputCustomerForm, dataInputCustomerForm } = this.props;
+        let { inputCustomerForm, dataInputCustomerForm, language } = this.props;
         return (
             <div className="customer-form">
-                {/* <div className="row">
-                    <div className="form-group col-xl-2">
-                        <label>Title</label>
-                        <Select
-                            value={selectedTitle.value}
-                            placeholder={selectedTitle.label}
-                            options={optionTitle}
-                            name='selectedTitle'
-                            onChange={this.handleOnChangeSelect}
-                            styles={{
-                                indicatorSeparator: () => { },
-                            }}
-                        />
-                    </div>
-
-                    <div className="form-group col-xl-2">
-                        <label>Middle and Given Name</label>
-                        <input
-                            className="form-control"
-                            onChange={(event) => this.handleOnChangeText(event)}
-                            value={middleGivenName}
-                            placeholder={"Enter your middle and given name"}
-                            required
-                            name='middleGivenName'
-                        />
-                    </div>
-
-                    <div className="form-group col-xl-3">
-                        <label>Family Name</label>
-                        <input
-                            className="form-control"
-                            onChange={(event) => this.handleOnChangeText(event)}
-                            value={familyName}
-                            placeholder={"Enter your name"}
-                            required
-                            name='familyName'
-                        />
-                    </div>
-
-                    <div className="form-group col-xl-3">
-                        <label>Email</label>
-                        <input
-                            className="form-control"
-                            onChange={(event) => this.handleOnChangeText(event)}
-                            value={email}
-                            placeholder={"Enter your email"}
-                            required
-                            name='email'
-                        />
-                    </div>
-
-                    <div className="form-group col-xl-2">
-                        <label>Phone</label>
-                        <input
-                            className="form-control"
-                            onChange={(event) => this.handleOnChangeText(event)}
-                            value={phone}
-                            placeholder={"eg. +665555551212"}
-                            required
-                            name='phone'
-                        />
-                    </div>
-
-                    <div className="form-group col-xl-4">
-                        <label>Passenger Middle and Given Name</label>
-                        <input
-                            className="form-control"
-                            onChange={(event) => this.handleOnChangeText(event)}
-                            value={passengerMiddleGivenName}
-                            placeholder={"Enter Passenger middle and given name"}
-                            required
-                            name='passengerMiddleGivenName'
-                        />
-                    </div>
-
-                    <div className="form-group col-xl-4">
-                        <label>Passenger Family Name</label>
-                        <input
-                            className="form-control"
-                            onChange={(event) => this.handleOnChangeText(event)}
-                            value={passengerFamilyName}
-                            placeholder={"Enter Passenger Name"}
-                            required
-                            name='passengerFamilyName'
-                        />
-                    </div>
-                </div> */}
-                {/* -------------------- */}
                 <div className="row">
                     {dataInputCustomerForm && dataInputCustomerForm.length > 0 &&
                         dataInputCustomerForm.map((item, index) => {
@@ -124,31 +36,52 @@ class CustomerForm extends Component {
                                     parentState: 'inputCustomerForm',
                                     name: _.camelCase('selected' + item.Input.Dropdown.title)
                                 }
+                                let title = language === 'en' ? item.Input.Dropdown.titleDataDropdown.valueEn :
+                                    item.Input.Dropdown.titleDataDropdown.valueTh;
                                 return (
                                     <div
                                         className={`form-group 
-                                        ${'col-xl-' + item.widthXLScreen}`}
+                                        ${'col-md-' + item.widthMdScreen}`}
                                     >
-                                        <label>{item.Input.Dropdown.title}</label>
+                                        <label>{title}</label>
                                         <Select
+                                            className="select-number"
                                             value={inputCustomerForm[stateName]}
                                             options={inputCustomerForm[optionStateName]}
                                             name={name}
                                             onChange={this.handleOnChangeSelect}
                                             styles={{
                                                 indicatorSeparator: () => { },
+                                                control: (base, state) => ({
+                                                    ...base,
+                                                    backgroundColor: "#eff2f5",
+                                                }),
                                             }}
+                                            menuPosition="fixed"
+                                            theme={(theme) => ({
+                                                ...theme,
+                                                colors: {
+                                                    ...theme.colors,
+                                                    primary: 'grey'
+                                                }
+                                            })}
                                         />
                                     </div>
                                 )
                             } else if (item.Input.typeInput === 'text') {
-                                let title = item.Input.Text_Input.title
-                                let placeHolder = item.Input.Text_Input.placeHolder
+                                let title, placeHolder;
+                                if (language === 'en') {
+                                    title = item.Input.Text_Input.titleDataText_Input.valueEn
+                                    placeHolder = item.Input.Text_Input.placeHolderDataText_Input.valueEn
+                                } else {
+                                    title = item.Input.Text_Input.titleDataText_Input.valueTh
+                                    placeHolder = item.Input.Text_Input.placeHolderDataText_Input.valueTh
+                                }
                                 let stateName = _.camelCase(item.Input.Text_Input.title);
                                 return (
                                     <div
                                         className={`form-group 
-                                        ${'col-xl-' + item.widthXLScreen}`}
+                                        ${'col-md-' + item.widthMdScreen}`}
                                     >
                                         <label>{title}</label>
                                         <input
@@ -170,4 +103,15 @@ class CustomerForm extends Component {
     }
 }
 
-export default CustomerForm;
+const mapStateToProps = state => {
+    return {
+        language: state.app.language
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CustomerForm);

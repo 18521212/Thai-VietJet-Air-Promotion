@@ -11,11 +11,14 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             Text_Input.belongsTo(models.Input, { foreignKey: 'inputId' })
+
+            Text_Input.belongsTo(models.Text_Translation, { foreignKey: 'title', as: 'titleDataText_Input' })
+            Text_Input.belongsTo(models.Text_Translation, { foreignKey: 'placeHolder', as: 'placeHolderDataText_Input' })
         }
     };
     Text_Input.init({
-        title: DataTypes.STRING,
-        placeHolder: DataTypes.STRING,
+        title: DataTypes.INTEGER,
+        placeHolder: DataTypes.INTEGER,
         typeText: DataTypes.STRING,
         inputId: DataTypes.INTEGER
     }, {

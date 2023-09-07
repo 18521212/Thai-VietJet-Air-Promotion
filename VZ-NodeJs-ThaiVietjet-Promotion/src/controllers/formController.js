@@ -30,7 +30,7 @@ let getAllFormSection = async (req, res) => {
 
 let getFormSectionById = async (req, res) => {
     try {
-        let data = await formService.getFormSectionById(req.query.id);
+        let data = await formService.getFormSectionById(req.params.id);
         return res.status(200).json(data)
     } catch (e) {
         console.log(e);
@@ -140,7 +140,7 @@ let getAllInput = async (req, res) => {
 
 let deleteInputById = async (req, res) => {
     try {
-        let data = await formService.deleteInputById(req.body.inputId);
+        let data = await formService.deleteInputById(req.params.id);
         return res.status(200).json(data)
     } catch (e) {
         console.log(e)
@@ -198,7 +198,7 @@ let createDropdown = async (req, res) => {
 
 let getDropdownById = async (req, res) => {
     try {
-        let data = await formService.getDropdownById(req.query.id);
+        let data = await formService.getDropdownById(req.params.id);
         return res.status(200).json(data)
     } catch (e) {
         console.log(e)
@@ -250,6 +250,32 @@ let getAllPack = async (req, res) => {
     }
 }
 
+let deletePackById = async (req, res) => {
+    try {
+        let data = await formService.deletePackById(req.params.id);
+        return res.status(200).json(data)
+    } catch (e) {
+        console.log(e)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
+
+let fetchData = async (req, res) => {
+    try {
+        let data = await formService.fetchData();
+        return res.status(200).json(data)
+    } catch (e) {
+        console.log(e)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
+
 module.exports = {
     createFormSection: createFormSection,
     getAllFormSection: getAllFormSection,
@@ -275,4 +301,7 @@ module.exports = {
 
     createPack: createPack,
     getAllPack: getAllPack,
+    deletePackById: deletePackById,
+
+    fetchData: fetchData,
 }
