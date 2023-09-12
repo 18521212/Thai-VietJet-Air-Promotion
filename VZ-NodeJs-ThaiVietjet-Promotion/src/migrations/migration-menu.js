@@ -8,8 +8,9 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            headerId: {
-                type: Sequelize.INTEGER
+            name: {
+                type: Sequelize.STRING,
+                allowNull: false
             },
             createdAt: {
                 allowNull: false,

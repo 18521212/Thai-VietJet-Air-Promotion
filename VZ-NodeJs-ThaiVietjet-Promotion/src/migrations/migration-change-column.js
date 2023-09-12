@@ -2,34 +2,8 @@
 module.exports = {
     up: async (queryInterface, Sequelize) => {
         // await queryInterface.changeColumn(
-        //     'Menu_Items',
-        //     'title',
-        //     {
-        //         type: Sequelize.INTEGER,
-        //         allowNull: false
-        //     }
-        // )
-
-        // await queryInterface.renameColumn(
-        //     'Form_Details',
-        //     'widthXLScreen',
-        //     'widthMdScreen',
-        // )
-
-        // add column
-        queryInterface.addColumn(
-            'Menu_Items',
-            'highLight',
-            {
-                type: Sequelize.STRING,
-                defaultValue: null
-            }
-        );
-    },
-    down: async (queryInterface, Sequelize) => {
-        // await queryInterface.changeColumn(
-        //     'Menu_Items',
-        //     'title',
+        //     'Menus',
+        //     'name',
         //     {
         //         type: Sequelize.STRING,
         //         allowNull: false
@@ -37,14 +11,40 @@ module.exports = {
         // )
 
         // await queryInterface.renameColumn(
-        //     'Form_Details',
-        //     'widthMdScreen',
-        //     'widthXLScreen',
+        //     'Menus',
+        //     'headerId',
+        //     'name',
+        // )
+
+        // add column
+        queryInterface.addColumn(
+            'Headers',
+            'menuId',
+            {
+                type: Sequelize.INTEGER,
+                // defaultValue: null
+            }
+        );
+    },
+    down: async (queryInterface, Sequelize) => {
+        // await queryInterface.changeColumn(
+        //     'Menus',
+        //     'name',
+        //     {
+        //         type: Sequelize.INTEGER,
+        //         allowNull: false
+        //     }
+        // )
+
+        // await queryInterface.renameColumn(
+        //     'Menus',
+        //     'name',
+        //     'headerId',
         // )
 
         queryInterface.removeColumn(
-            'Menu_Items',
-            'highLight',
+            'Headers',
+            'menuId',
         );
     }
 };

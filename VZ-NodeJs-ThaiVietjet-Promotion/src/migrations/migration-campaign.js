@@ -1,20 +1,30 @@
 'use strict';
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable('Headers', {
+        await queryInterface.createTable('Campaigns', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            imageLogo: {
-                type: Sequelize.STRING
+            name: {
+                type: Sequelize.STRING,
+                allowNull: false,
             },
-            imageBackground: {
-                type: Sequelize.STRING
+            headerId: {
+                type: Sequelize.INTEGER
             },
-            menuId: {
+            bannerId: {
+                type: Sequelize.INTEGER
+            },
+            bodyId: {
+                type: Sequelize.INTEGER
+            },
+            formSectionId: {
+                type: Sequelize.INTEGER
+            },
+            footerId: {
                 type: Sequelize.INTEGER
             },
             createdAt: {
@@ -28,6 +38,6 @@ module.exports = {
         });
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('Headers');
+        await queryInterface.dropTable('Campaigns');
     }
 };

@@ -1,34 +1,46 @@
 import express from "express";
+import campaignController from "../controllers/campaignController";
 import homeController from "../controllers/homeController";
 import bannerController from "../controllers/bannerController";
 import headerController from "../controllers/headerController";
 import bodyController from "../controllers/bodyController";
 import formController from "../controllers/formController";
+import footerController from "../controllers/footerController";
 
 let router = express.Router();
 
 let initWebRoutes = (app) => {
     router.get("/", homeController.getHomePage);
 
-    // banner
-    router.post('/api/create-banner', bannerController.createBanner);
-    router.get('/api/get-all-banners', bannerController.getAllBanner);
+    // campaign
+    router.post('/api/campaigns', campaignController.createCampaign);
+    router.get('/api/campaigns', campaignController.getAllCampaign);
+    router.put('/api/campaigns', campaignController.updateCampaign);
+    router.delete('/api/campaigns', campaignController.deleteCampaign);
 
+    // banner
+    router.post('/api/banners', bannerController.createBanner);
+    router.get('/api/banners', bannerController.getAllBanner);
 
     // header
-    router.post('/api/create-header', headerController.createHeader);
-    router.get('/api/get-all-header', headerController.getAllHeader);
+    router.post('/api/headers', headerController.createHeader);
+    router.get('/api/headers', headerController.getAllHeader);
+    router.put('/api/headers', headerController.updateHeader);
+    router.delete('/api/headers', headerController.deleteHeader);
 
-    router.post('/api/create-menu-item', headerController.createMenuItem);
-    router.get('/api/get-all-menu-item-by-menu-id', headerController.getAllMenuItemByMenuId);
-    router.post('/api/update-menu-item-by-id', headerController.updateMenuItemById)
-    router.post('/api/delete-menu-item-by-id', headerController.deleteMenuItemById)
+    router.post('/api/menus', headerController.createMenu)
+    router.get('/api/menus', headerController.getAllMenu)
 
-    router.post('/api/create-sub-menu', headerController.createSubMenu);
-    router.post('/api/delete-sub-menu-by-id', headerController.deleteSubMenuById)
+    router.post('/api/menu-items', headerController.createMenuItem);
+    router.get('/api/menu-items/menus/:id', headerController.getAllMenuItemByMenuId);
+    router.put('/api/menu-items', headerController.updateMenuItemById)
+    router.delete('/api/menu-items', headerController.deleteMenuItemById)
+
+    router.post('/api/sub-menus', headerController.createSubMenu);
+    router.delete('/api/sub-menus', headerController.deleteSubMenuById)
 
     // body
-    router.get('/api/content-body/:id', bodyController.getContentBodyById)
+    router.get('/api/content-bodys/:id', bodyController.getContentBodyById)
 
     // form section
     router.post('/api/form-sections', formController.createFormSection);
@@ -59,6 +71,18 @@ let initWebRoutes = (app) => {
     router.delete('/api/packs/:id', formController.deletePackById)
 
     router.post('/api/fetch-data', formController.fetchData)
+
+    // footer
+    router.post('/api/footers', footerController.createFooter)
+    router.get('/api/footers', footerController.getAllFooter)
+    router.get('/api/footers/:id', footerController.getFooterById)
+    router.put('/api/footers', footerController.updateFooter)
+    router.delete('/api/footers', footerController.deleteFooter)
+
+    // footer text
+    router.post('/api/footer-texts', footerController.createFooterText)
+    router.get('/api/footer-texts', footerController.getAllFooterText)
+    router.put('/api/footer-texts', footerController.updateFooterText)
 
     return app.use("/", router) //su dung tat ca fie router ma chung ta khai bao
 }

@@ -1,26 +1,31 @@
 import { Component } from 'react';
+
+import {
+    Routes,
+    Route,
+    Outlet,
+    Link,
+    useMatch,
+    useResolvedPath,
+} from "react-router-dom";
+
 import './App.scss';
-import Header from './HomePage/Header/Header';
-import Banner from './HomePage/Banner/Banner';
-import Body from './HomePage/Body/Body';
-import Form from './HomePage/Form/Form';
-import Footer from './HomePage/Footer/Footer';
+
+import HomePage from './HomePage/HomePage';
+import AdminPage from './AdminPage/AdminPage';
 
 class App extends Component {
     componentDidMount() {
-        document.title = "VietjetAir - Gift Voucher dev"
+
     }
 
     render() {
         return (
             <>
-                <Header />
-                <Banner />
-                <Body />
-                <section className="join-us" id="register-purchase">
-                    <Form />
-                    <Footer />
-                </section>
+                <Routes>
+                    <Route path="/*" element={<HomePage />} />
+                    <Route path="/admin/*" element={<AdminPage />} />
+                </Routes>
             </>
         )
     }

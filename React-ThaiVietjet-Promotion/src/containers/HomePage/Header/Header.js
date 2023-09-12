@@ -4,7 +4,7 @@ import logo from '../../../assets/Logo/skyfun_logo.png';
 import Select from 'react-select'
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
-import { getAllMenuItemById, getAllHeader } from "../../../services/userService";
+import { getAllMenuItemByMenuId, getAllHeader } from "../../../services/userService";
 
 import { connect } from 'react-redux';
 import { LANGUAGES } from '../../../utils';
@@ -31,7 +31,7 @@ class Header extends Component {
     }
 
     buildData = async () => {
-        let menuItemData = await getAllMenuItemById(1);
+        let menuItemData = await getAllMenuItemByMenuId(1);
         let menuLanguage = menuItemData.data.data.filter((data) => data.order === -1);
         let menuItem;
         menuItem = menuItemData.data.data.filter((data) => data.order !== -1);
@@ -43,7 +43,7 @@ class Header extends Component {
         this.setState({
             menuItem: menuItem,
             menuLanguage: menuLanguage,
-            header: header.data.data[0]
+            header: header.data[0]
         })
     }
 

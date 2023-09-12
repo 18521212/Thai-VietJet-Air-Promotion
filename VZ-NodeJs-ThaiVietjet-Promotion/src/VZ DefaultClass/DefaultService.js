@@ -5,7 +5,7 @@ let defaultFunction = (data) => {
         try {
             resolve({
                 errCode: 0,
-                errMessage: 'Ok'
+                errMessage: 'Ok',
             })
         } catch (e) {
             reject(e);

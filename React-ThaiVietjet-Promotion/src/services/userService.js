@@ -1,26 +1,51 @@
 import axios from "../axios";
 
-// header 
+// campaign
 
-const getAllHeader = () => {
-    return axios.get('/api/get-all-header');
+const getAllCampaign = () => {
+    return axios.get('/api/campaigns')
 }
 
-const getAllMenuItemById = (menuId) => {
-    return axios.get(`/api/get-all-menu-item-by-menu-id?menuId=${menuId}`)
+// header 
+const createHeader = (data) => {
+    return axios.post('/api/headers', data)
+}
+
+const getAllHeader = () => {
+    return axios.get('/api/headers');
+}
+
+const deleteHeader = (id) => {
+    return axios.delete('/api/headers', {
+        data: {
+            id: id
+        }
+    })
+}
+
+// menu
+
+const getAllMenu = () => {
+    return axios.get('/api/menus')
+}
+
+// menu item
+
+const getAllMenuItemByMenuId = (menuId) => {
+    return axios.get(`/api/menu-items/menus/${menuId}`)
 }
 
 // banner
 
 const getAllBanners = () => {
-    return axios.get('/api/get-all-banners');
+    return axios.get('/api/banners');
     // return axios.get('http://localhost:3002/api/get-all-banners');
 }
 
 // body
 
 const getContentBodyById = (id) => {
-    return axios.get(`/api/content-body/${id}`)
+    return axios.get(`/api/content-bodys/${id}`)
 }
 
 // form section
@@ -40,7 +65,8 @@ const getAllPack = () => {
 }
 
 export {
-    getAllBanners, getAllMenuItemById, getAllHeader,
+    getAllBanners, getAllMenuItemByMenuId, getAllHeader,
     getAllTextInput, getFormSectionById, getAllPack,
-    getContentBodyById
+    getContentBodyById, getAllCampaign, createHeader,
+    deleteHeader, getAllMenu
 }

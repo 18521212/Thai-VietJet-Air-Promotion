@@ -1,4 +1,7 @@
 const db = require('../models');
+const { resolveObj } = require('../utils');
+
+// header
 
 let createHeader = (data) => {
     return new Promise(async (resolve, reject) => {
@@ -12,12 +15,8 @@ let createHeader = (data) => {
                 // create header
                 let header = await db.Header.create({
                     imageLogo: data.imageLogo,
-                    imageBackground: data.imageBackground ? data.imageBackground : null
-                })
-
-                // create menu
-                await db.Menu.create({
-                    headerId: header.id
+                    imageBackground: data.imageBackground ? data.imageBackground : null,
+                    menuId: data.menuId
                 })
 
                 resolve({
@@ -25,10 +24,6 @@ let createHeader = (data) => {
                     errMessage: 'Create new Header succeed'
                 })
             }
-            resolve({
-                errCode: 0,
-                errMessage: 'Ok'
-            })
         } catch (e) {
             reject(e);
         }
@@ -42,9 +37,89 @@ let getAllHeader = () => {
 
             resolve({
                 errCode: 0,
-                errMessage: 'Create new Header succeed',
+                errMessage: 'Ok',
                 data
             })
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
+let updateHeader = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.id || !(data.imageLogo || data.imageBackground || data.menuId)) {
+                resolve(resolveObj.MISSING_PARAMETERS)
+                return;
+            }
+
+            await db.sequelize.transaction(async (t) => { // menuId === '', if(menuId) === if(false)
+                if (data.menuId) {
+                    let menu = await db.Menu.findOne({ where: { id: data.menuId } })
+
+                    if (!menu) {
+                        resolve(resolveObj.NOT_FOUND('Menu'))
+                        throw new Error()
+                    }
+                }
+                let header = await db.Header.findOne({ where: { id: data.id } })
+
+                await header.update({ // update only accept 2 argument
+                    imageLogo: data.imageLogo,
+                    imageBackground: data.imageBackground,
+                    menuId: data.menuId
+                }, { transaction: t }) // notice dont missing await
+            })
+            resolve(resolveObj.UPDATE_SUCCEED('Header'))
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
+let deleteHeader = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!id) { // check empty object
+                resolve(resolveObj.MISSING_PARAMETERS)
+            } else {
+                await db.sequelize.transaction(async (t) => {
+                    await db.Header.destroy({ where: { id: id }, transaction: t })
+                })
+
+                resolve(resolveObj.DELETE_SUCCEED('Header'))
+            }
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
+// menu
+
+let createMenu = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.name) {
+                resolve(resolveObj.MISSING_PARAMETERS)
+            } else {
+                await db.Menu.create({ name: data.name })
+
+                resolve(resolveObj.CREATE_SUCCEED('Menus'))
+            }
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
+let getAllMenu = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let dataApi = await db.Menu.findAll()
+
+            resolve(resolveObj.GET(dataApi))
         } catch (e) {
             reject(e);
         }
@@ -321,6 +396,11 @@ let deleteSubMenuById = (id) => {
 module.exports = {
     createHeader: createHeader,
     getAllHeader: getAllHeader,
+    deleteHeader: deleteHeader,
+    updateHeader: updateHeader,
+
+    createMenu: createMenu,
+    getAllMenu: getAllMenu,
 
     createMenuItem: createMenuItem,
     bulkCreateMenuItem: bulkCreateMenuItem,

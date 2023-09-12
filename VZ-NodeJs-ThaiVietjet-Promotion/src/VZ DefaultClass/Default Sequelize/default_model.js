@@ -3,23 +3,23 @@ const {
     Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    class Menu extends Model {
+    class DefaultModel extends Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            Menu.hasMany(models.Header, { foreignKey: 'menuId', as: 'Menu' })
+            // DefaultModel.belongsTo(models.Input, { foreignKey: 'inputId' })
 
-            Menu.hasMany(models.Menu_Item, { foreignKey: 'menuId' })
+            // DefaultModel.hasMany(models.Row_Dataset_Dropdown, { foreignKey: 'dropdownId', as: 'dataDropdown' })
         }
     };
-    Menu.init({
-        name: DataTypes.STRING,
+    DefaultModel.init({
+        property: DataTypes.INTEGER,
     }, {
         sequelize,
-        modelName: 'Menu',
+        modelName: 'DefaultModel',
     });
-    return Menu;
+    return DefaultModel;
 };

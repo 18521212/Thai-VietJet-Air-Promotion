@@ -1,21 +1,17 @@
 'use strict';
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable('Headers', {
+        await queryInterface.createTable('DefaultModels', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            imageLogo: {
-                type: Sequelize.STRING
-            },
-            imageBackground: {
-                type: Sequelize.STRING
-            },
-            menuId: {
-                type: Sequelize.INTEGER
+            property: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                defaultValue: 0
             },
             createdAt: {
                 allowNull: false,
@@ -28,6 +24,6 @@ module.exports = {
         });
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('Headers');
+        await queryInterface.dropTable('DefaultModels');
     }
 };
