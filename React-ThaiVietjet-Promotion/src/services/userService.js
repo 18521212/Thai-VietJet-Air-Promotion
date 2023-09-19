@@ -25,8 +25,20 @@ const deleteHeader = (id) => {
 
 // menu
 
+const createMenu = (data) => {
+    return axios.post('/api/menus', data)
+}
+
 const getAllMenu = () => {
     return axios.get('/api/menus')
+}
+
+const deleteMenu = (data) => {
+    return axios.delete('/api/menus', {
+        data: {
+            id: data.id
+        }
+    })
 }
 
 // menu item
@@ -68,5 +80,5 @@ export {
     getAllBanners, getAllMenuItemByMenuId, getAllHeader,
     getAllTextInput, getFormSectionById, getAllPack,
     getContentBodyById, getAllCampaign, createHeader,
-    deleteHeader, getAllMenu
+    deleteHeader, getAllMenu, createMenu, deleteMenu
 }

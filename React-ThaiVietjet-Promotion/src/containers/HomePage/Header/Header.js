@@ -32,9 +32,10 @@ class Header extends Component {
 
     buildData = async () => {
         let menuItemData = await getAllMenuItemByMenuId(1);
-        let menuLanguage = menuItemData.data.data.filter((data) => data.order === -1);
+        console.log(menuItemData)
+        let menuLanguage = menuItemData.data.filter((data) => data.order === -1);
         let menuItem;
-        menuItem = menuItemData.data.data.filter((data) => data.order !== -1);
+        menuItem = menuItemData.data.filter((data) => data.order !== -1);
         menuItem.sort((a, b) => a.order - b.order);
         // console.log('check menu item:', menuItem.data, menuItem, menuLanguage)
 

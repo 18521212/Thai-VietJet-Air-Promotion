@@ -25,13 +25,14 @@ class AdminPage extends Component {
 
     render() {
         return (
-            <>
+            <div className='admin-page'>
                 <Header />
+                <h1 className='title-admin'>system admin</h1>
                 <Routes>
                     <Route path="/campaign" element={<Campaign />} />
-                    <Route path="/header" element={<HeaderControl />} />
+                    <Route path="/header*" element={<HeaderControl />} />
                 </Routes>
-            </>
+            </div>
         )
     }
 }

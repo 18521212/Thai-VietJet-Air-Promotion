@@ -44,8 +44,8 @@ class Campaign extends Component {
         let { selectedCampaign, optionCampaign, listCampaign, dataCampaign } = this.state;
         return (
             <>
-                <div>
-                    <h1>system admin</h1>
+                <div className="col-12">
+                   
 
                     <div className='campaign'>
                         <div className="select-campaign">

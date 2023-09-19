@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            Menu_Item.belongsTo(models.Menu, { foreignKey: 'menuId' })
+            Menu_Item.belongsTo(models.Menu, { foreignKey: 'menuId', as: 'Menu_Item' })
 
             Menu_Item.hasMany(models.Sub_Menu, { foreignKey: 'menuParentId' })
 

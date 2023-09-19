@@ -7,8 +7,8 @@ import {
     getAllMenu
 } from "../../../../services/userService";
 import { event } from "jquery";
-import HeaderForm from "../Header Control/Child/HeaderForm";
-import MenuForm from "./Child/MenuForm";
+import HeaderForm from "./Child/HeaderForm/HeaderForm";
+import MenuForm from "./Child/MenuForm/MenuForm";
 
 class HeaderControl extends Component {
     constructor(props) {
@@ -19,19 +19,14 @@ class HeaderControl extends Component {
     }
 
     componentDidMount() {
-        this.buildDataAndMapState()
-    }
 
-    buildDataAndMapState = async () => {
-        let listMenu = await getAllMenu();
-        this.setState({ listMenu: listMenu.data })
     }
 
     render() {
         return (
             <div className="header-control">
                 <HeaderForm listMenu={this.state.listMenu} />
-                <MenuForm listMenu={this.state.listMenu} />
+                <MenuForm />
             </div>
         )
     }

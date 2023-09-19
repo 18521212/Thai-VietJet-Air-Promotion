@@ -5,7 +5,7 @@ import Select from 'react-select';
 import {
     getAllHeader, createHeader, deleteHeader,
     getAllMenu
-} from "../../../../../services/userService";
+} from "../../../../../../services/userService";
 
 class HeaderForm extends Component {
     constructor(props) {
@@ -23,6 +23,7 @@ class HeaderForm extends Component {
             imageBackgroundInput: '',
 
             isUpdateHeader: false,
+            isShowCreateForm: false,
         }
     }
 
@@ -105,53 +106,67 @@ class HeaderForm extends Component {
         this.setState({ [actions.name]: selectedOption })
     }
 
+    toggle = (name) => {
+        let stateCopy = this.state[name]
+        this.setState({
+            [name]: !stateCopy
+        })
+    }
+
     render() {
         let { listHeader, imageLogo, imageBackground } = this.state;
         return (
             <>
                 <div className='header-form'>
                     <h3>Header Form</h3><br />
-                    <form>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="inputEmail4">Logo Image</label>
-                                <input value={this.state.imageLogoInput} name='imageLogoInput' parentState='headerFormInput'
-                                    onChange={(event) => this.handleOnChangeText(event)} type="text"
-                                    class="form-control" placeholder="Logo Image"
-                                />
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="inputPassword4">Background Image</label>
-                                <input value={this.state.imageBackgroundInput} name='imageBackgroundInput' parentState='headerFormInput'
-                                    onChange={(event) => this.handleOnChangeText(event)} type="text"
-                                    class="form-control" placeholder="Background Image"
-                                />
-                            </div>
 
-                            <Select className="select-menu col-md-4 p-0"
-                                value={this.state.selectedMenu}
-                                options={this.state.optionMenu}
-                                name={'selectedMenu'}
-                                onChange={this.handleOnChangeSelect}
-                                placeholder='Adding menu'
-                                isClearable={true}
-                                styles={{
-                                    indicatorSeparator: () => { },
-                                }}
-                                menuPosition="fixed"
-                                theme={(theme) => ({
-                                    ...theme,
-                                    colors: {
-                                        ...theme.colors,
-                                        primary: 'grey'
-                                    }
-                                })}
-                            />
-                        </div>
-                        <button type="button" class={`btn ${this.state.isUpdateHeader ? 'btn-warning' : 'btn-primary'}`}
-                            onClick={(event) => this.handleCreateHeader(event)}
-                        >{this.state.isUpdateHeader ? 'Update' : 'Create'}</button>
-                    </form>
+                    {this.state.isShowCreateForm &&
+                        <form>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="inputEmail4">Logo Image</label>
+                                    <input value={this.state.imageLogoInput} name='imageLogoInput' parentState='headerFormInput'
+                                        onChange={(event) => this.handleOnChangeText(event)} type="text"
+                                        class="form-control" placeholder="Logo Image"
+                                    />
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="inputPassword4">Background Image</label>
+                                    <input value={this.state.imageBackgroundInput} name='imageBackgroundInput' parentState='headerFormInput'
+                                        onChange={(event) => this.handleOnChangeText(event)} type="text"
+                                        class="form-control" placeholder="Background Image"
+                                    />
+                                </div>
+
+                                <Select className="select-menu col-md-4 p-0"
+                                    value={this.state.selectedMenu}
+                                    options={this.state.optionMenu}
+                                    name={'selectedMenu'}
+                                    onChange={this.handleOnChangeSelect}
+                                    placeholder='Adding menu'
+                                    isClearable={true}
+                                    styles={{
+                                        indicatorSeparator: () => { },
+                                    }}
+                                    menuPosition="fixed"
+                                    theme={(theme) => ({
+                                        ...theme,
+                                        colors: {
+                                            ...theme.colors,
+                                            primary: 'grey'
+                                        }
+                                    })}
+                                />
+                            </div>
+                            <button type="button" className={`btn ${this.state.isUpdateHeader ? 'btn-warning' : 'btn-primary'}`}
+                                onClick={(event) => this.handleCreateHeader(event)}
+                            >{this.state.isUpdateHeader ? 'Update' : 'Create'}</button>
+                            <button className="btn btn-secondary"
+                                onClick={() => this.toggle('isShowCreateForm')}
+                            >Cancel</button>
+                        </form>
+                    }
+
 
                     <table className="table table-header">
                         <thead className="thead-light">
@@ -184,6 +199,15 @@ class HeaderForm extends Component {
                                     </tr>
                                 )
                             })}
+                            {!this.state.isShowCreateForm &&
+                                <tr>
+                                    <td colSpan={100}>
+                                        <input value='+ Add New' type="button" class="btn btn-success"
+                                            onClick={() => this.toggle('isShowCreateForm')}
+                                        />
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>

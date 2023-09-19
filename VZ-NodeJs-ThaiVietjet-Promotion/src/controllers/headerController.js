@@ -82,6 +82,19 @@ let getAllMenu = async (req, res) => {
     }
 }
 
+let deleteMenu = async (req, res) => {
+    try {
+        let data = await headerService.deleteMenu(req.body);
+        return res.status(200).json(data)
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
+
 // menu item
 
 let createMenuItem = async (req, res) => {
@@ -174,6 +187,7 @@ module.exports = {
 
     createMenu: createMenu,
     getAllMenu: getAllMenu,
+    deleteMenu: deleteMenu,
 
     createMenuItem: createMenuItem,
     getAllMenuItemByMenuId: getAllMenuItemByMenuId,

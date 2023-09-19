@@ -14,7 +14,7 @@ export const text = {
     NOT_FOUND: (data_table) => {
         return `Data in table ${data_table} not found`
     },
-    EXIST_REF_KEY: 'Exist reference key to this table from other table, please remove reference key on that tables first',
+    EXIST_REF_KEY: 'Alter data unsucceed, exist reference key to this table from other table, please remove reference key on that tables first',
 
     CREATE_UNSUCCEED: (data_table = 'data') => {
         return `Create new ${data_table} unsucceed`
@@ -29,7 +29,7 @@ export const text = {
 
 export const resolveObj = {
     MISSING_PARAMETERS: {
-        errCode: 0,
+        errCode: 1,
         errMessage: text.MISSING_PARAMETERS
     },
     CREATE_SUCCEED: (data_table) => {
@@ -63,6 +63,10 @@ export const resolveObj = {
             errCode: 404,
             errMessage: text.NOT_FOUND(data_table)
         }
+    },
+    EXIST_REF_KEY: {
+        errCode: 1,
+        errMessage: text.EXIST_REF_KEY
     },
 
     DELETE_UNSUCCEED: (data_table) => {

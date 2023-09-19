@@ -1,4 +1,4 @@
-.header-form {
+.menu-form {
     table {
         img {
             background-position: center center;
@@ -6,6 +6,11 @@
             width: 10rem;
             height: 2rem;
             background-size: cover;
+        }
+
+        tr {
+            text-align: center;
+            vertical-align: middle;
         }
     }
 }

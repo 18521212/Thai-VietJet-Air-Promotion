@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             Menu.hasMany(models.Header, { foreignKey: 'menuId', as: 'Menu' })
 
-            Menu.hasMany(models.Menu_Item, { foreignKey: 'menuId' })
+            Menu.hasMany(models.Menu_Item, { foreignKey: 'menuId', as: 'Menu_Item'})
         }
     };
     Menu.init({

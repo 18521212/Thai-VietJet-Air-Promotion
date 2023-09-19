@@ -1,5 +1,6 @@
 const db = require('../models');
 const { resolveObj } = require('../utils');
+import sequelize from 'sequelize';
 
 // header
 
@@ -101,6 +102,7 @@ let deleteHeader = (id) => {
 let createMenu = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            console.log(data.id)
             if (!data.name) {
                 resolve(resolveObj.MISSING_PARAMETERS)
             } else {
@@ -117,9 +119,39 @@ let createMenu = (data) => {
 let getAllMenu = () => {
     return new Promise(async (resolve, reject) => {
         try {
-            let dataApi = await db.Menu.findAll()
+            let dataApi = await db.Menu.findAll({
+                include: [
+                    {
+                        model: db.Menu_Item, as: 'Menu_Item', attributes: ['id']
+                    },
+                ],
+            })
 
             resolve(resolveObj.GET(dataApi))
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
+let deleteMenu = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.id) {
+                resolve(resolveObj.MISSING_PARAMETERS)
+                return
+            }
+            await db.sequelize.transaction(async (t) => {
+                let menuItem = await db.Menu_Item.findAll({ where: { menuId: data.id } })
+                if (menuItem.length > 0) {
+                    resolve(resolveObj.EXIST_REF_KEY)
+                    throw new Error()
+                }
+
+                await db.Menu.destroy({ where: { id: data.id }, transaction: t })
+
+                resolve(resolveObj.DELETE_SUCCEED('Menu'))
+            })
         } catch (e) {
             reject(e);
         }
@@ -401,6 +433,7 @@ module.exports = {
 
     createMenu: createMenu,
     getAllMenu: getAllMenu,
+    deleteMenu: deleteMenu,
 
     createMenuItem: createMenuItem,
     bulkCreateMenuItem: bulkCreateMenuItem,

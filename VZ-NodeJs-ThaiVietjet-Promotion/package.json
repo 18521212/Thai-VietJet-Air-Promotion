@@ -5,7 +5,7 @@
     "main": "server.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "nodemon --exec babel-node src/server.js"
+        "start": "nodemon --exec ./node_modules/.bin/babel-node src/server.js"
     },
     "keywords": [
         "ThaiVietJet",
@@ -22,6 +22,7 @@
         "sequelize": "^6.6.2"
     },
     "devDependencies": {
+        "@babel/cli": "^7.22.15",
         "@babel/core": "^7.12.10",
         "@babel/node": "^7.12.10",
         "@babel/preset-env": "^7.12.10",
