@@ -125,7 +125,7 @@ class Header extends Component {
                                                     <a
                                                         className={
                                                             `${item.Sub_Menus.length > 0 ? 'dropdown-toggle' : ''} ` +
-                                                            `${item.highLight && 'highlight'} ` +
+                                                            `${item.highlight && 'highlight'} ` +
                                                             'nav-link'
                                                         }
                                                         href={`${item.Sub_Menus.length > 0 ? '#' : item.link ? item.link : '#'}`}
@@ -135,7 +135,7 @@ class Header extends Component {
                                                         // data-toggle="dropdown"
                                                         // aria-haspopup="false"
                                                         // aria-expanded="false"
-                                                        style={{ background: item.highLight !== 'default' ? item.highLight : false }}
+                                                        style={{ background: item.highlight !== 'default' ? item.highlight : false }}
                                                     >
                                                         {language === 'en' ?
                                                             item.textDataMenu_Item.valueEn

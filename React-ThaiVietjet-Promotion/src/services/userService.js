@@ -33,6 +33,10 @@ const getAllMenu = () => {
     return axios.get('/api/menus')
 }
 
+const updateMenu = (data) => {
+    return axios.put('/api/menus', data)
+}
+
 const deleteMenu = (data) => {
     return axios.delete('/api/menus', {
         data: {
@@ -43,8 +47,30 @@ const deleteMenu = (data) => {
 
 // menu item
 
+const createMenuItem = (data) => {
+    return axios.post('/api/menu-items', data)
+}
+
 const getAllMenuItemByMenuId = (menuId) => {
     return axios.get(`/api/menu-items/menus/${menuId}`)
+}
+
+const updateMenuItem = (data) => {
+    return axios.put('/api/menu-items', data)
+}
+
+const deleteMenuItem = (data) => {
+    return axios.delete('/api/menu-items', {
+        data: {
+            id: data.id
+        }
+    })
+}
+
+// sub menu
+
+const createSubMenu = (data) => {
+    return axios.post('/api/sub-menus', data)
 }
 
 // banner
@@ -80,5 +106,7 @@ export {
     getAllBanners, getAllMenuItemByMenuId, getAllHeader,
     getAllTextInput, getFormSectionById, getAllPack,
     getContentBodyById, getAllCampaign, createHeader,
-    deleteHeader, getAllMenu, createMenu, deleteMenu
+    deleteHeader, getAllMenu, createMenu, deleteMenu,
+    updateMenu, createMenuItem, deleteMenuItem,
+    updateMenuItem, createSubMenu
 }

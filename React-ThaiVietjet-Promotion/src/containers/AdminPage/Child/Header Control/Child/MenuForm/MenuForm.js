@@ -23,8 +23,6 @@ class MenuForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            optionMenu: '',
-            selectedMenu: '',
             selectedColorHEX: '',
 
             optionView: [
@@ -36,7 +34,7 @@ class MenuForm extends Component {
     }
 
     componentDidMount() {
-        this.props.loadMenu()
+
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -44,9 +42,7 @@ class MenuForm extends Component {
         // if (prevProps.listMenu !== this.props.listMenu) {
         //     this.buildDataAndMapState()
         // }
-        if (prevProps.menuData !== this.props.menuData) {
-            this.buildDataAndMapState()
-        }
+        // console.log('update')
         if (prevProps.location !== this.props.location) {
             if (this.props.location.pathname === "/admin/header") {
                 this.setState({
@@ -54,36 +50,6 @@ class MenuForm extends Component {
                 })
             }
         }
-    }
-
-    buildDataAndMapState = () => {
-
-        // option menu
-        let optionMenu = [];
-        this.props.menuData.data && this.props.menuData.data.map((item) => {
-            optionMenu.push({ value: { ...item }, label: item.name })
-        })
-
-        this.setState({ optionMenu: optionMenu })
-    }
-
-    handleOnChangeSelect = (selectedOption, actions) => {
-        if (actions.name === 'selectedMenu') {
-            if (selectedOption && selectedOption.value.id) {
-                // this.props.navigate('menu-item-select')
-                this.props.navigate('menu-item-select', { replace: false })
-            } else {
-                this.setState({ menuItem: '' })
-            }
-        }
-        this.setState({ [actions.name]: selectedOption })
-    }
-
-    toggle = (name) => {
-        let stateCopy = this.state[name]
-        this.setState({
-            [name]: !stateCopy
-        })
     }
 
     setParentState = (name, value) => {
@@ -107,13 +73,11 @@ class MenuForm extends Component {
                     <Routes>
                         <Route path="" element={<MenuSelect selectedMenu={this.state.selectedMenu} optionMenu={this.state.optionMenu}
                             handleOnChangeSelect={this.handleOnChangeSelect} />} />
-                        <Route path="/menu-create" element={<CreateMenu />} />
-                        <Route path="/menu-item-select" element={<MenuItemSelect
-                            menuId={this.state.selectedMenu && this.state.selectedMenu.value.id}
-                        />} />
-                        <Route path="/menu-item-create" element={<CreateMenuItem />} />
+                        <Route path="/menu-create/:type?" element={<CreateMenu />} />
+                        <Route path="/menu-item-select" element={<MenuItemSelect />} />
+                        <Route path="/menu-item-create/:type?" element={<CreateMenuItem />} />
                         <Route path="/sub-menu-select" element={<SubMenuSelect />} />
-                        <Route path="/sub-menu-form" element={<SubMenuForm />} />
+                        <Route path="/sub-menu-form/:type?" element={<SubMenuForm />} />
                     </Routes>
 
                     {/* {this.state.selectedMenu &&

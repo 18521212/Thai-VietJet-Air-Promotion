@@ -1,8 +1,10 @@
 import { Component } from "react";
 import './CreateMenu.scss'
 import _ from 'lodash';
+import { connect } from 'react-redux'
+import * as actions from 'store/actions';
 import withRouter from "components/withRouter/withRouter";
-import { createMenu } from "services/userService";
+import { createMenu, updateMenu } from "services/userService";
 
 class CreateMenu extends Component {
     constructor(props) {
@@ -21,9 +23,19 @@ class CreateMenu extends Component {
     }
 
     handleSubmit = async () => {
-        let res = await createMenu({ name: this.state.name })
-        alert(res.errMessage)
-        res.errCode === 0 && this.handleNav(-1)
+        let { type } = this.props.params;
+        let { name } = this.state
+        let res
+        if (!type) {
+            res = await createMenu({ name: name })
+            alert(res.errMessage)
+            // this.props.loadMenu()
+        } else if (type === 'update') {
+            let menuId = this.props.location.state.menuId
+            res = await updateMenu({ id: menuId, name: name })
+            alert(res.errMessage)
+        }
+        res && res.errCode === 0 && this.handleNav(-1)
     }
 
     handleOnChnageText = (name, value) => {
@@ -33,6 +45,7 @@ class CreateMenu extends Component {
     }
 
     render() {
+        let { type } = this.props.params
         return (
             <>
                 <div className="create-menu-form form-row">
@@ -44,7 +57,9 @@ class CreateMenu extends Component {
                         />
                     </div>
                     <div className="form-group col-4">
-                        <button className="btn btn-primary mx-1" onClick={() => this.handleSubmit()}>Submit</button>
+                        <button className={`btn ${type === 'update' ? 'btn-warning' : 'btn-primary'} mx-1`}
+                            onClick={() => this.handleSubmit()}>
+                            {type === 'update' ? 'Save' : 'Submit'}</button>
                         <button className="btn btn-secondary mx-1" onClick={() => this.handleNav(-1)}>Cancel</button>
                     </div>
                 </div>
@@ -53,4 +68,16 @@ class CreateMenu extends Component {
     }
 }
 
-export default withRouter(CreateMenu);
+const mapStateToProps = state => {
+    return {
+        menuData: state.admin.menus
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        loadMenu: () => dispatch(actions.fetchMenu())
+    };
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CreateMenu));

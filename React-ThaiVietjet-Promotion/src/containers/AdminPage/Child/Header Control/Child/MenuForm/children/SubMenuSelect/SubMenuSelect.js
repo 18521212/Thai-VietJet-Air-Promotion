@@ -11,15 +11,16 @@ class SubMenuSelect extends Component {
         }
     }
     componentDidMount() {
-        
+
     }
 
-    handleNavigate = (link) => {
-        this.props.navigate(link)
+    handleNavigate = (link, data) => {
+        this.props.navigate(link, { state: data })
     }
 
     render() {
-        let { SubMenus } = this.props.location.state
+        let { SubMenus, menuParentId } = this.props.location.state
+        console.log(menuParentId)
         return (
             <>
                 <div className="row px-3 my-1">
@@ -27,7 +28,7 @@ class SubMenuSelect extends Component {
                     <div className="bg-danger text-white col-1">menu</div>
                     <div className="bg-success text-white col-1">menu item</div>
                     <div className="bg-info text-white col-2">sub menu</div>
-                    <button className="btn btn-success ml-auto" onClick={() => this.handleNavigate("../sub-menu-form")}>+ Add new</button>
+                    <button className="btn btn-success ml-auto" onClick={() => this.handleNavigate("../sub-menu-form", { menuParentId: menuParentId })}>+ Add new</button>
                 </div>
                 {SubMenus &&
                     <table className="table table-sub-menu col-12 table-striped">
@@ -50,7 +51,10 @@ class SubMenuSelect extends Component {
                                         <td>{item.textDataSub_Menu.valueEn}</td>
                                         <td>{item.link}</td>
                                         <td>{item.order}</td>
-                                        <td><button className="btn btn-danger" onClick={() => this.handleNavigate(-1)}>Delete</button></td>
+                                        <td>
+                                            <button className="btn btn-warning mx-1" onClick={() => this.handleNavigate(-1)}>Update</button>
+                                            <button className="btn btn-danger mx-1" onClick={() => this.handleNavigate(-1)}>Delete</button>
+                                        </td>
                                     </tr>
                                 )
                             })}

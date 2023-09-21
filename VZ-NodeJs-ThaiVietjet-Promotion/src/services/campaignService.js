@@ -91,7 +91,7 @@ let deleteCampaign = (id) => {
             }
 
             const result = await db.sequelize.transaction(async (t) => {
-                let campaign = await db.Campaign.destroy({ where: { id: id } })
+                let campaign = await db.Campaign.destroy({ where: { id: id }, transaction: t })
                 if (campaign === 0) {
                     resolve(resolveObj.DELETE_UNSUCCEED('Campaign'))
                     throw new Error()

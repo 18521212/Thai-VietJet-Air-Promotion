@@ -10,21 +10,21 @@ module.exports = {
         //     }
         // )
 
-        // await queryInterface.renameColumn(
-        //     'Menus',
-        //     'headerId',
-        //     'name',
-        // )
+        await queryInterface.renameColumn(
+            'Menu_Items',
+            'highLight',
+            'highlight',
+        )
 
         // add column
-        queryInterface.addColumn(
-            'Headers',
-            'menuId',
-            {
-                type: Sequelize.INTEGER,
-                // defaultValue: null
-            }
-        );
+        // queryInterface.addColumn(
+        //     'Headers',
+        //     'menuId',
+        //     {
+        //         type: Sequelize.INTEGER,
+        //         // defaultValue: null
+        //     }
+        // );
     },
     down: async (queryInterface, Sequelize) => {
         // await queryInterface.changeColumn(
@@ -36,15 +36,15 @@ module.exports = {
         //     }
         // )
 
-        // await queryInterface.renameColumn(
-        //     'Menus',
-        //     'name',
-        //     'headerId',
-        // )
+        await queryInterface.renameColumn(
+            'Menu_Items',
+            'highlight',
+            'highLight',
+        )
 
-        queryInterface.removeColumn(
-            'Headers',
-            'menuId',
-        );
+        // queryInterface.removeColumn(
+        //     'Headers',
+        //     'menuId',
+        // );
     }
 };

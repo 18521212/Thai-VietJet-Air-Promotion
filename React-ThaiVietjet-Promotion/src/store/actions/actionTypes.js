@@ -6,7 +6,9 @@ const actionTypes = Object.freeze({
 
     //admin
     FETCH_MENU: 'FETCH_MENU',
-    FETCH_MENU_SUCCESS: 'FETCH_MENU_SUCCESS'
+    FETCH_MENU_SUCCESS: 'FETCH_MENU_SUCCESS',
+
+    FETCH_MENUITEM: 'FETCH_MENUITEM'
 })
 
 export default actionTypes;

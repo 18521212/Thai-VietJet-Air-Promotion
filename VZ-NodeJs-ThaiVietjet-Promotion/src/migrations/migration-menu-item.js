@@ -23,7 +23,7 @@ module.exports = {
             link: {
                 type: Sequelize.STRING
             },
-            highLight: {
+            highlight: {
                 type: Sequelize.STRING,
                 defaultValue: null
             },

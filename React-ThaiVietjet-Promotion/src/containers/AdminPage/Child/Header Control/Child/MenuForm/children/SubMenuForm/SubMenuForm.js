@@ -1,13 +1,19 @@
 import { Component } from "react";
 import './SubMenuForm.scss'
 import _ from 'lodash';
+import { toast } from 'react-toastify';
 import withRouter from "components/withRouter/withRouter";
+import { createSubMenu } from "services/userService";
 
 class SubMenuForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            menuParentId: this.props.location.state ? this.props.location.state.menuParentId : '',
+            order: 0,
+            valueEn: '',
+            valueTh: '',
+            link: ''
         }
     }
 
@@ -15,34 +21,69 @@ class SubMenuForm extends Component {
         this.props.navigate(link)
     }
 
+    handleOnChangeText = (name, e) => {
+        this.setState({
+            [name]: e.target.value
+        })
+    }
+
+    handleSubmit = async () => {
+        let { type } = this.props.params
+        let { menuParentId, order, valueEn, valueTh, link } = this.state
+        let data = {}, res
+        if (!type) {
+            data.menuParentId = menuParentId
+            data.order = order
+            data.valueEn = valueEn
+            data.valueTh = valueTh
+            data.link = link
+            res = await createSubMenu(data)
+        } else if (type === 'update') {
+
+        }
+        if (res.errCode === 0) {
+            toast.success(res.errMessage)
+        } else if (res.errCode === 1) {
+            toast.error(res.errMessage)
+        }
+        res && res.errCode === 0 && this.props.navigate(-1)
+    }
+
     render() {
+        console.log(this.props.location.state)
+        // console.log(this.state)
         return (
             <>
                 <form className="form-row">
                     <div class="form-group col-2">
                         <label for="menuItemParentId">Id menu item parent</label>
-                        <input class="form-control" id="menuItemParentId" aria-describedby="emailHelp" placeholder="id" disabled />
+                        <input class="form-control" id="menuItemParentId" aria-describedby="emailHelp" placeholder="id" disabled
+                            value={this.state.menuParentId} onChange={(e) => this.handleOnChangeText('menuParentId', e)} />
                     </div>
                     <div class="form-group col-1">
                         <label for="exampleInputPassword1">Order</label>
-                        <input value={0} class="form-control" id="exampleInputPassword1" placeholder="Order" />
+                        <input value={this.state.order} class="form-control" id="exampleInputPassword1" placeholder="Order"
+                            onChange={(e) => this.handleOnChangeText('order', e)} />
                     </div>
                     <div class="form-group col-4">
                         <label for="exampleInputPassword1">Text English</label>
-                        <input class="form-control" id="exampleInputPassword1" placeholder="Enter text English" />
+                        <input class="form-control" id="exampleInputPassword1" placeholder="Enter text English"
+                            value={this.state.valueEn} onChange={(e) => this.handleOnChangeText('valueEn', e)} />
                     </div>
                     <div class="form-group col-4">
                         <label for="exampleInputPassword1">Text Thai</label>
-                        <input class="form-control" id="thaiText" placeholder="Enter text Thai" />
-                        <small id="thaiText" class="form-text text-muted">This is optional, if you dont enter this, it will be set to the same as English text by default</small>
+                        <input class="form-control" id="thaiText" placeholder="Enter text Thai"
+                            value={this.state.valueTh} onChange={(e) => this.handleOnChangeText('valueTh', e)} />
+                        <small id="thaiText" class="form-text text-muted">This is optional, if you dont enter this field, it will be set to the same as English text by default</small>
                     </div>
                     <div class="form-group col-5">
                         <label for="exampleInputPassword1">Link</label>
-                        <input class="form-control" id="exampleInputPassword1" placeholder="Enter sub menu link" />
+                        <input class="form-control" id="exampleInputPassword1" placeholder="Enter sub menu link"
+                            value={this.state.link} onChange={(e) => this.handleOnChangeText('link', e)} />
                     </div>
                     <div className="w-100"></div>
-                    <button type="button" className="btn btn-primary">Create Menu</button>
-                    <button type="button" class="btn btn-secondary" onClick={() => this.handleNavigate(-1)}>Cancel</button>
+                    <button type="button" className="btn btn-primary mx-1" onClick={() => this.handleSubmit()}>Submit</button>
+                    <button type="button" class="btn btn-secondary mx-1" onClick={() => this.handleNavigate(-1)}>Cancel</button>
                     {/* <input type="button" className="btn btn-primary" value='Create Menu' />
                     <input type="button" className="btn btn-secondary" value='Cancel' /> */}
                 </form>

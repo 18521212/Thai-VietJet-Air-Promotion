@@ -1,6 +1,6 @@
 import actionTypes from './actionTypes';
 
-import { getAllMenu } from 'services/userService';
+import { getAllMenu, getAllMenuItemByMenuId } from 'services/userService';
 
 export const fetchMenu = () => {
     return async (dispatch, getState) => {
@@ -12,6 +12,20 @@ export const fetchMenu = () => {
             })
         } catch (e) {
             console.log('fetchMenu error', e)
+        }
+    }
+}
+
+export const fetchMenuItem = (menuId) => {
+    return async (dispatch, getState) => {
+        try {
+            let res = await getAllMenuItemByMenuId(menuId)
+            dispatch({
+                type: actionTypes.FETCH_MENUITEM,
+                data: res
+            })
+        } catch (e) {
+            console.log('fetchMenuItem error', e)
         }
     }
 }

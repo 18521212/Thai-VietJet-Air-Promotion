@@ -82,6 +82,19 @@ let getAllMenu = async (req, res) => {
     }
 }
 
+let updateMenu = async (req, res) => {
+    try {
+        let data = await headerService.updateMenu(req.body);
+        return res.status(200).json(data)
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
+
 let deleteMenu = async (req, res) => {
     try {
         let data = await headerService.deleteMenu(req.body);
@@ -100,9 +113,7 @@ let deleteMenu = async (req, res) => {
 let createMenuItem = async (req, res) => {
     try {
         let data = await headerService.createMenuItem(req.body);
-        return res.status(200).json({
-            data
-        })
+        return res.status(200).json(data)
     } catch (e) {
         console.log(e);
         return res.status(200).json({
@@ -166,6 +177,19 @@ let createSubMenu = async (req, res) => {
     }
 }
 
+let getAllSubMenu = async (req, res) => {
+    try {
+        let data = await headerService.getAllSubMenu(req.body);
+        return res.status(200).json(data)
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
+
 let deleteSubMenuById = async (req, res) => {
     try {
         let data = await headerService.deleteSubMenuById(req.body.id);
@@ -187,6 +211,7 @@ module.exports = {
 
     createMenu: createMenu,
     getAllMenu: getAllMenu,
+    updateMenu: updateMenu,
     deleteMenu: deleteMenu,
 
     createMenuItem: createMenuItem,
@@ -195,5 +220,6 @@ module.exports = {
     deleteMenuItemById: deleteMenuItemById,
 
     createSubMenu: createSubMenu,
+    getAllSubMenu: getAllSubMenu,
     deleteSubMenuById: deleteSubMenuById,
 }

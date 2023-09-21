@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
         menuId: DataTypes.INTEGER,
         text: DataTypes.INTEGER,
         link: DataTypes.STRING,
-        highLight: DataTypes.STRING
+        highlight: DataTypes.STRING
     }, {
         sequelize,
         modelName: 'Menu_Item',

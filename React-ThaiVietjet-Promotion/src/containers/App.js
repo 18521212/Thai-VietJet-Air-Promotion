@@ -1,4 +1,6 @@
 import { Component } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import {
     Routes,
@@ -26,6 +28,19 @@ class App extends Component {
                     <Route path="/*" element={<HomePage />} />
                     <Route path="/admin/*" element={<AdminPage />} />
                 </Routes>
+
+                <ToastContainer
+                    position="top-right"
+                    autoClose={2000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="colored"
+                />
             </>
         )
     }

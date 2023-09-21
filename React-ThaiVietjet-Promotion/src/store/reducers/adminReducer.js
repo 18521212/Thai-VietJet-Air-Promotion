@@ -1,7 +1,8 @@
 import actionTypes from "store/actions/actionTypes";
 
 const initialState = {
-    menus: []
+    menus: [],
+    menuItems: [],
 }
 
 const adminReducer = (state = initialState, action) => {
@@ -11,6 +12,11 @@ const adminReducer = (state = initialState, action) => {
             copyState.menus = action.data
             return {
                 ...copyState
+            }
+        case actionTypes.FETCH_MENUITEM:
+            return {
+                ...copyState,
+                menuItems: action.data
             }
         default:
             return state;

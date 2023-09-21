@@ -30,6 +30,7 @@ let initWebRoutes = (app) => {
 
     router.post('/api/menus', headerController.createMenu)
     router.get('/api/menus', headerController.getAllMenu)
+    router.put('/api/menus', headerController.updateMenu)
     router.delete('/api/menus', headerController.deleteMenu)
 
     router.post('/api/menu-items', headerController.createMenuItem);
@@ -38,6 +39,7 @@ let initWebRoutes = (app) => {
     router.delete('/api/menu-items', headerController.deleteMenuItemById)
 
     router.post('/api/sub-menus', headerController.createSubMenu);
+    router.get('/api/sub-menus', headerController.getAllSubMenu);
     router.delete('/api/sub-menus', headerController.deleteSubMenuById)
 
     // body
