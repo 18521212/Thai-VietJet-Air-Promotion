@@ -3,7 +3,9 @@ import './SubMenuForm.scss'
 import _ from 'lodash';
 import { toast } from 'react-toastify';
 import withRouter from "components/withRouter/withRouter";
-import { createSubMenu } from "services/userService";
+import { createSubMenu, updateSubMenu } from "services/userService";
+import { connect } from "react-redux";
+import * as actions from 'store/actions';
 
 class SubMenuForm extends Component {
     constructor(props) {
@@ -17,6 +19,24 @@ class SubMenuForm extends Component {
         }
     }
 
+    componentDidMount() {
+        this.mapDataUpdate()
+    }
+
+    mapDataUpdate = () => {
+        let { type } = this.props.params
+        if (type !== 'update') {
+            return
+        }
+        let { subMenu } = this.props.location.state
+        this.setState({
+            order: subMenu.order,
+            valueEn: subMenu.textDataSub_Menu.valueEn,
+            valueTh: subMenu.textDataSub_Menu.valueTh,
+            link: subMenu.link
+        })
+    }
+
     handleNavigate = (link) => {
         this.props.navigate(link)
     }
@@ -28,6 +48,8 @@ class SubMenuForm extends Component {
     }
 
     handleSubmit = async () => {
+        let { subMenu } = this.props.location.state
+        console.log(subMenu)
         let { type } = this.props.params
         let { menuParentId, order, valueEn, valueTh, link } = this.state
         let data = {}, res
@@ -39,19 +61,24 @@ class SubMenuForm extends Component {
             data.link = link
             res = await createSubMenu(data)
         } else if (type === 'update') {
-
+            data.id = subMenu.id
+            data.order = order
+            data.valueEn = valueEn
+            data.valueTh = valueTh
+            data.link = link
+            res = await updateSubMenu(data)
         }
         if (res.errCode === 0) {
             toast.success(res.errMessage)
-        } else if (res.errCode === 1) {
+        } else if (res.errCode !== 0) {
             toast.error(res.errMessage)
         }
         res && res.errCode === 0 && this.props.navigate(-1)
     }
 
     render() {
-        console.log(this.props.location.state)
-        // console.log(this.state)
+        // console.log(this.props.location.state.subMenu)
+        let { type } = this.props.params
         return (
             <>
                 <form className="form-row">
@@ -82,8 +109,12 @@ class SubMenuForm extends Component {
                             value={this.state.link} onChange={(e) => this.handleOnChangeText('link', e)} />
                     </div>
                     <div className="w-100"></div>
-                    <button type="button" className="btn btn-primary mx-1" onClick={() => this.handleSubmit()}>Submit</button>
-                    <button type="button" class="btn btn-secondary mx-1" onClick={() => this.handleNavigate(-1)}>Cancel</button>
+                    <button type="button" className={`btn ${type === 'update' ? 'btn-warning' : 'btn-primary'} mx-1`}
+                        onClick={() => this.handleSubmit()}>
+                        {type === 'update' ? 'Save' : 'Submit'}</button>
+                    <button type="button" class="btn btn-secondary mx-1"
+                        onClick={() => this.handleNavigate(-1)}>
+                        Cancel</button>
                     {/* <input type="button" className="btn btn-primary" value='Create Menu' />
                     <input type="button" className="btn btn-secondary" value='Cancel' /> */}
                 </form>
@@ -141,4 +172,15 @@ class SubMenuForm extends Component {
     }
 }
 
-export default withRouter(SubMenuForm);
+const mapStateToProps = state => {
+    return {
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+
+    };
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SubMenuForm));

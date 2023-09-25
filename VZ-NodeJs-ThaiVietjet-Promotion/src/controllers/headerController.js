@@ -177,9 +177,22 @@ let createSubMenu = async (req, res) => {
     }
 }
 
-let getAllSubMenu = async (req, res) => {
+let getAllSubMenuByMenuItemId = async (req, res) => {
     try {
-        let data = await headerService.getAllSubMenu(req.body);
+        let data = await headerService.getAllSubMenuByMenuItemId(req.params.id);
+        return res.status(200).json(data)
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
+
+let updateSubMenu = async (req, res) => {
+    try {
+        let data = await headerService.updateSubMenu(req.body);
         return res.status(200).json(data)
     } catch (e) {
         console.log(e);
@@ -220,6 +233,7 @@ module.exports = {
     deleteMenuItemById: deleteMenuItemById,
 
     createSubMenu: createSubMenu,
-    getAllSubMenu: getAllSubMenu,
+    getAllSubMenuByMenuItemId: getAllSubMenuByMenuItemId,
+    updateSubMenu: updateSubMenu,
     deleteSubMenuById: deleteSubMenuById,
 }

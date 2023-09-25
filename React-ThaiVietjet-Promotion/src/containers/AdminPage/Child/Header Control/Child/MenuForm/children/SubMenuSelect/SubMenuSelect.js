@@ -2,6 +2,10 @@ import { Component } from "react";
 import './SubMenuSelect.scss'
 import _, { conforms } from 'lodash';
 import withRouter from "components/withRouter/withRouter";
+import { connect } from 'react-redux'
+import * as actions from 'store/actions';
+import { deleteSubMenu } from "services/userService";
+import { toast } from 'react-toastify';
 
 class SubMenuSelect extends Component {
     constructor(props) {
@@ -11,16 +15,32 @@ class SubMenuSelect extends Component {
         }
     }
     componentDidMount() {
+        this.fetchSubMenuFromRedux()
+    }
 
+    fetchSubMenuFromRedux = () => {
+        this.props.fetchSubMenu(this.props.location.state.menuParentId)
     }
 
     handleNavigate = (link, data) => {
         this.props.navigate(link, { state: data })
     }
 
+    handleDelete = async (id) => {
+        if (window.confirm('Are you sure to delete this Sub Menu?') === true) {
+            let res = await deleteSubMenu({ id: id })
+            res.errCode === 0 ? toast.success(res.errMessage) : toast.error(res.errMessage)
+            if (res.errCode === 0) {
+                this.fetchSubMenuFromRedux()
+            }
+        } else {
+            return;
+        }
+    }
+
     render() {
-        let { SubMenus, menuParentId } = this.props.location.state
-        console.log(menuParentId)
+        let { menuParentId } = this.props.location.state
+        let SubMenus = this.props.subMenuData.data;
         return (
             <>
                 <div className="row px-3 my-1">
@@ -36,10 +56,11 @@ class SubMenuSelect extends Component {
                         // className="thead-light"
                         >
                             <tr className="table-info">
-                                <th scope="col">id</th>
-                                <th scope="col">text</th>
-                                <th scope="col">link</th>
-                                <th scope="col">order</th>
+                                <th scope="col">Id</th>
+                                <th scope="col">English Text</th>
+                                <th scope="col">Thai Text</th>
+                                <th scope="col">Link</th>
+                                <th scope="col">Order</th>
                                 <th scope="col">Actions</th>
                             </tr>
                         </thead>
@@ -49,11 +70,12 @@ class SubMenuSelect extends Component {
                                     <tr>
                                         <td scope="row">{item.id}</td>
                                         <td>{item.textDataSub_Menu.valueEn}</td>
+                                        <td>{item.textDataSub_Menu.valueTh}</td>
                                         <td>{item.link}</td>
                                         <td>{item.order}</td>
                                         <td>
-                                            <button className="btn btn-warning mx-1" onClick={() => this.handleNavigate(-1)}>Update</button>
-                                            <button className="btn btn-danger mx-1" onClick={() => this.handleNavigate(-1)}>Delete</button>
+                                            <button className="btn btn-warning mx-1" onClick={() => this.handleNavigate('../sub-menu-form/update', { subMenu: item, menuParentId: menuParentId })}>Update</button>
+                                            <button className="btn btn-danger mx-1" onClick={() => this.handleDelete(item.id)}>Delete</button>
                                         </td>
                                     </tr>
                                 )
@@ -66,4 +88,16 @@ class SubMenuSelect extends Component {
     }
 }
 
-export default withRouter(SubMenuSelect);
+const mapStateToProps = state => {
+    return {
+        subMenuData: state.admin.subMenus
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        fetchSubMenu: (menuParentId) => dispatch(actions.fetchSubMenu(menuParentId))
+    };
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SubMenuSelect));

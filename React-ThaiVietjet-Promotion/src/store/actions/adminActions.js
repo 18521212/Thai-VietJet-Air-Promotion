@@ -1,6 +1,23 @@
 import actionTypes from './actionTypes';
 
-import { getAllMenu, getAllMenuItemByMenuId } from 'services/userService';
+import {
+    getAllMenu, getAllMenuItemByMenuId, getAllSubMenuByMenuItemId,
+    getAllHeader
+} from 'services/userService';
+
+export const fetchHeader = () => {
+    return async (dispatch, getState) => {
+        try {
+            let res = await getAllHeader()
+            dispatch({
+                type: actionTypes.FETCH_HEADER,
+                data: res
+            })
+        } catch (e) {
+            console.log('fetchHeader error', e)
+        }
+    }
+}
 
 export const fetchMenu = () => {
     return async (dispatch, getState) => {
@@ -20,12 +37,28 @@ export const fetchMenuItem = (menuId) => {
     return async (dispatch, getState) => {
         try {
             let res = await getAllMenuItemByMenuId(menuId)
+            res.data = res.data.sort((a, b) => a.order - b.order);
             dispatch({
                 type: actionTypes.FETCH_MENUITEM,
                 data: res
             })
         } catch (e) {
             console.log('fetchMenuItem error', e)
+        }
+    }
+}
+
+export const fetchSubMenu = (menuParentId) => {
+    return async (dispatch, getState) => {
+        try {
+            let res = await getAllSubMenuByMenuItemId(menuParentId)
+            res.data = res.data.sort((a, b) => a.order - b.order);
+            dispatch({
+                type: actionTypes.FETCH_SUBMENU,
+                data: res
+            })
+        } catch (e) {
+            console.log('fetchSubMenu error', e)
         }
     }
 }

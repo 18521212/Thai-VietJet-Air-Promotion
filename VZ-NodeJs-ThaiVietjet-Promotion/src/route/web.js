@@ -39,8 +39,10 @@ let initWebRoutes = (app) => {
     router.delete('/api/menu-items', headerController.deleteMenuItemById)
 
     router.post('/api/sub-menus', headerController.createSubMenu);
-    router.get('/api/sub-menus', headerController.getAllSubMenu);
+    router.get('/api/sub-menus/menu-items/:id', headerController.getAllSubMenuByMenuItemId);
+    router.put('/api/sub-menus', headerController.updateSubMenu);
     router.delete('/api/sub-menus', headerController.deleteSubMenuById)
+
 
     // body
     router.get('/api/content-bodys/:id', bodyController.getContentBodyById)

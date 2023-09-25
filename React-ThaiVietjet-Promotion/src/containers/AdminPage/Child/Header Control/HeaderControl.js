@@ -9,6 +9,10 @@ import {
 import { event } from "jquery";
 import HeaderForm from "./Child/HeaderForm/HeaderForm";
 import MenuForm from "./Child/MenuForm/MenuForm";
+import {
+    Routes,
+    Route,
+} from "react-router-dom";
 
 class HeaderControl extends Component {
     constructor(props) {
@@ -25,6 +29,7 @@ class HeaderControl extends Component {
     render() {
         return (
             <div className="header-control">
+                <h1>header control</h1>
                 <HeaderForm listMenu={this.state.listMenu} />
                 <MenuForm />
             </div>

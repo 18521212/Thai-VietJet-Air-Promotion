@@ -5,26 +5,21 @@ import sequelize from 'sequelize';
 // header
 
 let createHeader = (data) => {
+    console.log('create', !data.imageLogo)
     return new Promise(async (resolve, reject) => {
         try {
             if (!data.imageLogo) {
-                resolve({
-                    errCode: 1,
-                    errMessage: 'Missing required parameters'
-                })
-            } else {
-                // create header
-                let header = await db.Header.create({
-                    imageLogo: data.imageLogo,
-                    imageBackground: data.imageBackground ? data.imageBackground : null,
-                    menuId: data.menuId
-                })
-
-                resolve({
-                    errCode: 0,
-                    errMessage: 'Create new Header succeed'
-                })
+                resolve(resolveObj.MISSING_PARAMETERS)
+                return
             }
+            // create header
+            let header = await db.Header.create({
+                imageLogo: data.imageLogo,
+                imageBackground: data.imageBackground ? data.imageBackground : null,
+                menuId: data.menuId
+            })
+
+            resolve(resolveObj.CREATE_SUCCEED('Header'))
         } catch (e) {
             reject(e);
         }
@@ -381,17 +376,64 @@ let createSubMenu = (data) => {
     })
 }
 
-let getAllSubMenu = (data) => {
+let getAllSubMenuByMenuItemId = (menuParentId) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.menuParentId) {
+            if (!menuParentId) {
                 resolve(resolveObj.MISSING_PARAMETERS)
                 return
             }
 
-            let subMenu = await db.Sub_Menu.findAll({ where: { menuParentId: data.menuParentId } })
+            let subMenu = await db.Sub_Menu.findAll({
+                where: { menuParentId: menuParentId },
+                include: [
+                    { model: db.Text_Translation, as: 'textDataSub_Menu' }
+                ]
+            })
 
             resolve(resolveObj.GET(subMenu))
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
+let updateSubMenu = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.id || (!data.order && !data.valueEn && !data.valueTh && !data.link)) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required parameters'
+                })
+            } else {
+                let sub_menu = await db.Sub_Menu.findOne({
+                    where: {
+                        id: data.id
+                    }
+                })
+                const result = await db.sequelize.transaction(async (t) => {
+                    if (!sub_menu) {
+                        resolve(resolveObj.NOT_FOUND('Menu Item'))
+                        throw new Error()
+                    }
+
+                    await sub_menu.update({
+                        order: data.order,
+                        link: data.link
+                    }, { transaction: t })
+
+                    if (data.valueEn || data.valueTh) {
+                        let text_translation = await db.Text_Translation.findOne({ where: { id: sub_menu.text } })
+                        await text_translation.update({
+                            valueEn: data.valueEn,
+                            valueTh: data.valueTh
+                        }, { transaction: t })
+                    }
+                })
+
+                resolve(resolveObj.UPDATE_SUCCEED())
+            }
         } catch (e) {
             reject(e);
         }
@@ -413,6 +455,10 @@ let deleteSubMenuById = (id) => {
                     }
                 })
                 const result = await db.sequelize.transaction(async (t) => {
+                    if (!sub_menu) {
+                        resolve(resolveObj.NOT_FOUND('Menu Item'))
+                        throw new Error()
+                    }
                     // remove text_translation sub_menu
                     await db.Text_Translation.destroy({
                         where: {
@@ -428,10 +474,7 @@ let deleteSubMenuById = (id) => {
                     }, { transaction: t })
                 })
 
-                resolve({
-                    errCode: 0,
-                    errMessage: `Remove Sub Menu with id: ${id} succeed`,
-                })
+                resolve(resolveObj.DELETE_SUCCEED())
             }
         } catch (e) {
             reject(e);
@@ -457,6 +500,7 @@ module.exports = {
     deleteMenuItemById: deleteMenuItemById,
 
     createSubMenu: createSubMenu,
-    getAllSubMenu: getAllSubMenu,
+    getAllSubMenuByMenuItemId: getAllSubMenuByMenuItemId,
+    updateSubMenu: updateSubMenu,
     deleteSubMenuById: deleteSubMenuById,
 }

@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import axios from "../axios";
 
 // campaign
@@ -13,6 +14,10 @@ const createHeader = (data) => {
 
 const getAllHeader = () => {
     return axios.get('/api/headers');
+}
+
+const updateHeader = (data) => {
+    return axios.put('/api/headers', data);
 }
 
 const deleteHeader = (id) => {
@@ -73,6 +78,22 @@ const createSubMenu = (data) => {
     return axios.post('/api/sub-menus', data)
 }
 
+const getAllSubMenuByMenuItemId = (menuParentId) => {
+    return axios.get(`/api/sub-menus/menu-items/${menuParentId}`)
+}
+
+const updateSubMenu = (data) => {
+    return axios.put('/api/sub-menus', data)
+}
+
+const deleteSubMenu = (data) => {
+    return axios.delete('/api/sub-menus', {
+        data: {
+            id: data.id
+        }
+    })
+}
+
 // banner
 
 const getAllBanners = () => {
@@ -108,5 +129,6 @@ export {
     getContentBodyById, getAllCampaign, createHeader,
     deleteHeader, getAllMenu, createMenu, deleteMenu,
     updateMenu, createMenuItem, deleteMenuItem,
-    updateMenuItem, createSubMenu
+    updateMenuItem, createSubMenu, getAllSubMenuByMenuItemId,
+    deleteSubMenu, updateSubMenu, updateHeader
 }

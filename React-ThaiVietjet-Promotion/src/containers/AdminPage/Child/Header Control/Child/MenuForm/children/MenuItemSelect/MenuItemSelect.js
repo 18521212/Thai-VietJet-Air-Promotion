@@ -2,28 +2,22 @@ import { Component } from "react";
 import './MenuItemSelect.scss'
 import _ from 'lodash';
 import { toast } from 'react-toastify';
-// import withRouter from "../../../../../../../../components/withRouter/withRouter";
 import withRouter from "components/withRouter/withRouter";
 import { getAllMenuItemByMenuId, deleteMenuItem } from "services/userService";
+import { connect } from 'react-redux'
+import * as actions from 'store/actions';
 
 class MenuItemSelect extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            menuItem: ''
+
         }
+        this.props.fetchMenuItem(this.props.location.state.menuId)
     }
 
-    componentDidMount() {
-        // console.log('props:', this.props)
-        this.getAllMenuItemByMenuId()
-    }
-
-    getAllMenuItemByMenuId = async () => {
-        let id = this.props.location.state ? this.props.location.state.menuId : '';
-        let menuItem = await getAllMenuItemByMenuId(id)
-        menuItem = menuItem.data.sort((a, b) => a.order - b.order);
-        this.setState({ menuItem: menuItem })
+    async componentDidMount() {
+        // await this.props.fetchMenuItem(this.props.location.state.menuId)
     }
 
     handleNavigate = (link, data) => {
@@ -43,15 +37,26 @@ class MenuItemSelect extends Component {
     }
 
     render() {
+        let menuItem = this.props.menuItemData.data
+        console.log(this.props)
         return (
             <>
                 <div className="row px-3 my-1">
-                    <button className="btn btn-primary mr-auto" onClick={() => this.handleNavigate(-1)}>Back</button>
-                    <div className="bg-danger text-white col-1">menu</div>
-                    <div className="bg-success text-white col-2">menu item</div>
-                    <button className="btn btn-success ml-auto" onClick={() => this.handleNavigate('../menu-item-create', { menuId: this.props.location.state.menuId })}>+ Add new</button>
+                    <button className="btn btn-primary mr-auto"
+                        onClick={() => this.handleNavigate(-1)}>
+                        Back</button>
+                    <div className="bg-danger text-white col-1">
+                        menu</div>
+                    <div className="bg-success text-white col-2">
+                        menu item</div>
+                    <button className="btn btn-success ml-auto"
+                        onClick={() => this.handleNavigate(
+                            '../menu-item-create',
+                            { menuId: this.props.location.state.menuId })}>
+                        + Add new</button>
                 </div>
-                {this.state.menuItem &&
+                {menuItem &&
+                    menuItem[0].menuId === this.props.location.state.menuId && // this line prevent flash screen because of old data menu item showing
                     <table className="table table-menu col-12 table-striped">
                         <thead
                         // className="thead-light"
@@ -67,7 +72,7 @@ class MenuItemSelect extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                            {this.state.menuItem && this.state.menuItem.map((item, index) => {
+                            {menuItem.map((item, index) => {
                                 // console.log(item)
                                 return (
                                     <>
@@ -81,14 +86,33 @@ class MenuItemSelect extends Component {
                                             <td>
                                                 {item.Sub_Menus.length > 0 ?
                                                     <>
-                                                        <button className="btn btn-success mx-1" onClick={() => this.handleNavigate('../sub-menu-select', { SubMenus: item.Sub_Menus, menuParentId: item.id })}>Sub Menu</button>
-                                                        <button className="btn btn-warning mx-1" onClick={() => this.handleNavigate('../menu-item-create/update', { menuItem: item, menuId: this.props.location.state.menuId })}>Update</button>
+                                                        <button className="btn btn-success mx-1"
+                                                            onClick={() => this.handleNavigate(
+                                                                '../sub-menu-select',
+                                                                { menuParentId: item.id })}>
+                                                            Sub Menu</button>
+                                                        <button className="btn btn-warning mx-1"
+                                                            onClick={() => this.handleNavigate(
+                                                                '../menu-item-create/update',
+                                                                { menuItem: item, menuId: this.props.location.state.menuId })}>
+                                                            Update</button>
                                                     </>
                                                     :
                                                     <>
-                                                        <button className="btn btn-info mx-1" onClick={() => this.handleNavigate('../sub-menu-form', { menuParentId: item.id })}>+ Add Sub Menu</button>
-                                                        <button className="btn btn-warning mx-1" onClick={() => this.handleNavigate('../menu-item-create/update', { menuItem: item, menuId: this.props.location.state.menuId })}>Update</button>
-                                                        <button className="btn btn-danger mx-1" onClick={() => this.handleDelete(item.id)}>Delete</button>
+                                                        <button className="btn btn-info mx-1"
+                                                            onClick={() => this.handleNavigate(
+                                                                '../sub-menu-form',
+                                                                { menuParentId: item.id })}>
+                                                            + Add Sub Menu</button>
+                                                        <button className="btn btn-warning mx-1"
+                                                            onClick={() => this.handleNavigate(
+                                                                '../menu-item-create/update',
+                                                                { menuItem: item, menuId: this.props.location.state.menuId })}>
+                                                            Update</button>
+                                                        <button className="btn btn-danger mx-1"
+                                                            onClick={() => this.handleDelete(
+                                                                item.id)}>
+                                                            Delete</button>
                                                     </>}
                                             </td>
                                         </tr>
@@ -104,4 +128,16 @@ class MenuItemSelect extends Component {
     }
 }
 
-export default withRouter(MenuItemSelect);
+const mapStateToProps = state => {
+    return {
+        menuItemData: state.admin.menuItems
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        fetchMenuItem: (menuId) => dispatch(actions.fetchMenuItem(menuId))
+    };
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MenuItemSelect));

@@ -16,7 +16,6 @@ import withRouter from "components/withRouter/withRouter";
 import {
     Routes,
     Route,
-    useNavigate,
 } from "react-router-dom";
 
 class MenuForm extends Component {
@@ -71,10 +70,10 @@ class MenuForm extends Component {
                     {/* <div className="row"> */}
                     {/* <CreateMenuItem /> */}
                     <Routes>
-                        <Route path="" element={<MenuSelect selectedMenu={this.state.selectedMenu} optionMenu={this.state.optionMenu}
+                        <Route path="*" element={<MenuSelect selectedMenu={this.state.selectedMenu} optionMenu={this.state.optionMenu}
                             handleOnChangeSelect={this.handleOnChangeSelect} />} />
-                        <Route path="/menu-create/:type?" element={<CreateMenu />} />
-                        <Route path="/menu-item-select" element={<MenuItemSelect />} />
+                        <Route path="menu-create/:type?" element={<CreateMenu />} />
+                        <Route path="menu-item-select" element={<MenuItemSelect />} />
                         <Route path="/menu-item-create/:type?" element={<CreateMenuItem />} />
                         <Route path="/sub-menu-select" element={<SubMenuSelect />} />
                         <Route path="/sub-menu-form/:type?" element={<SubMenuForm />} />
