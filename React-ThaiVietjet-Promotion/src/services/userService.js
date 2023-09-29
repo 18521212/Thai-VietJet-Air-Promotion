@@ -7,6 +7,14 @@ const getAllCampaign = () => {
     return axios.get('/api/campaigns')
 }
 
+const getCampaign = (id = null) => {
+    if (id) {
+        return axios.get(`/api/campaigns/${id}`)
+    } else {
+        return axios.get(`/api/campaigns`)
+    }
+}
+
 // header 
 const createHeader = (data) => {
     return axios.post('/api/headers', data)
@@ -130,5 +138,6 @@ export {
     deleteHeader, getAllMenu, createMenu, deleteMenu,
     updateMenu, createMenuItem, deleteMenuItem,
     updateMenuItem, createSubMenu, getAllSubMenuByMenuItemId,
-    deleteSubMenu, updateSubMenu, updateHeader
+    deleteSubMenu, updateSubMenu, updateHeader,
+    getCampaign,
 }

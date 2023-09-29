@@ -2,7 +2,6 @@ import { Component } from "react";
 import './Header.scss';
 import logo from '../../../assets/Logo/skyfun_logo.png';
 import Select from 'react-select'
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 import { getAllMenuItemByMenuId, getAllHeader } from "../../../services/userService";
 
@@ -28,6 +27,7 @@ class Header extends Component {
 
     componentDidMount() {
         this.buildData()
+        console.log('headerId from header mount', this.props.headerId)
     }
 
     buildData = async () => {
@@ -73,6 +73,7 @@ class Header extends Component {
     }
 
     render() {
+        console.log('headerId from header render', this.props.headerId)
         let { menuItem, menuLanguage, header } = this.state;
         let mainUrl = 'https://vietjetthai.com';
         let { language } = this.props;
@@ -222,7 +223,8 @@ class Header extends Component {
 
 const mapStateToProps = state => {
     return {
-        language: state.app.language
+        language: state.app.language,
+        menuData: state.admin.menus
     };
 };
 

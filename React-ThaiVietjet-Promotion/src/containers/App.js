@@ -25,7 +25,7 @@ class App extends Component {
         return (
             <>
                 <Routes>
-                    <Route path="/*" element={<HomePage />} />
+                    <Route path="/:id?" element={<HomePage />} />
                     <Route path="/admin/*" element={<AdminPage />} />
                 </Routes>
 

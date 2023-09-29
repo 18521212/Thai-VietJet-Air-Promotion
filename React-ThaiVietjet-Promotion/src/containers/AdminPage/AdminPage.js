@@ -2,8 +2,7 @@ import { Component } from 'react';
 import './AdminPage.scss';
 
 import Header from './Child/Header Panel/Header';
-import Campaign from './Child/Campaign/Campaign';
-
+import CampaignControl from './Child/Campaign Control/CampaignControl';
 import HeaderControl from './Child/Header Control/HeaderControl';
 
 import {
@@ -29,7 +28,7 @@ class AdminPage extends Component {
                 <Header />
                 <h1 className='title-admin'>Admin Page</h1>
                 <Routes>
-                    <Route path="/campaign" element={<Campaign />} />
+                    <Route path="/campaign" element={<CampaignControl />} />
                     <Route path="/header*" element={<HeaderControl />} />
                 </Routes>
             </div>

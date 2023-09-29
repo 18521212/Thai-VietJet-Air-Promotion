@@ -1,6 +1,8 @@
 import actionTypes from "store/actions/actionTypes";
 
 const initialState = {
+    campaigns: '',
+    campaign: '',
     headers: '',
     menus: '',
     optionMenus: '',
@@ -10,6 +12,22 @@ const initialState = {
 
 const adminReducer = (state = initialState, action) => {
     switch (action.type) {
+        case actionTypes.FETCH_CAMPAIGN:
+            // console.log('res',action.data)
+            if (Array.isArray(action.data.data)) {
+                // console.log('arr')
+                return {
+                    ...state,
+                    campaigns: action.data
+                }
+            } else {
+                // console.log('sing')
+                return {
+                    ...state,
+                    campaign: action.data
+                }
+            }
+
         case actionTypes.FETCH_HEADER:
             return {
                 ...state,

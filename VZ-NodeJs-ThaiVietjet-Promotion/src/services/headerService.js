@@ -5,7 +5,6 @@ import sequelize from 'sequelize';
 // header
 
 let createHeader = (data) => {
-    console.log('create', !data.imageLogo)
     return new Promise(async (resolve, reject) => {
         try {
             if (!data.imageLogo) {
@@ -30,6 +29,10 @@ let getAllHeader = () => {
     return new Promise(async (resolve, reject) => {
         try {
             let data = await db.Header.findAll();
+            if (data) data.map((item) => {
+                item.imageLogo = new Buffer(item.imageLogo, 'base64').toString('binary');
+                item.imageBackground = new Buffer(item.imageBackground, 'base64').toString('binary');
+            })
 
             resolve({
                 errCode: 0,
@@ -97,7 +100,6 @@ let deleteHeader = (id) => {
 let createMenu = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            console.log(data.id)
             if (!data.name) {
                 resolve(resolveObj.MISSING_PARAMETERS)
             } else {
@@ -275,7 +277,6 @@ let updateMenuItemById = (data) => {
                 }, { transaction: t })
 
                 if (data.valueEn || data.valueTh) {
-                    console.log('text')
                     let text_translation = await db.Text_Translation.findOne({
                         where: {
                             id: menu_item.text

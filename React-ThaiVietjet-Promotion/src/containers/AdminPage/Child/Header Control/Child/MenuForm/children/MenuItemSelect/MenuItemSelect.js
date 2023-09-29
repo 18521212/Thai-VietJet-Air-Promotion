@@ -41,7 +41,7 @@ class MenuItemSelect extends Component {
         console.log(this.props)
         return (
             <>
-                <div className="row px-3 my-1">
+                <div className="row ">
                     <button className="btn btn-primary mr-auto"
                         onClick={() => this.handleNavigate(-1)}>
                         Back</button>

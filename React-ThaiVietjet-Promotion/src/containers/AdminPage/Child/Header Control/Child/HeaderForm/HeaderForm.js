@@ -74,11 +74,11 @@ class HeaderForm extends Component {
         let { listHeader, imageLogo, imageBackground } = this.state;
         return (
             <>
-                <div className='header-form'>
+                <div className='header-form container-fluid'>
                     <h3>Header Form</h3><br />
-                    {
-                        this.renderSwitch(this.state.selectedPageHeader.name)
-                    }
+                        {
+                            this.renderSwitch(this.state.selectedPageHeader.name)
+                        }
                 </div>
             </>
         )

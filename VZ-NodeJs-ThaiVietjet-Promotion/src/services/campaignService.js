@@ -30,7 +30,21 @@ let getAllCampaign = () => {
     return new Promise(async (resolve, reject) => {
         try {
             let data = await db.Campaign.findAll();
+            resolve(resolveObj.GET(data))
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
 
+let getCampaignById = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!id) {
+                resolve(resolveObj.MISSING_PARAMETERS)
+                return
+            }
+            let data = await db.Campaign.findOne({ where: { id: id } });
             resolve(resolveObj.GET(data))
         } catch (e) {
             reject(e);
@@ -41,16 +55,19 @@ let getAllCampaign = () => {
 let updateCampaign = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            // notice data.property === '' different === null - if have variable but don't have value, it's equal to '', not equal to null
+            // notice data.property === '' different === null - if have variable but don't 
+            // -- have value, it's equal to '', not equal to null
             if (!data.id ||
-                !(data.name || data.headerId || data.bannerId || data.bodyId || data.formSectionId || data.footerId)
+                !(data.name || data.headerId || data.bannerId
+                    || data.bodyId || data.formSectionId || data.footerId)
             ) {
                 resolve(resolveObj.MISSING_PARAMETERS)
                 return;
             }
 
-            const result = await db.sequelize.transaction(async (t) => {
-                let check = await checkChildTableDataExist(data); // does not pass data does not mean it is null - must use compare data !== null
+            await db.sequelize.transaction(async (t) => {
+                let check = await checkChildTableDataExist(data); // does not pass data does not mean it is null 
+                // -- must use compare data !== null
                 // console.log(!data.headerId)
                 if (check.result !== true) {
                     resolve(resolveObj.NOT_FOUND(check.table_name))
@@ -152,6 +169,7 @@ let checkChildTableDataExist = async (data) => {
 module.exports = {
     createCampaign: createCampaign,
     getAllCampaign: getAllCampaign,
+    getCampaignById: getCampaignById,
     updateCampaign: updateCampaign,
     deleteCampaign: deleteCampaign
 }

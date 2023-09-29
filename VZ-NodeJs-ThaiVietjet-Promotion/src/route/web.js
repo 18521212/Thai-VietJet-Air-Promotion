@@ -14,7 +14,7 @@ let initWebRoutes = (app) => {
 
     // campaign
     router.post('/api/campaigns', campaignController.createCampaign);
-    router.get('/api/campaigns', campaignController.getAllCampaign);
+    router.get('/api/campaigns/:id?', campaignController.getCampaign);
     router.put('/api/campaigns', campaignController.updateCampaign);
     router.delete('/api/campaigns', campaignController.deleteCampaign);
 
@@ -29,23 +29,23 @@ let initWebRoutes = (app) => {
     router.delete('/api/headers', headerController.deleteHeader);
 
     router.post('/api/menus', headerController.createMenu)
-    router.get('/api/menus', headerController.getAllMenu)
+    router.get('/api/menus/:id?', headerController.getAllMenu)
     router.put('/api/menus', headerController.updateMenu)
     router.delete('/api/menus', headerController.deleteMenu)
 
     router.post('/api/menu-items', headerController.createMenuItem);
-    router.get('/api/menu-items/menus/:id', headerController.getAllMenuItemByMenuId);
+    router.get('/api/menu-items/menus/:id?', headerController.getAllMenuItemByMenuId);
     router.put('/api/menu-items', headerController.updateMenuItemById)
     router.delete('/api/menu-items', headerController.deleteMenuItemById)
 
     router.post('/api/sub-menus', headerController.createSubMenu);
-    router.get('/api/sub-menus/menu-items/:id', headerController.getAllSubMenuByMenuItemId);
+    router.get('/api/sub-menus/menu-items/:id?', headerController.getAllSubMenuByMenuItemId);
     router.put('/api/sub-menus', headerController.updateSubMenu);
     router.delete('/api/sub-menus', headerController.deleteSubMenuById)
 
 
     // body
-    router.get('/api/content-bodys/:id', bodyController.getContentBodyById)
+    router.get('/api/content-bodys/:id?', bodyController.getContentBodyById)
 
     // form section
     router.post('/api/form-sections', formController.createFormSection);

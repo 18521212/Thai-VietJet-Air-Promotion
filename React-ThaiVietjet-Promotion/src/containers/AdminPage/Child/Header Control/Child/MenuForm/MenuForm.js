@@ -67,119 +67,15 @@ class MenuForm extends Component {
             <>
                 <div className="container-fluid">
                     <h3>Menu Form</h3>
-                    {/* <div className="row"> */}
-                    {/* <CreateMenuItem /> */}
                     <Routes>
                         <Route path="*" element={<MenuSelect selectedMenu={this.state.selectedMenu} optionMenu={this.state.optionMenu}
                             handleOnChangeSelect={this.handleOnChangeSelect} />} />
                         <Route path="menu-create/:type?" element={<CreateMenu />} />
                         <Route path="menu-item-select" element={<MenuItemSelect />} />
-                        <Route path="/menu-item-create/:type?" element={<CreateMenuItem />} />
-                        <Route path="/sub-menu-select" element={<SubMenuSelect />} />
-                        <Route path="/sub-menu-form/:type?" element={<SubMenuForm />} />
+                        <Route path="menu-item-create/:type?" element={<CreateMenuItem />} />
+                        <Route path="sub-menu-select" element={<SubMenuSelect />} />
+                        <Route path="sub-menu-form/:type?" element={<SubMenuForm />} />
                     </Routes>
-
-                    {/* {this.state.selectedMenu &&
-                        <MenuItemSelect menuItem={menuItem} setParentState={this.setParentState} />
-                    } */}
-
-                    {/* {this.state.selectedView.value === 1 && menuItem && menuItem.length > 0 && menuItem.map((item, index) => {
-                                return (
-                                    <>
-                                        <table className="table table-menu col-12" key={index}>
-                                            <thead
-                                            // className="thead-light"
-                                            >
-                                                <tr className="table-success"><th colspan="6">Menu Item: {item.textDataMenu_Item.valueEn}</th></tr>
-                                                <tr className="table-active">
-                                                    <th scope="col">id</th>
-                                                    <th scope="col">text</th>
-                                                    <th scope="col">link</th>
-                                                    <th scope="col">order</th>
-                                                    <th scope="col">highlight </th>
-                                                    <th scope="col">Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td scope="row">{item.id}</td>
-                                                    <td>{item.textDataMenu_Item.valueEn}</td>
-                                                    <td>{item.link}</td>
-                                                    <td>{item.order}</td>
-                                                    <td>{item.highLight}</td>
-                                                    <td>Actions</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        {item.Sub_Menus.length > 0 &&
-                                            <table className="table table-sub-menu col-12">
-                                                <thead
-                                                // className="thead-light"
-                                                >
-                                                    <tr className="table-danger">
-                                                        <th colSpan={4}>Sub Menu of Menu Item: {item.textDataMenu_Item.valueEn}</th>
-                                                    </tr>
-                                                    <tr className="table-active">
-                                                        <th scope="col">id menu item</th>
-                                                        <th scope="col">text</th>
-                                                        <th scope="col">link</th>
-                                                        <th scope="col">order</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {item.Sub_Menus.map((item, index) => {
-                                                        return (
-                                                            <tr>
-                                                                <td scope="row">{item.menuParentId}</td>
-                                                                <td>{item.textDataSub_Menu.valueEn}</td>
-                                                                <td>{item.link}</td>
-                                                                <td>{item.order}</td>
-                                                            </tr>
-                                                        )
-                                                    })}
-                                                </tbody>
-                                            </table>
-                                        }
-                                    </>
-                                )
-                            })}
-
-                            {this.state.selectedView.value === 2 && menuItem &&
-                                <table className="table table-menu-item-only col-12">
-                                    <thead>
-                                        <tr className="table-success"><th colspan="6">Menu Item</th></tr>
-                                        <tr className="table-active">
-                                            <th scope="col">id</th>
-                                            <th scope="col">text</th>
-                                            <th scope="col">link</th>
-                                            <th scope="col">order</th>
-                                            <th scope="col">highlight </th>
-                                            <th scope="col">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {menuItem && menuItem.length > 0 && menuItem.map((item, index) => {
-                                            return (
-                                                <tr>
-                                                    <td scope="row">{item.id}</td>
-                                                    <td>{item.textDataMenu_Item.valueEn}</td>
-                                                    <td>{item.link}</td>
-                                                    <td>{item.order}</td>
-                                                    <td>{item.highLight}</td>
-                                                    <td>Actions</td>
-                                                </tr>
-                                            )
-                                        })}
-                                        <tr>
-                                            <td colSpan={100}>
-                                                <input value='+ Add New' type="button" class="btn btn-success"
-                                                    onClick={() => this.toggle('isShowMenuItemForm')}
-                                                />
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            } */}
                 </div>
             </>
         )

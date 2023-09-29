@@ -59,7 +59,11 @@ class HeaderSelect extends Component {
         return (
             <>
                 <h1>select header</h1>
-
+                <div className="row px-3 my-1">
+                    <input value='+ Add New' type="button" className="btn btn-success ml-auto"
+                        onClick={() => this.directCreateHeader()}
+                    />
+                </div>
                 <table className="table table-header">
                     <thead className="thead-light">
                         <tr>
@@ -91,15 +95,6 @@ class HeaderSelect extends Component {
                                 </tr>
                             )
                         })}
-                        {!this.state.isShowCreateForm &&
-                            <tr>
-                                <td colSpan={100}>
-                                    <input value='+ Add New' type="button" className="btn btn-success mx-1"
-                                        onClick={() => this.directCreateHeader()}
-                                    />
-                                </td>
-                            </tr>
-                        }
                     </tbody>
                 </table>
             </>

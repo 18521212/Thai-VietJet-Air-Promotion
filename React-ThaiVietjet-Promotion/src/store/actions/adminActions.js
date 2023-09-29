@@ -2,8 +2,22 @@ import actionTypes from './actionTypes';
 
 import {
     getAllMenu, getAllMenuItemByMenuId, getAllSubMenuByMenuItemId,
-    getAllHeader
+    getAllHeader, getAllCampaign, getCampaign
 } from 'services/userService';
+
+export const fetchCampaign = (id) => {
+    return async (dispatch, getState) => {
+        try {
+            let res = await getCampaign(id)
+            dispatch({
+                type: actionTypes.FETCH_CAMPAIGN,
+                data: res
+            })
+        } catch (e) {
+            console.log('fetchHeader error', e)
+        }
+    }
+}
 
 export const fetchHeader = () => {
     return async (dispatch, getState) => {

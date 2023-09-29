@@ -13,9 +13,14 @@ let createCampaign = async (req, res) => {
     }
 }
 
-let getAllCampaign = async (req, res) => {
+let getCampaign = async (req, res) => {
     try {
-        let data = await campaignService.getAllCampaign();
+        let data
+        if (!req.params.id) {
+            data = await campaignService.getAllCampaign();
+        } else {
+            data = await campaignService.getCampaignById(req.params.id);
+        }
         return res.status(200).json(data)
     } catch (e) {
         console.log(e);
@@ -53,7 +58,7 @@ let deleteCampaign = async (req, res) => {
 }
 
 module.exports = {
-    getAllCampaign: getAllCampaign,
+    getCampaign: getCampaign,
     createCampaign: createCampaign,
     updateCampaign: updateCampaign,
     deleteCampaign: deleteCampaign

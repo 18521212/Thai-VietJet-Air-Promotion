@@ -7,6 +7,8 @@ import { createHeader, updateHeader } from "services/userService";
 import { toast } from 'react-toastify';
 import { connect } from 'react-redux'
 import * as actions from 'store/actions';
+import { CommonUtils } from "utils";
+// import bsCustomFileInput from 'bs-custom-file-input'
 
 class CreateHeader extends Component {
     constructor(props) {
@@ -25,7 +27,6 @@ class CreateHeader extends Component {
     mapDataUpdate = () => {
         if (!this.props.isUpdate) return
         let { selectedHeader } = this.props
-        console.log(this.props.optionMenus.filter(item => item.value.id === this.props.selectedHeader.menuId))
         if (selectedHeader) {
             this.setState({
                 imageLogoInput: selectedHeader.imageLogo,
@@ -72,6 +73,20 @@ class CreateHeader extends Component {
         this.props.setParentState('selectedPageHeader', this.props.pageHeader[1])
     }
 
+    handleOnchangeImage = async (name, event) => {
+        let data = event.target.files;
+        let file = data[0];
+        event.target.nextElementSibling.innerText = file.name // show file name
+        if (file) {
+            let base64 = await CommonUtils.getBase64(file);
+            let objectUrl = URL.createObjectURL(file);
+            this.setState({
+                // previewImgURL: objectUrl,
+                [name]: base64
+            })
+        }
+    }
+
     render() {
         return (
             <>
@@ -80,20 +95,24 @@ class CreateHeader extends Component {
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="inputEmail4">Logo Image</label>
-                            <input value={this.state.imageLogoInput} name='imageLogoInput' parentState='headerFormInput'
-                                onChange={(event) => this.handleOnChangeText(event)} type="text"
-                                class="form-control" placeholder="Logo Image"
-                            />
+                            <div class="custom-file">
+                                <input type="file" className="custom-file-input" id="validatedCustomFile"
+                                    onChange={(event) => this.handleOnchangeImage('imageLogoInput', event)}
+                                />
+                                <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
+                            </div>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="inputPassword4">Background Image</label>
-                            <input value={this.state.imageBackgroundInput} name='imageBackgroundInput' parentState='headerFormInput'
-                                onChange={(event) => this.handleOnChangeText(event)} type="text"
-                                class="form-control" placeholder="Background Image"
-                            />
+                            <div class="custom-file">
+                                <input type="file" className="custom-file-input" id="validatedCustomFile"
+                                    onChange={(event) => this.handleOnchangeImage('imageBackgroundInput', event)}
+                                />
+                                <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
+                            </div>
                         </div>
 
-                        <Select className="select-menu col-md-4 p-0"
+                        <Select className="select-menu col-md-4 form-group"
                             value={this.state.selectedMenu}
                             options={this.props.optionMenus}
                             name={'selectedMenu'}
@@ -112,13 +131,14 @@ class CreateHeader extends Component {
                                 }
                             })}
                         />
+                        <div className="w-100"></div>
+                        <button type="button" className={`btn ${this.state.isUpdateHeader ? 'btn-warning' : 'btn-primary'} mx-1`}
+                            onClick={(event) => this.handleCreateHeader(event)}
+                        >{this.state.isUpdateHeader ? 'Update' : 'Create'}</button>
+                        <button type="button" className="btn btn-secondary mx-1"
+                            onClick={() => this.backHeaderSelect()}
+                        >Cancel</button>
                     </div>
-                    <button type="button" className={`btn ${this.state.isUpdateHeader ? 'btn-warning' : 'btn-primary'} mx-1`}
-                        onClick={(event) => this.handleCreateHeader(event)}
-                    >{this.state.isUpdateHeader ? 'Update' : 'Create'}</button>
-                    <button type="button" className="btn btn-secondary mx-1"
-                        onClick={() => this.backHeaderSelect()}
-                    >Cancel</button>
                 </form>
             </>
         )

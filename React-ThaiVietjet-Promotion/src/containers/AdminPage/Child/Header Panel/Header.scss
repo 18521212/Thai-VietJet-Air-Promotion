@@ -7,7 +7,7 @@
     color: white;
 
     .navbar {
-        background-color: #1c2945 !important; // #e61f20
+        background-color: #e61f20 !important; // #e61f20
 
         img {
             height: auto;
@@ -17,9 +17,7 @@
         }
 
         a {
-            &:hover {
-                color: white !important;
-            }
+            color: white !important;
         }
     }
 }

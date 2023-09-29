@@ -9,10 +9,10 @@ module.exports = {
                 type: Sequelize.INTEGER
             },
             imageLogo: {
-                type: Sequelize.STRING
+                type: Sequelize.BLOB('long')
             },
             imageBackground: {
-                type: Sequelize.STRING
+                type: Sequelize.BLOB('long')
             },
             menuId: {
                 type: Sequelize.INTEGER
