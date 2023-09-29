@@ -1,144 +1,5 @@
 const db = require('../models');
-
-// form section
-
-let createFormSection = (data) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            if (!data.name) {
-                resolve({
-                    errCode: 0,
-                    errMessage: 'Missing required parameters',
-                })
-            } else {
-                await db.Form_Section.create({
-                    title: data.title,
-                    instruct: data.instruct,
-                    customer_form_id: data.customer_form_id,
-                    frame_card_id: data.frame_card_id,
-                    breakdownId: data.breakdownId,
-                    checkboxId: data.checkboxId,
-                    button_submit_id: data.button_submit_id,
-                    name: data.name
-                })
-
-                resolve({
-                    errCode: 0,
-                    errMessage: 'Create form section succeed',
-                })
-            }
-        } catch (e) {
-            reject(e);
-        }
-    })
-} // need to edit form section table
-
-let getAllFormSection = () => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            let data = await db.Form_Section.findAll({
-                include: [
-                    {
-                        model: db.Form,
-                        include: [
-                            {
-                                model: db.Form_Detail, as: 'Form_Detail',
-                                include: [
-                                    {
-                                        model: db.Input,
-                                        include: [
-                                            {
-                                                model: db.Text_Input,
-                                                include: [
-                                                    { model: db.Text_Translation, as: 'titleDataText_Input' },
-                                                    { model: db.Text_Translation, as: 'placeHolderDataText_Input' }
-                                                ]
-                                            },
-                                            {
-                                                model: db.Dropdown,
-                                                include: [
-                                                    { model: db.Row_Dataset_Dropdown, as: 'dataDropdown' },
-                                                    { model: db.Text_Translation, as: 'titleDataDropdown' }
-                                                ]
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            })
-
-            resolve({
-                errCode: 0,
-                errMessage: 'Ok',
-                data
-            })
-        } catch (e) {
-            reject(e);
-        }
-    })
-}
-
-let getFormSectionById = (id) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            if (!id) {
-                resolve({
-                    errCode: 0,
-                    errMessage: 'Missing required parameters',
-                })
-            }
-            else {
-                let data = await db.Form_Section.findOne({
-                    where: {
-                        id: id
-                    },
-                    include: [
-                        {
-                            model: db.Form,
-                            include: [
-                                {
-                                    model: db.Form_Detail, as: 'Form_Detail',
-                                    include: [
-                                        {
-                                            model: db.Input,
-                                            include: [
-                                                {
-                                                    model: db.Text_Input,
-                                                    include: [
-                                                        { model: db.Text_Translation, as: 'titleDataText_Input' },
-                                                        { model: db.Text_Translation, as: 'placeHolderDataText_Input' }
-                                                    ]
-                                                },
-                                                {
-                                                    model: db.Dropdown,
-                                                    include: [
-                                                        { model: db.Row_Dataset_Dropdown, as: 'dataDropdown' },
-                                                        { model: db.Text_Translation, as: 'titleDataDropdown' }
-                                                    ]
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                })
-
-                resolve({
-                    errCode: 0,
-                    errMessage: 'Ok',
-                    data
-                })
-            }
-        } catch (e) {
-            reject(e);
-        }
-    })
-}
+const { resolveObj } = require('../utils');
 
 // form
 
@@ -146,20 +7,14 @@ let createForm = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
             if (!data.name) {
-                resolve({
-                    errCode: 1,
-                    errMessage: 'Missing required parameters',
-                })
+                resolve(resolveObj.MISSING_PARAMETERS)
             } else {
                 await db.Form.create({
                     name: data.name,
                     css: data.css
                 })
 
-                resolve({
-                    errCode: 0,
-                    errMessage: 'Create new form succeed',
-                })
+                resolve(resolveObj.CREATE_SUCCEED())
             }
         } catch (e) {
             reject(e);
@@ -167,16 +22,25 @@ let createForm = (data) => {
     })
 }
 
-let getAllForm = (data) => {
+let getAllForm = () => {
     return new Promise(async (resolve, reject) => {
         try {
             let data = await db.Form.findAll()
+            resolve(resolveObj.GET(data))
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
 
-            resolve({
-                errCode: 0,
-                errMessage: 'Ok',
-                data
-            })
+let getFormById = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!id) {
+                resolve(resolveObj.MISSING_PARAMETERS)
+            }
+            let data = await db.Form.findOne({ where })
+            resolve(resolveObj.GET(data))
         } catch (e) {
             reject(e)
         }
@@ -189,12 +53,7 @@ let getAllFormDetail = () => {
     return new Promise(async (resolve, reject) => {
         try {
             let data = await db.Form_Detail.findAll()
-
-            resolve({
-                errCode: 0,
-                errMessage: 'Ok',
-                data
-            })
+            resolve(resolveObj.GET(Data))
         } catch (e) {
             reject(e)
         }
@@ -205,10 +64,7 @@ let addInputIntoForm = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
             if (!data.formId || !data.inputId) {
-                resolve({
-                    errCode: 1,
-                    errMessage: 'Missing required parameters'
-                })
+                resolve(resolveObj.MISSING_PARAMETERS)
             } else {
                 //check form, input is exist
                 let form = await db.Form.findOne({
@@ -777,12 +633,9 @@ let fetchData = () => {
 }
 
 module.exports = {
-    createFormSection: createFormSection,
-    getAllFormSection: getAllFormSection,
-    getFormSectionById: getFormSectionById,
-
     createForm: createForm,
     getAllForm: getAllForm,
+    getFormById: getFormById,
 
     getAllFormDetail: getAllFormDetail,
     addInputIntoForm: addInputIntoForm,

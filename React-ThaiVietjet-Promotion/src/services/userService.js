@@ -7,12 +7,16 @@ const getAllCampaign = () => {
     return axios.get('/api/campaigns')
 }
 
-const getCampaign = (id = null) => {
+const getCampaign = (id) => {
     if (id) {
         return axios.get(`/api/campaigns/${id}`)
     } else {
         return axios.get(`/api/campaigns`)
     }
+}
+
+const updateCampaign = (data) => {
+    return axios.put('/api/campaigns', data)
 }
 
 // header 
@@ -104,25 +108,43 @@ const deleteSubMenu = (data) => {
 
 // banner
 
-const getAllBanners = () => {
+const getAllBanners = (id) => {
     return axios.get('/api/banners');
     // return axios.get('http://localhost:3002/api/get-all-banners');
 }
 
 // body
 
-const getContentBodyById = (id) => {
-    return axios.get(`/api/content-bodys/${id}`)
+const getContentBody = (id) => {
+    if (id) {
+        return axios.get(`/api/content-bodys/${id}`)
+    } else {
+        return axios.get(`/api/content-bodys`)
+    }
 }
 
-// form section
+// form
 
-const getFormSectionById = (id) => {
-    return axios.get(`/api/form-sections/${id}`)
+const getForm = (id) => {
+    if (id) {
+        return axios.get(`/api/forms/${id}`)
+    } else {
+        return axios.get(`/api/forms`)
+    }
 }
 
 const getAllTextInput = () => {
     return axios.get('/api/get-all-text-input')
+}
+
+// footer
+
+const getFooter = (id) => {
+    if (id) {
+        return axios.get(`/api/footers/${id}`)
+    } else {
+        return axios.get(`/api/footers`)
+    }
 }
 
 // pack
@@ -133,11 +155,11 @@ const getAllPack = () => {
 
 export {
     getAllBanners, getAllMenuItemByMenuId, getAllHeader,
-    getAllTextInput, getFormSectionById, getAllPack,
-    getContentBodyById, getAllCampaign, createHeader,
+    getAllTextInput, getAllPack,
+    getContentBody, getAllCampaign, createHeader,
     deleteHeader, getAllMenu, createMenu, deleteMenu,
     updateMenu, createMenuItem, deleteMenuItem,
     updateMenuItem, createSubMenu, getAllSubMenuByMenuItemId,
     deleteSubMenu, updateSubMenu, updateHeader,
-    getCampaign,
+    getCampaign, getForm, getFooter, updateCampaign
 }

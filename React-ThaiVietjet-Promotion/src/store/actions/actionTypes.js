@@ -6,15 +6,14 @@ const actionTypes = Object.freeze({
 
     //admin
     FETCH_CAMPAIGN: 'FETCH_CAMPAIGN',
-    
     FETCH_HEADER: 'FETCH_HEADER',
-
     FETCH_MENU: 'FETCH_MENU',
-    // FETCH_MENU_SUCCESS: 'FETCH_MENU_SUCCESS',
-
     FETCH_MENUITEM: 'FETCH_MENUITEM',
-
     FETCH_SUBMENU: 'FETCH_SUBMENU',
+    FETCH_BANNER: 'FETCH_BANNER',
+    FETCH_BODY: 'FETCH_BODY',
+    FETCH_FORM: 'FETCH_FORM',
+    FETCH_FOOTER: 'FETCH_FOOTER',
 })
 
 export default actionTypes;

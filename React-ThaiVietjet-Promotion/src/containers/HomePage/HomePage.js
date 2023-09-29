@@ -38,7 +38,7 @@ class HomePage extends Component {
 
     render() {
         let { campaign } = this.state
-        console.log(campaign)
+        // console.log(campaign)
         return (
             <>
                 {campaign && // if doesn't has this line, first mount (not did mount) or first render will not get value id

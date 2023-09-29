@@ -21,6 +21,11 @@ let initWebRoutes = (app) => {
     // banner
     router.post('/api/banners', bannerController.createBanner);
     router.get('/api/banners', bannerController.getAllBanner);
+    router.put('/api/banners', bannerController.updateBanner);
+    router.delete('/api/banners', bannerController.deleteBanner);
+
+    router.post('/api/image-banners', bannerController.addImageBanner)
+    router.delete('/api/image-banners', bannerController.deleteImageBanner)
 
     // header
     router.post('/api/headers', headerController.createHeader);
@@ -45,15 +50,11 @@ let initWebRoutes = (app) => {
 
 
     // body
-    router.get('/api/content-bodys/:id?', bodyController.getContentBodyById)
+    router.get('/api/content-bodys/:id?', bodyController.getContentBody)
 
-    // form section
-    router.post('/api/form-sections', formController.createFormSection);
-    router.get('/api/form-sections', formController.getAllFormSection);
-    router.get('/api/form-sections/:id', formController.getFormSectionById);
-
+    // form
     router.post('/api/forms', formController.createForm)
-    router.get('/api/forms', formController.getAllForm)
+    router.get('/api/forms/:id?', formController.getForm)
 
     router.get('/api/form-details', formController.getAllFormDetail)
     router.post('/api/form-details', formController.addInputIntoForm)
@@ -79,8 +80,7 @@ let initWebRoutes = (app) => {
 
     // footer
     router.post('/api/footers', footerController.createFooter)
-    router.get('/api/footers', footerController.getAllFooter)
-    router.get('/api/footers/:id', footerController.getFooterById)
+    router.get('/api/footers/:id?', footerController.getFooter)
     router.put('/api/footers', footerController.updateFooter)
     router.delete('/api/footers', footerController.deleteFooter)
 

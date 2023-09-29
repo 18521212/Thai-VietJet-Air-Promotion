@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 import {
     getAllBanners,
-} from "../../../services/userService";
+} from "services/userService";
 
 class Banner extends Component {
     constructor(props) {
@@ -15,29 +15,7 @@ class Banner extends Component {
     }
 
     componentDidMount() {
-        this.getDataBanner()
-    }
 
-    getDataBanner = async () => {
-        let dataBanner = await getAllBanners();
-
-        let desktop, mobile;
-        dataBanner && dataBanner.data && dataBanner.data.length > 0 &&
-            dataBanner.data.map((item, index) => {
-                if (item.type === 'desktop') {
-                    desktop = item
-                } else if (item.type === 'mobile') {
-                    mobile = item
-                }
-            })
-
-        this.setState({
-            bannerImage: {
-                ...this.state.bannerImage,
-                desktop: desktop.image,
-                mobile: mobile.image
-            }
-        })
     }
 
     render() {
@@ -47,13 +25,13 @@ class Banner extends Component {
                 <div className="container-fluid p-0 top-section">
                     <picture>
                         < source
-                            srcSet={bannerImage.mobile ? bannerImage.mobile : ''}
+                            // srcSet={bannerImage.mobile ? bannerImage.mobile : ''}
                             media="(max-width: 600px)"
                             className="img-fluid"
                         />
                         <img
                             className="img-fluid"
-                            src={bannerImage.desktop ? bannerImage.desktop : ''}
+                            // src={bannerImage.desktop ? bannerImage.desktop : ''}
                             alt="advertise-banner"
                         />
                     </picture>

@@ -1,45 +1,5 @@
 import formService from '../services/formService';
-
-// form section
-
-let createFormSection = async (req, res) => {
-    try {
-        let data = await formService.createFormSection(req.body);
-        return res.status(200).json(data)
-    } catch (e) {
-        console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
-    }
-}
-
-let getAllFormSection = async (req, res) => {
-    try {
-        let data = await formService.getAllFormSection();
-        return res.status(200).json(data)
-    } catch (e) {
-        console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
-    }
-}
-
-let getFormSectionById = async (req, res) => {
-    try {
-        let data = await formService.getFormSectionById(req.params.id);
-        return res.status(200).json(data)
-    } catch (e) {
-        console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
-    }
-}
+import { resolveObj } from '../utils';
 
 // form
 
@@ -56,16 +16,18 @@ let createForm = async (req, res) => {
     }
 }
 
-let getAllForm = async (req, res) => {
+let getForm = async (req, res) => {
     try {
-        let data = await formService.getAllForm();
+        let data
+        if (req.params.id) {
+            data = await formService.getFormById(req.params.id)
+        } else {
+            data = await formService.getAllForm()
+        }
         return res.status(200).json(data)
     } catch (e) {
         console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -277,12 +239,8 @@ let fetchData = async (req, res) => {
 }
 
 module.exports = {
-    createFormSection: createFormSection,
-    getAllFormSection: getAllFormSection,
-    getFormSectionById: getFormSectionById,
-
     createForm: createForm,
-    getAllForm: getAllForm,
+    getForm: getForm,
 
     getAllFormDetail: getAllFormDetail,
     addInputIntoForm: addInputIntoForm,

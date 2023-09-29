@@ -1,4 +1,16 @@
 const db = require('../models');
+const { resolveObj } = require('../utils');
+
+let getAllContentBody = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = await db.Content_Body.findAll()
+            resolve(resolveObj.GET(data))
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
 
 let getContentBodyById = (id) => {
     return new Promise(async (resolve, reject) => {
@@ -27,5 +39,6 @@ let getContentBodyById = (id) => {
 }
 
 module.exports = {
+    getAllContentBody: getAllContentBody,
     getContentBodyById: getContentBodyById,
 }

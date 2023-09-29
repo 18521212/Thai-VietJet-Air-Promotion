@@ -9,7 +9,7 @@ import PowerPack from './Child/PowerPack';
 
 import {
     getAllBanners, getAllTextInput, getFormSectionById,
-    getAllPack, getContentBodyById
+    getAllPack, getContentBody
 } from "../../../services/userService";
 
 import _ from 'lodash';
@@ -35,7 +35,7 @@ class Body extends Component {
         // pack data
         let packData = await getAllPack();
         // content body data
-        let contentBodyData = await getContentBodyById(1);
+        let contentBodyData = await getContentBody(1);
 
         this.setState({
             packData: packData.data,

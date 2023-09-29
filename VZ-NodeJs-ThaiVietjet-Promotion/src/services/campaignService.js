@@ -88,7 +88,7 @@ let updateCampaign = (data) => {
                     headerId: data.headerId,
                     bannerId: data.bannerId,
                     bodyId: data.bodyId,
-                    formSectionId: data.formSectionId,
+                    formSectionId: data.formId,
                     footerId: data.footerId
                 }, { transaction: t })
             })

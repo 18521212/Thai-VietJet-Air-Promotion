@@ -1,16 +1,24 @@
 'use strict';
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable('Banners', {
+        await queryInterface.createTable('Image_Banners', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            name: {
-                type: Sequelize.STRING,
+            bannerId: {
+                type: Sequelize.INTEGER,
                 allowNull: false
+            },
+            image: {
+                type: Sequelize.BLOB('long'),
+                allowNull: false
+            },
+            type: {
+                type: Sequelize.STRING,
+                defaultValue: 'mobile'
             },
             createdAt: {
                 allowNull: false,

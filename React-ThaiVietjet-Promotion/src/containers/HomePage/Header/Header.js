@@ -27,7 +27,6 @@ class Header extends Component {
 
     componentDidMount() {
         this.buildData()
-        console.log('headerId from header mount', this.props.headerId)
     }
 
     buildData = async () => {
@@ -73,7 +72,6 @@ class Header extends Component {
     }
 
     render() {
-        console.log('headerId from header render', this.props.headerId)
         let { menuItem, menuLanguage, header } = this.state;
         let mainUrl = 'https://vietjetthai.com';
         let { language } = this.props;

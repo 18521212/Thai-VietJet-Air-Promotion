@@ -12,9 +12,8 @@ import PurchaseBreakdown from "./Child/PurchaseBreakdown";
 import Footer from "../Footer/Footer";
 
 import {
-    getAllBanners, getAllTextInput, getFormSectionById,
-    getAllPack
-} from "../../../services/userService";
+    
+} from "services/userService";
 
 class Form extends Component {
     constructor(props) {
@@ -35,7 +34,7 @@ class Form extends Component {
     }
 
     componentDidMount() {
-        this.getDataAndMapState();
+        // this.getDataAndMapState();
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -54,68 +53,68 @@ class Form extends Component {
         }
     }
 
-    getDataAndMapState = async () => {
-        // get data
-        let formSection = await getFormSectionById(1);
-        // console.log('formSection:', formSection.data.Form.Form_Detail)
-        let listInput = formSection.data.Form.Form_Detail;
-        listInput.sort((a, b) => a.order - b.order);
+    // getDataAndMapState = async () => {
+    //     // get data
+    //     let formSection = await getFormSectionById(1);
+    //     // console.log('formSection:', formSection.data.Form.Form_Detail)
+    //     let listInput = formSection.data.Form.Form_Detail;
+    //     listInput.sort((a, b) => a.order - b.order);
 
-        let { inputCustomerForm } = this.state;
-        let stateCopy = {
-            ...inputCustomerForm,
-        }
+    //     let { inputCustomerForm } = this.state;
+    //     let stateCopy = {
+    //         ...inputCustomerForm,
+    //     }
 
-        // map state
-        listInput.map((item, index) => {
-            if (item.Input.typeInput === 'text') {
-                stateCopy[_.camelCase(item.Input.Text_Input.title)] = '';
-            } else if (item.Input.typeInput === 'dropdown') {
-                let title = item.Input.Dropdown.title;
-                stateCopy[_.camelCase('selected' + title)] = '';// object
-                stateCopy[_.camelCase('option' + title)] = [];
+    //     // map state
+    //     listInput.map((item, index) => {
+    //         if (item.Input.typeInput === 'text') {
+    //             stateCopy[_.camelCase(item.Input.Text_Input.title)] = '';
+    //         } else if (item.Input.typeInput === 'dropdown') {
+    //             let title = item.Input.Dropdown.title;
+    //             stateCopy[_.camelCase('selected' + title)] = '';// object
+    //             stateCopy[_.camelCase('option' + title)] = [];
 
-                // map dropdown data
-                item.Input.Dropdown.dataDropdown.map((item, index) => {
-                    let option = { value: item.value, label: item.label }
-                    stateCopy[_.camelCase('option' + title)].push(option)
-                })
-                // set default selected option
-                stateCopy[_.camelCase('selected' + title)] = stateCopy[_.camelCase('option' + title)][0];
-            }
-        })
+    //             // map dropdown data
+    //             item.Input.Dropdown.dataDropdown.map((item, index) => {
+    //                 let option = { value: item.value, label: item.label }
+    //                 stateCopy[_.camelCase('option' + title)].push(option)
+    //             })
+    //             // set default selected option
+    //             stateCopy[_.camelCase('selected' + title)] = stateCopy[_.camelCase('option' + title)][0];
+    //         }
+    //     })
 
-        // pack data
-        let packData = await getAllPack();
+    //     // pack data
+    //     let packData = await getAllPack();
 
-        // map state pack data
-        // let stateCopy2 = {
-        //     ...this.state.inputFrameCard,
-        // }
+    //     // map state pack data
+    //     // let stateCopy2 = {
+    //     //     ...this.state.inputFrameCard,
+    //     // }
 
-        let { inputFrameCard } = this.state
-        let stateCopy2 = {
-            ...inputFrameCard
-        }
+    //     let { inputFrameCard } = this.state
+    //     let stateCopy2 = {
+    //         ...inputFrameCard
+    //     }
 
-        packData.data.map((item, index) => {
-            stateCopy2[_.camelCase('option' + item.name)] = '';
-            let option = []
-            for (let i = 0; i <= item.maxNumber; i++) {
-                option.push({ value: i, label: i })
-            }
-            stateCopy2[_.camelCase('option' + item.name)] = option;
-            stateCopy2[_.camelCase('selected' + item.name)] = stateCopy2[_.camelCase('option' + item.name)][0];
-        })
+    //     packData.data.map((item, index) => {
+    //         stateCopy2[_.camelCase('option' + item.name)] = '';
+    //         let option = []
+    //         for (let i = 0; i <= item.maxNumber; i++) {
+    //             option.push({ value: i, label: i })
+    //         }
+    //         stateCopy2[_.camelCase('option' + item.name)] = option;
+    //         stateCopy2[_.camelCase('selected' + item.name)] = stateCopy2[_.camelCase('option' + item.name)][0];
+    //     })
 
-        this.setState({
-            ...this.state,
-            inputCustomerForm: stateCopy,
-            dataInputCustomerForm: listInput,
-            packData: packData.data,
-            inputFrameCard: stateCopy2,
-        })
-    }
+    //     this.setState({
+    //         ...this.state,
+    //         inputCustomerForm: stateCopy,
+    //         dataInputCustomerForm: listInput,
+    //         packData: packData.data,
+    //         inputFrameCard: stateCopy2,
+    //     })
+    // }
 
     handleOnChangeSelect = (selectedOption, action) => {
         this.setState({

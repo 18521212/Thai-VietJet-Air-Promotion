@@ -1,5 +1,6 @@
 import { Component } from "react";
-import Select from 'react-select';
+// import Select from 'react-select';
+import Select from "components/Select/Select";
 import './CampaignSelect.scss'
 import _ from 'lodash';
 import { getAllCampaign } from 'services/userService';
@@ -20,6 +21,7 @@ class CampaignSelect extends Component {
     }
 
     componentDidMount() {
+        this.props.loadCampaign()
         this.buildDataAndMapState()
     }
 
@@ -43,6 +45,7 @@ class CampaignSelect extends Component {
 
     handleOnChangeSelect = (selectedCampaign) => {
         this.setState({ selectedCampaign })
+        this.handleNav('../campaign-detail', { campaign: selectedCampaign.value })
     }
 
     handleNav = (link, data) => {
@@ -50,17 +53,8 @@ class CampaignSelect extends Component {
     }
 
     render() {
-        let { selectedCampaign, optionCampaign, listCampaign, dataCampaign } = this.state;
-        let show = (a) => {
-            return a ?
-                <>
-                    <td>{a}</td>
-                </>
-                :
-                <>
-                    <td>Campaign hasn't this item yet</td>
-                </>
-        }
+        let { selectedCampaign, listCampaign, dataCampaign } = this.state;
+        let { campaignOption } = this.props
         return (
             <>
                 <div className="container-fluid">
@@ -69,67 +63,28 @@ class CampaignSelect extends Component {
                             <label>Choose campaign</label>
                             <Select className="select-number"
                                 value={selectedCampaign}
-                                options={optionCampaign}
-                                // name={name}
+                                options={campaignOption}
                                 onChange={this.handleOnChangeSelect}
-                                placeholder='Please choose an campaign'
-                                isClearable={true}
-                                styles={{
-                                    indicatorSeparator: () => { },
-                                }}
-                                menuPosition="fixed"
-                                theme={(theme) => ({
-                                    ...theme,
-                                    colors: {
-                                        ...theme.colors,
-                                        primary: 'grey'
-                                    }
-                                })}
                             />
                         </div>
                     </div>
                     <div className="row">
-                        <div className="col">
-                            {selectedCampaign &&
-                                <>
-                                    <div className="row px-3 my-1">
-                                        <button className="btn btn-primary mr-auto mx-1">Back</button>
-                                        <button className="btn btn-warning ml-auto mx-1"
-                                            onClick={() => this.handleNav('../campaign-form')}>Update</button>
-                                    </div>
-                                    <table className="table">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Column</th>
-                                                <th scope="col">Id</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <th>Header</th>
-                                                {show(selectedCampaign.value.headerId)}
-                                            </tr>
-                                            <tr>
-                                                <th>Banner</th>
-                                                {show(selectedCampaign.value.bannerId)}
-                                            </tr>
-                                            <tr>
-                                                <th>Body</th>
-                                                {show(selectedCampaign.value.bodyId)}
-                                            </tr>
-                                            <tr>
-                                                <th>Form Section</th>
-                                                {show(selectedCampaign.value.formSectionId)}
-                                            </tr>
-                                            <tr>
-                                                <th>Footer</th>
-                                                {show(selectedCampaign.value.footerId)}
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </>
-                            }
-                        </div>
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Id</th>
+                                    <th scope="col">Header Id</th>
+                                    <th scope="col">Banner Id</th>
+                                    <th scope="col">Body Id</th>
+                                    <th scope="col">Form Id</th>
+                                    <th scope="col">Footer Id</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </>
@@ -139,11 +94,14 @@ class CampaignSelect extends Component {
 
 const mapStateToProps = state => {
     return {
+        campaigns: state.admin.campaigns,
+        campaignOption: state.admin.campaignOption
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
+        loadCampaign: (id) => dispatch(actions.fetchCampaign(id))
     };
 };
 

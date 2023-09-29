@@ -68,6 +68,10 @@ export const resolveObj = {
         errCode: 1,
         errMessage: text.EXIST_REF_KEY
     },
+    ERROR_SERVER: {
+        errCode: -1,
+        errMessage: 'Error from the server'
+    },
 
     DELETE_UNSUCCEED: (data_table) => {
         return {
@@ -86,5 +90,16 @@ export const services = {
                 reject(e);
             }
         })
+    }
+}
+
+export const func = {
+    CHECK_HAS_VALUE: (...args) => {
+        args.map((item) => {
+            if (!item) {
+                return false
+            }
+        })
+        return true
     }
 }

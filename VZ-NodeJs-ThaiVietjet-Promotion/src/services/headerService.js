@@ -1,5 +1,5 @@
 const db = require('../models');
-const { resolveObj } = require('../utils');
+const { resolveObj, func } = require('../utils');
 import sequelize from 'sequelize';
 
 // header
@@ -7,7 +7,7 @@ import sequelize from 'sequelize';
 let createHeader = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.imageLogo) {
+            if (func.CHECK_HAS_VALUE(data.imageLogo)) {
                 resolve(resolveObj.MISSING_PARAMETERS)
                 return
             }
@@ -30,8 +30,12 @@ let getAllHeader = () => {
         try {
             let data = await db.Header.findAll();
             if (data) data.map((item) => {
-                item.imageLogo = new Buffer(item.imageLogo, 'base64').toString('binary');
-                item.imageBackground = new Buffer(item.imageBackground, 'base64').toString('binary');
+                if (func.CHECK_HAS_VALUE(item.imageLogo)) {
+                    item.imageLogo = new Buffer(item.imageLogo, 'base64').toString('binary');
+                }
+                if (func.CHECK_HAS_VALUE(item.imageLogo)) {
+                    item.imageBackground = new Buffer(item.imageBackground, 'base64').toString('binary');
+                }
             })
 
             resolve({

@@ -11,12 +11,12 @@ let createFooter = (data) => {
                 resolve(resolveObj.MISSING_PARAMETERS)
                 return;
             }
+            console.log(data)
 
             await db.sequelize.transaction(async (t) => {
                 await db.Footer.create({
-                    data
+                    name: data.name
                 }, { transaction: t })
-
                 resolve(resolveObj.CREATE_SUCCEED('footer'))
             })
         } catch (e) {
@@ -46,7 +46,7 @@ let getFooterById = (id) => {
             let dataApi = await db.Footer.findOne({
                 where: { id: id },
                 include: [
-                    { model: models.Footer_Text }
+                    { model: db.Footer_Text, as: 'footer_text' }
                 ]
             })
 
@@ -86,12 +86,9 @@ let deleteFooter = (id) => {
                 resolve(resolveObj.MISSING_PARAMETERS)
                 return;
             }
-
             await db.sequelize.transaction(async (t) => {
                 await db.Footer_Text.destroy({ where: { footerId: id }, transaction: t })
-
                 let data = await db.Footer.destroy({ where: { id: id }, transaction: t })
-
                 if (data === 0) {
                     resolve(resolveObj.DELETE_UNSUCCEED('Footer'))
                 }
@@ -112,7 +109,6 @@ let createFooterText = (data) => {
                 resolve(resolveObj.MISSING_PARAMETERS)
                 return;
             }
-
             await db.sequelize.transaction(async (t) => {
                 let footer = await db.Footer.findOne({ where: { id: data.footerId } })
 
