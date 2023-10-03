@@ -21,7 +21,7 @@ module.exports = {
             bodyId: {
                 type: Sequelize.INTEGER
             },
-            formSectionId: {
+            formId: {
                 type: Sequelize.INTEGER
             },
             footerId: {

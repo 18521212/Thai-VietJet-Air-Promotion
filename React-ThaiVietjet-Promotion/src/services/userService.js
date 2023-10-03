@@ -1,27 +1,55 @@
 import { toast } from "react-toastify";
 import axios from "../axios";
+import { api } from "utils";
 
-// campaign
+// CRUD
 
-const getAllCampaign = () => {
-    return axios.get('/api/campaigns')
+const create = (link, data) => {
+    return axios.post(link, data)
 }
 
-const getCampaign = (id) => {
+const get = (link, id) => {
     if (id) {
-        return axios.get(`/api/campaigns/${id}`)
+        return axios.get(`${link}/${id}`)
     } else {
-        return axios.get(`/api/campaigns`)
+        return axios.get(`${link}`)
     }
 }
 
+const update = (link, data) => {
+    return axios.put(link, data)
+}
+
+const deleteData = (link, id) => {
+    return axios.delete(link, {
+        data: {
+            ['id']: id
+        }
+    })
+}
+
+// campaign
+
+const createCampaign = (data) => {
+    return create(api.CAMPAIGNS, data)
+}
+
+const getCampaign = (id) => {
+    return get(api.CAMPAIGNS, id)
+}
+
 const updateCampaign = (data) => {
-    return axios.put('/api/campaigns', data)
+    return update(api.CAMPAIGNS, data)
+}
+
+const deleteCampaign = (data) => {
+    return deleteData(api.CAMPAIGNS, data.id)
 }
 
 // header 
 const createHeader = (data) => {
-    return axios.post('/api/headers', data)
+    console.log('cre he se')
+    return create('/api/headers', data)
 }
 
 const getAllHeader = () => {
@@ -33,11 +61,7 @@ const updateHeader = (data) => {
 }
 
 const deleteHeader = (id) => {
-    return axios.delete('/api/headers', {
-        data: {
-            id: id
-        }
-    })
+    return deleteData('/api/headers', id)
 }
 
 // menu
@@ -108,19 +132,26 @@ const deleteSubMenu = (data) => {
 
 // banner
 
-const getAllBanners = (id) => {
-    return axios.get('/api/banners');
-    // return axios.get('http://localhost:3002/api/get-all-banners');
+const createBanner = (data) => {
+    return create(api.BANNERS, data)
+}
+
+const getBanners = (id) => {
+    return get(api.BANNERS, id)
+}
+
+const updateBanner = (data) => {
+    return update(api.BANNERS, data)
+}
+
+const deleteBanner = (data) => {
+    return deleteData(api.BANNERS, data.id)
 }
 
 // body
 
-const getContentBody = (id) => {
-    if (id) {
-        return axios.get(`/api/content-bodys/${id}`)
-    } else {
-        return axios.get(`/api/content-bodys`)
-    }
+const getBody = (id) => {
+    return get(api.BODYS, id)
 }
 
 // form
@@ -154,12 +185,14 @@ const getAllPack = () => {
 }
 
 export {
-    getAllBanners, getAllMenuItemByMenuId, getAllHeader,
+    getAllMenuItemByMenuId, getAllHeader,
     getAllTextInput, getAllPack,
-    getContentBody, getAllCampaign, createHeader,
+    getBody, createHeader,
     deleteHeader, getAllMenu, createMenu, deleteMenu,
     updateMenu, createMenuItem, deleteMenuItem,
     updateMenuItem, createSubMenu, getAllSubMenuByMenuItemId,
     deleteSubMenu, updateSubMenu, updateHeader,
-    getCampaign, getForm, getFooter, updateCampaign
+    getCampaign, getForm, getFooter, updateCampaign,
+    createCampaign, deleteCampaign, getBanners,
+    createBanner, deleteBanner, updateBanner
 }

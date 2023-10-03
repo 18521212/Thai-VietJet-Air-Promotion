@@ -65,8 +65,8 @@ class CreateHeader extends Component {
                 break
             default:
         }
-        res.errCode === 0 && this.backHeaderSelect()
-        res.errCode === 0 ? toast.success(res.errMessage) : toast.error(res.errMessage)
+        res?.errCode === 0 && this.backHeaderSelect()
+        res?.errCode === 0 ? toast.success(res?.errMessage) : toast.error(res?.errMessage)
     }
 
     backHeaderSelect = () => {

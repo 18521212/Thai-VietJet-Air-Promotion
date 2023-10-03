@@ -8,6 +8,7 @@ const initialState = {
     menuItems: '',
     subMenus: '',
     banners: '',
+    banner: '',
     bodys: '',
     forms: '',
     footers: '',
@@ -24,18 +25,7 @@ const initialState = {
 const adminReducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.FETCH_CAMPAIGN:
-            if (Array.isArray(action.data.data)) {
-                return {
-                    ...state,
-                    campaigns: action.data,
-                    campaignOption: buildOption(action.data.data)
-                }
-            } else {
-                return {
-                    ...state,
-                    campaign: action.data
-                }
-            }
+            return mapDataGET(state, action, 'campaign')
         case actionTypes.FETCH_HEADER:
             return {
                 ...state,
@@ -64,11 +54,7 @@ const adminReducer = (state = initialState, action) => {
                 subMenus: action.data
             }
         case actionTypes.FETCH_BANNER:
-            return {
-                ...state,
-                banners: action.data,
-                bannerOption: buildOption(action.data.data)
-            }
+            return mapDataGET(state, action, 'banner')
         case actionTypes.FETCH_BODY:
             return {
                 ...state,
@@ -82,20 +68,24 @@ const adminReducer = (state = initialState, action) => {
                 formOption: buildOption(action.data.data)
             }
         case actionTypes.FETCH_FOOTER:
-            if (Array.isArray(action.data.data)) {
-                return {
-                    ...state,
-                    footers: action.data,
-                    footerOption: buildOption(action.data.data)
-                }
-            } else {
-                return {
-                    ...state,
-                    footer: action.data
-                }
-            }
+            return mapDataGET(state, action, 'footer')
         default:
             return state;
+    }
+}
+
+const mapDataGET = (state = initialState, action, name) => {
+    if (Array.isArray(action.data.data)) {
+        return {
+            ...state,
+            [name + 's']: action.data,
+            [name + 'Option']: buildOption(action.data.data)
+        }
+    } else {
+        return {
+            ...state,
+            [name]: action.data
+        }
     }
 }
 

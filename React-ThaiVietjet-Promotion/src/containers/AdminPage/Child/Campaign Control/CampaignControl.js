@@ -25,7 +25,7 @@ class CampaignControl extends Component {
                 <Routes>
                     <Route path="*" element={<CampaignSelect />} />
                     <Route path="campaign-detail*" element={<CampaignDetail />} />
-                    <Route path="campaign-form*" element={<CampaignForm />} />
+                    <Route path="campaign-form/:type?" element={<CampaignForm />} />
                 </Routes>
             </div>
         )

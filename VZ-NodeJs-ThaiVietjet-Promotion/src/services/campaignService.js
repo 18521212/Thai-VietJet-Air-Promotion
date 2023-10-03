@@ -9,16 +9,17 @@ let createCampaign = (data) => {
                 resolve(resolveObj.MISSING_PARAMETERS)
                 return;
             }
-            let campaign = await db.Campaign.create({
-                name: data.name,
+            await db.sequelize.transaction(async (t) => {
+                let campaign = await db.Campaign.create({
+                    name: data.name,
 
-                headerId: data.headerId,
-                bannerId: data.bannerId,
-                bodyId: data.bodyId,
-                formSectionId: data.formSectionId,
-                footerId: data.footerId
+                    headerId: data.headerId,
+                    bannerId: data.bannerId,
+                    bodyId: data.bodyId,
+                    formId: data.formId,
+                    footerId: data.footerId
+                }, { transaction: t })
             })
-
             resolve(resolveObj.CREATE_SUCCEED('Campaign'))
         } catch (e) {
             reject(e);
@@ -59,7 +60,7 @@ let updateCampaign = (data) => {
             // -- have value, it's equal to '', not equal to null
             if (!data.id ||
                 !(data.name || data.headerId || data.bannerId
-                    || data.bodyId || data.formSectionId || data.footerId)
+                    || data.bodyId || data.formId || data.footerId)
             ) {
                 resolve(resolveObj.MISSING_PARAMETERS)
                 return;
@@ -85,11 +86,11 @@ let updateCampaign = (data) => {
 
                 let update = await dataApi.update({ // update dont insert if data doesn't exist
                     name: data.name,
-                    headerId: data.headerId,
-                    bannerId: data.bannerId,
-                    bodyId: data.bodyId,
-                    formSectionId: data.formId,
-                    footerId: data.footerId
+                    headerId: data.headerId ? data.headerId : null,
+                    bannerId: data.bannerId ? data.bannerId : null,
+                    bodyId: data.bodyId ? data.bodyId : null,
+                    formId: data.formId ? data.formId : null,
+                    footerId: data.footerId ? data.footerId : null
                 }, { transaction: t })
             })
 
@@ -114,7 +115,7 @@ let deleteCampaign = (id) => {
                     throw new Error()
                 }
             })
-
+            resolve(resolveObj.DELETE_SUCCEED())
         } catch (e) {
             reject(e);
         }
@@ -148,11 +149,11 @@ let checkChildTableDataExist = async (data) => {
             table_name = 'Body'
         }
     }
-    if (data.formSectionId) {
-        let dataApi = await db.Form_Section.findOne({ where: { id: data.formSectionId } })
+    if (data.formId) {
+        let dataApi = await db.Form.findOne({ where: { id: data.formId } })
         if (!dataApi) {
             result = false
-            table_name = 'Form_Section'
+            table_name = 'Form'
         }
     }
     if (data.footerId) {

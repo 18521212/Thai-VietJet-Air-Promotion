@@ -20,12 +20,9 @@ let initWebRoutes = (app) => {
 
     // banner
     router.post('/api/banners', bannerController.createBanner);
-    router.get('/api/banners', bannerController.getAllBanner);
+    router.get('/api/banners/:id?', bannerController.getBanner);
     router.put('/api/banners', bannerController.updateBanner);
     router.delete('/api/banners', bannerController.deleteBanner);
-
-    router.post('/api/image-banners', bannerController.addImageBanner)
-    router.delete('/api/image-banners', bannerController.deleteImageBanner)
 
     // header
     router.post('/api/headers', headerController.createHeader);

@@ -15,16 +15,18 @@ let createBanner = async (req, res) => {
     }
 }
 
-let getAllBanner = async (req, res) => {
+let getBanner = async (req, res) => {
     try {
-        let data = await bannerService.getAllBanner();
+        let data
+        if (req.params.id) {
+            data = await bannerService.updateBanner(req.params.id);
+        } else {
+            data = await bannerService.getAllBanner();
+        }
         return res.status(200).json(data)
     } catch (e) {
         console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -81,7 +83,7 @@ let deleteImageBanner = async (req, res) => {
 
 module.exports = {
     createBanner: createBanner,
-    getAllBanner: getAllBanner,
+    getBanner,
     updateBanner: updateBanner,
     deleteBanner: deleteBanner,
 

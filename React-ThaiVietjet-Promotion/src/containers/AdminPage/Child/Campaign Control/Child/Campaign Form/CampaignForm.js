@@ -5,13 +5,14 @@ import Select from "components/Select/Select"
 import withRouter from "components/withRouter/withRouter"
 import { connect } from 'react-redux'
 import * as actions from 'store/actions'
-import { updateCampaign } from "services/userService"
+import { updateCampaign, createCampaign } from "services/userService"
 import { func } from 'utils'
 
 class CampaignForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            name: '',
             header: '',
             banner: '',
             body: '',
@@ -30,13 +31,14 @@ class CampaignForm extends Component {
         await this.props.loadBody()
         await this.props.loadForm()
         await this.props.loadFooter()
-        this.mapDataOption()
+        this.props.location?.state?.campaign && this.mapData()
     }
 
-    mapDataOption = () => {
+    mapData = () => {
         let { campaign } = this.props.location.state
         let { headerOption, bannerOption, bodyOption, formOption, footerOption } = this.props
         this.setState({
+            name: campaign.name,
             header: headerOption.find(item => item.value.id === campaign.headerId),
             banner: bannerOption.find(item => item.value.id === campaign.bannerId),
             body: bodyOption.find(item => item.value.id === campaign.bodyId),
@@ -53,52 +55,79 @@ class CampaignForm extends Component {
         this.setState({ [actions.name]: selectedValue })
     }
 
+    handleOnChangeText = (name, e) => {
+        this.setState({
+            [name]: e.target.value
+        })
+    }
+
     handleSave = async () => {
-        let { campaign } = this.props.location.state
-        let { header, banner, body, form, footer } = this.state
-        let data = {};
-        data.id = campaign.id
-        data.headerId = header?.value?.id
-        data.bannerId = banner?.value?.id
-        data.bodyId = body?.value?.id
-        data.formId = form?.value?.id
-        data.footerId = footer?.value?.id
-        let res = await updateCampaign(data)
+        let type = this.props.params.type
+        let { header, banner, body, form, footer, name } = this.state
+        let data = {}, res;
+        if (type === 'update') {
+            let { campaign } = this.props.location.state
+            data.id = campaign.id
+            data.name = name
+            data.headerId = header?.value?.id
+            data.bannerId = banner?.value?.id
+            data.bodyId = body?.value?.id
+            data.formId = form?.value?.id
+            data.footerId = footer?.value?.id
+            res = await updateCampaign(data)
+        } else {
+            data.name = name
+            data.headerId = header?.value?.id
+            data.bannerId = banner?.value?.id
+            data.bodyId = body?.value?.id
+            data.formId = form?.value?.id
+            data.footerId = footer?.value?.id
+            res = await createCampaign(data)
+        }
+
         func.ALERT_RES(res) && this.handleNav(-1)
     }
 
     render() {
+        let type = this.props.params.type
         return (
             <>
                 <h3>Campaign form</h3>
                 <div className="row">
                     <form className="col-md-5">
                         <div className="form-group">
+                            <label for="exampleInputEmail1">Name</label>
+                            <input className="form-control" value={this.state.name}
+                                onChange={(e) => this.handleOnChangeText('name', e)} type='text' />
+                        </div>
+                        <div className="form-group">
                             <label for="exampleInputEmail1">Header</label>
-                            <Select name='header' value={this.state.header} options={this.props.headerOption}
-                                onChange={this.handleOnChangeSelect} />
+                            <Select value='header' options='headerOption'
+                                parent={this} />
                         </div>
                         <div className="form-group">
                             <label for="exampleInputEmail1">Banner</label>
-                            <Select name='banner' value={this.state.banner} options={this.props.bannerOption}
-                                onChange={this.handleOnChangeSelect} />
+                            <Select value='banner' options='bannerOption'
+                                parent={this} />
                         </div>
                         <div className="form-group">
                             <label for="exampleInputEmail1">Body</label>
-                            <Select name='body' value={this.state.body} options={this.props.bodyOption}
-                                onChange={this.handleOnChangeSelect} />
+                            <Select value='body' options='bodyOption'
+                                parent={this} />
                         </div>
                         <div className="form-group">
                             <label for="exampleInputEmail1">Form</label>
-                            <Select name='form' value={this.state.form} options={this.props.formOption}
-                                onChange={this.handleOnChangeSelect} />
+                            <Select value='form' options='formOption'
+                                parent={this} />
                         </div>
                         <div className="form-group">
                             <label for="exampleInputEmail1">Footer</label>
-                            <Select name='footer' value={this.state.footer} options={this.props.footerOption}
-                                onChange={this.handleOnChangeSelect} />
+                            <Select value='footer' options='footerOption'
+                                parent={this} />
                         </div>
-                        <button type="button" className="btn btn-warning mx-1" onClick={() => this.handleSave()}>Save</button>
+                        <button type="button" className={`btn ${type === 'update' ? 'btn-warning' : 'btn-success'} mx-1`}
+                            onClick={() => this.handleSave()}>
+                            {type === 'update' ? 'Save' : 'Create'}</button>
                         <button type="button" className="btn btn-secondary mx-1" onClick={() => this.handleNav(-1)}>Cancel</button>
                     </form>
                 </div>

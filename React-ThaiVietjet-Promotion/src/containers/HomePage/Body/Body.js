@@ -8,8 +8,8 @@ import Select from 'react-select';
 import PowerPack from './Child/PowerPack';
 
 import {
-    getAllBanners, getAllTextInput, getFormSectionById,
-    getAllPack, getContentBody
+    getBanners, getAllTextInput, getFormSectionById,
+    getAllPack, getBody
 } from "../../../services/userService";
 
 import _ from 'lodash';
@@ -35,7 +35,7 @@ class Body extends Component {
         // pack data
         let packData = await getAllPack();
         // content body data
-        let contentBodyData = await getContentBody(1);
+        let contentBodyData = await getBody(1);
 
         this.setState({
             packData: packData.data,

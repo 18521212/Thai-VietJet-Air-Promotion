@@ -7,15 +7,17 @@ import sequelize from 'sequelize';
 let createHeader = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (func.CHECK_HAS_VALUE(data.imageLogo)) {
+            if (!func.CHECK_HAS_VALUE(data.imageLogo)) {
                 resolve(resolveObj.MISSING_PARAMETERS)
                 return
             }
             // create header
-            let header = await db.Header.create({
-                imageLogo: data.imageLogo,
-                imageBackground: data.imageBackground ? data.imageBackground : null,
-                menuId: data.menuId
+            await db.sequelize.transaction(async (t) => {
+                let header = await db.Header.create({
+                    imageLogo: data.imageLogo,
+                    imageBackground: data.imageBackground,
+                    menuId: data.menuId
+                }, {transaction: t})
             })
 
             resolve(resolveObj.CREATE_SUCCEED('Header'))

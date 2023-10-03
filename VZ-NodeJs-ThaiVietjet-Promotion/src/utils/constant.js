@@ -83,6 +83,7 @@ export const resolveObj = {
 
 export const services = {
     SERVICE: (func) => {
+        console.log('ser')
         return new Promise(async (resolve, reject) => {
             try {
 
@@ -95,11 +96,13 @@ export const services = {
 
 export const func = {
     CHECK_HAS_VALUE: (...args) => {
+        let result = true
         args.map((item) => {
             if (!item) {
-                return false
+                result = false
+                return
             }
         })
-        return true
+        return result
     }
 }

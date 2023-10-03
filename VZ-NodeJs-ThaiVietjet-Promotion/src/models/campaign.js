@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
         headerId: DataTypes.INTEGER,
         bannerId: DataTypes.INTEGER,
         bodyId: DataTypes.INTEGER,
-        formSectionId: DataTypes.INTEGER,
+        formId: DataTypes.INTEGER,
         footerId: DataTypes.INTEGER,
     }, {
         sequelize,

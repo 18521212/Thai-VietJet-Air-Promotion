@@ -45,7 +45,7 @@ class CampaignDetail extends Component {
                     <button className="btn btn-primary mr-auto mx-1"
                         onClick={() => this.handleNav(-1)}>Back</button>
                     <button className="btn btn-warning ml-auto mx-1"
-                        onClick={() => this.handleNav('../campaign-form', { campaign: campaign })}>Update</button>
+                        onClick={() => this.handleNav('../campaign-form/update', { campaign: campaign })}>Update</button>
                 </div>
                 {campaign &&
                     <table className="table">
@@ -70,7 +70,7 @@ class CampaignDetail extends Component {
                             </tr>
                             <tr>
                                 <th>Form</th>
-                                {this.show(campaign?.formSectionId)}
+                                {this.show(campaign?.formId)}
                             </tr>
                             <tr>
                                 <th>Footer</th>

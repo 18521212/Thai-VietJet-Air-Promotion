@@ -4,11 +4,12 @@ import './AdminPage.scss';
 import Header from './Child/Header Panel/Header';
 import CampaignControl from './Child/Campaign Control/CampaignControl';
 import HeaderControl from './Child/Header Control/HeaderControl';
-
 import {
     Routes,
     Route,
 } from "react-router-dom";
+import BannerControl from './Child/Banner Control/BannerControl';
+import BodyControl from './Child/Body Control/BodyControl';
 
 class AdminPage extends Component {
     constructor(props) {
@@ -30,6 +31,8 @@ class AdminPage extends Component {
                 <Routes>
                     <Route path="/campaign*" element={<CampaignControl />} />
                     <Route path="/header*" element={<HeaderControl />} />
+                    <Route path="/banner*" element={<BannerControl />} />
+                    <Route path="/body*" element={<BodyControl />} />
                 </Routes>
             </div>
         )

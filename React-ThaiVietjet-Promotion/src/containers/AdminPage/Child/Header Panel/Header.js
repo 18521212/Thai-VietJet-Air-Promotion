@@ -38,10 +38,10 @@ class Header extends Component {
                                 <ul className="navbar-nav mr-auto">
                                     <li className="nav-item"><Link className="nav-link" to='/admin/campaign'>Campaign</Link></li>
                                     <li className="nav-item"><Link className="nav-link" to='/admin/header'>Header</Link></li>
-                                    <li className="nav-item"><Link className="nav-link">Banner</Link></li>
-                                    <li className="nav-item"><Link className="nav-link">Body</Link></li>
-                                    <li className="nav-item"><Link className="nav-link">Form Section</Link></li>
-                                    <li className="nav-item"><Link className="nav-link">Footer</Link></li>
+                                    <li className="nav-item"><Link className="nav-link" to='/admin/banner'>Banner</Link></li>
+                                    <li className="nav-item"><Link className="nav-link" to='/admin/body'>Body</Link></li>
+                                    <li className="nav-item"><Link className="nav-link" to='/admin/form'>Form Section</Link></li>
+                                    <li className="nav-item"><Link className="nav-link" to='/admin/footer'>Footer</Link></li>
                                 </ul>
                             </div>
                         </nav>

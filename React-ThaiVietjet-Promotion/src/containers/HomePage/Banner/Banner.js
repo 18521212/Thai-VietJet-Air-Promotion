@@ -3,7 +3,7 @@ import './Banner.scss'
 import _ from 'lodash';
 
 import {
-    getAllBanners,
+    getBanners,
 } from "services/userService";
 
 class Banner extends Component {

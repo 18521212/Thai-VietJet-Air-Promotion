@@ -1,4 +1,5 @@
 import { toast } from 'react-toastify'
+import { CommonUtils } from "utils";
 
 export const func = {
     ALERT_RES: (res) => {
@@ -9,5 +10,39 @@ export const func = {
             toast.error(res.errMessage)
             return false
         }
+    },
+    ALERT_CONFIRM: (text, func) => {
+        if (window.confirm(text) === true) {
+            func && func()
+            return true
+        } else {
+            return false
+        }
+    },
+    NAV: (parent, link, data) => {
+        parent?.props?.navigate(link, { state: data })
+    },
+    ONCHANGE_TEXT: (parent, name, e) => {
+        parent.setState({ [name]: e.target.value })
+    },
+    ONCHANGE_IMAGE: async (parent, name, e, nameImagePreview) => {
+        let data = e.target.files;
+        let file = data[0];
+        e.target.nextElementSibling.innerText = file.name // show file name
+        let objectUrl
+        if (file) {
+            let base64 = await CommonUtils.getBase64(file);
+            objectUrl = URL.createObjectURL(file);
+            parent.setState({
+                [nameImagePreview]: objectUrl,
+                [name]: base64
+            })
+        }
+    },
+    HANDLE_DELETE: (text, data, funcDelete, funcFetchData) => {
+        func.ALERT_CONFIRM(text, async () => {
+            let res = await funcDelete({ id: data.id })
+            func.ALERT_RES(res) && funcFetchData()
+        })
     }
 }

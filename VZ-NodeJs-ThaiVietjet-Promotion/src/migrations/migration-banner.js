@@ -12,6 +12,13 @@ module.exports = {
                 type: Sequelize.STRING,
                 allowNull: false
             },
+            imageMobile: {
+                type: Sequelize.BLOB('long'),
+            },
+            imageDesktop: {
+                type: Sequelize.BLOB('long'),
+                allowNull: false
+            },
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE

@@ -10,11 +10,13 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            Banner.hasMany(models.Image_Banner, { foreignKey: 'bannerId', as: 'imageData' })
+            
         }
     };
     Banner.init({
         name: DataTypes.STRING,
+        imageMobile: DataTypes.STRING,
+        imageDesktop: DataTypes.STRING,
     }, {
         sequelize,
         modelName: 'Banner',

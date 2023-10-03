@@ -2,8 +2,8 @@ import actionTypes from './actionTypes';
 
 import {
     getAllMenu, getAllMenuItemByMenuId, getAllSubMenuByMenuItemId,
-    getAllHeader, getCampaign, getAllBanners,
-    getContentBody, getFooter
+    getAllHeader, getCampaign, getBanners,
+    getBody, getFooter
 } from 'services/userService';
 
 export const fetchCampaign = (id) => {
@@ -78,10 +78,10 @@ export const fetchSubMenu = (menuParentId) => {
     }
 }
 
-export const fetchBanner = () => {
+export const fetchBanner = (id) => {
     return async (dispatch, getState) => {
         try {
-            let res = await getAllBanners()
+            let res = await getBanners(id)
             dispatch({
                 type: actionTypes.FETCH_BANNER,
                 data: res
@@ -95,7 +95,7 @@ export const fetchBanner = () => {
 export const fetchBody = (id) => {
     return async (dispatch, getState) => {
         try {
-            let res = await getContentBody(id)
+            let res = await getBody(id)
             dispatch({
                 type: actionTypes.FETCH_BODY,
                 data: res
@@ -109,7 +109,7 @@ export const fetchBody = (id) => {
 export const fetchForm = (id) => {
     return async (dispatch, getState) => {
         try {
-            let res = await getContentBody(id)
+            let res = await getBody(id)
             dispatch({
                 type: actionTypes.FETCH_FORM,
                 data: res
