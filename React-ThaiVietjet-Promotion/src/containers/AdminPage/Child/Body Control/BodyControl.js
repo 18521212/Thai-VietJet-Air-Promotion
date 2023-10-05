@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 import { Route, Routes } from "react-router";
 import BodyForm from "./Child/Body Form/BodyForm";
 import BodySelect from "./Child/Body Select/BodySelect";
+import BodyDetail from "./Child/Body Detail/BodyDetail";
 
 class BodyControl extends Component {
     constructor(props) {
@@ -14,6 +15,12 @@ class BodyControl extends Component {
         this.state = {
 
         }
+    }
+
+    componentDidMount() {
+        let a = { b: 1, c: 2 }
+        let b = { c: 3, e: 4 }
+        console.log('a', { ...a, ...b })
     }
 
     handleOnChangeSelect = (selectedValue, actions) => {
@@ -26,13 +33,14 @@ class BodyControl extends Component {
 
     render() {
         return (
-            <>
+            <div className="container-fluid">
                 <h3>Body Control</h3>
                 <Routes>
                     <Route path="*" element={<BodySelect />} />
-                    <Route path="/body-form" element={<BodyForm />} />
+                    <Route path="body-detail" element={<BodyDetail />} />
+                    <Route path="body-form/:type?" element={<BodyForm />} />
                 </Routes>
-            </>
+            </div>
         )
     }
 }

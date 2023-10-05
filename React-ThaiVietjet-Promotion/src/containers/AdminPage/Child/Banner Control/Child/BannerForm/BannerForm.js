@@ -51,7 +51,6 @@ class BannerForm extends Component {
     }
 
     handleSave = async () => {
-        console.log('gwgw')
         let { type } = this.props.params
         let { name, imageDesktop, imageMobile } = this.state
         let data = {}, res

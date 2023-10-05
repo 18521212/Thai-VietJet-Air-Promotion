@@ -10,9 +10,11 @@ const initialState = {
     banners: '',
     banner: '',
     bodys: '',
+    body: '',
     forms: '',
     footers: '',
     footer: '',
+    footer_texts: '',
     campaignOption: [],
     headerOption: [],
     optionMenus: [],
@@ -20,6 +22,7 @@ const initialState = {
     bodyOption: [],
     formOption: [],
     footerOption: [],
+    footer_textOption: [],
 }
 
 const adminReducer = (state = initialState, action) => {
@@ -56,11 +59,7 @@ const adminReducer = (state = initialState, action) => {
         case actionTypes.FETCH_BANNER:
             return mapDataGET(state, action, 'banner')
         case actionTypes.FETCH_BODY:
-            return {
-                ...state,
-                bodys: action.data,
-                bodyOption: buildOption(action.data.data)
-            }
+            return mapDataGET(state, action, 'body')
         case actionTypes.FETCH_FORM:
             return {
                 ...state,
@@ -69,6 +68,8 @@ const adminReducer = (state = initialState, action) => {
             }
         case actionTypes.FETCH_FOOTER:
             return mapDataGET(state, action, 'footer')
+        case actionTypes.FETCH_FOOTER_TEXT:
+            return mapDataGET(state, action, 'footer_text')
         default:
             return state;
     }

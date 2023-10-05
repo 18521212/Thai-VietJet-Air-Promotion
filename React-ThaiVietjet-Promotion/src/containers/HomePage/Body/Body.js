@@ -35,7 +35,7 @@ class Body extends Component {
         // pack data
         let packData = await getAllPack();
         // content body data
-        let contentBodyData = await getBody(1);
+        let contentBodyData = await getBody(2);
 
         this.setState({
             packData: packData.data,

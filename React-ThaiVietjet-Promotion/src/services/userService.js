@@ -150,8 +150,20 @@ const deleteBanner = (data) => {
 
 // body
 
+const createBody = (data) => {
+    return create(api.BODYS, data)
+}
+
 const getBody = (id) => {
     return get(api.BODYS, id)
+}
+
+const updateBody = (data) => {
+    return update(api.BODYS, data)
+}
+
+const deleteBody = (data) => {
+    return deleteData(api.BODYS, data.id)
 }
 
 // form
@@ -170,12 +182,42 @@ const getAllTextInput = () => {
 
 // footer
 
+const createFooter = (data) => {
+    return create(api.FOOTERS, data)
+}
+
 const getFooter = (id) => {
     if (id) {
         return axios.get(`/api/footers/${id}`)
     } else {
         return axios.get(`/api/footers`)
     }
+}
+
+const updateFooter = (data) => {
+    return update(api.FOOTERS, data)
+}
+
+const deleteFooter = (data) => {
+    return deleteData(api.FOOTERS, data.id)
+}
+
+// footer text
+
+const createFooterText = (data) => {
+    return create(api.FOOTER_TEXTS, data)
+}
+
+const getFooterText = (id) => {
+    return axios.get(api.FOOTER_TEXTS + `/footers/${id}`)
+}
+
+const updateFooterText = (data) => {
+    return update(api.FOOTER_TEXTS, data)
+}
+
+const deleteFooterText = (data) => {
+    return deleteData(api.FOOTER_TEXTS, data)
 }
 
 // pack
@@ -194,5 +236,9 @@ export {
     deleteSubMenu, updateSubMenu, updateHeader,
     getCampaign, getForm, getFooter, updateCampaign,
     createCampaign, deleteCampaign, getBanners,
-    createBanner, deleteBanner, updateBanner
+    createBanner, deleteBanner, updateBanner,
+    createBody, updateBody, deleteBody,
+    createFooter, updateFooter, deleteFooter,
+    createFooterText, getFooterText, deleteFooterText,
+    updateFooterText,
 }

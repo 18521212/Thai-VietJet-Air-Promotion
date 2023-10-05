@@ -14,6 +14,7 @@ const actionTypes = Object.freeze({
     FETCH_BODY: 'FETCH_BODY',
     FETCH_FORM: 'FETCH_FORM',
     FETCH_FOOTER: 'FETCH_FOOTER',
+    FETCH_FOOTER_TEXT: 'FETCH_FOOTER_TEXT',
 })
 
 export default actionTypes;

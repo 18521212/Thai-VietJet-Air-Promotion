@@ -6,6 +6,7 @@ import headerController from "../controllers/headerController";
 import bodyController from "../controllers/bodyController";
 import formController from "../controllers/formController";
 import footerController from "../controllers/footerController";
+import { api } from "../utils";
 
 let router = express.Router();
 
@@ -47,7 +48,10 @@ let initWebRoutes = (app) => {
 
 
     // body
-    router.get('/api/content-bodys/:id?', bodyController.getContentBody)
+    router.post(api.BODYS, bodyController.createUpdateDeleteBody)
+    router.get('/api/bodies/:id?', bodyController.getBody)
+    router.put(api.BODYS, bodyController.createUpdateDeleteBody)
+    router.delete(api.BODYS, bodyController.createUpdateDeleteBody)
 
     // form
     router.post('/api/forms', formController.createForm)
@@ -83,8 +87,9 @@ let initWebRoutes = (app) => {
 
     // footer text
     router.post('/api/footer-texts', footerController.createFooterText)
-    router.get('/api/footer-texts', footerController.getAllFooterText)
+    router.get('/api/footer-texts/footers/:id', footerController.getAllFooterText)
     router.put('/api/footer-texts', footerController.updateFooterText)
+    router.delete('/api/footer-texts', footerController.deleteFooterText)
 
     return app.use("/", router) //su dung tat ca fie router ma chung ta khai bao
 }

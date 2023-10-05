@@ -19,21 +19,29 @@ module.exports = {
         //     }
         // )
 
-        await queryInterface.renameColumn(
-            'Campaigns',
-            'formSectionId',
-            'formId',
-        )
+        // await queryInterface.renameColumn(
+        //     'Campaigns',
+        //     'formSectionId',
+        //     'formId',
+        // )
 
         // add column
-        // queryInterface.addColumn(
-        //     'Headers',
-        //     'menuId',
-        //     {
-        //         type: Sequelize.INTEGER,
-        //         // defaultValue: null
-        //     }
-        // );
+        queryInterface.addColumn(
+            'Content_Bodies',
+            'markdownEn',
+            {
+                type: Sequelize.TEXT,
+                // defaultValue: null,
+            }
+        );
+        queryInterface.addColumn(
+            'Content_Bodies',
+            'markdownTh',
+            {
+                type: Sequelize.TEXT,
+                // defaultValue: null,
+            }
+        );
     },
     down: async (queryInterface, Sequelize) => {
         // await queryInterface.changeColumn(
@@ -45,15 +53,19 @@ module.exports = {
         //     }
         // )
 
-        await queryInterface.renameColumn(
-            'Campaigns',
-            'formId',
-            'formSectionId',
-        )
+        // await queryInterface.renameColumn(
+        //     'Campaigns',
+        //     'formId',
+        //     'formSectionId',
+        // )
 
-        // queryInterface.removeColumn(
-        //     'Headers',
-        //     'menuId',
-        // );
+        queryInterface.removeColumn(
+            'Content_Bodies',
+            'markdownEn',
+        );
+        queryInterface.removeColumn(
+            'Content_Bodies',
+            'markdownTh',
+        );
     }
 };

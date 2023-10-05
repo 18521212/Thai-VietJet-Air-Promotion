@@ -39,6 +39,18 @@ export const func = {
             })
         }
     },
+    MAP_STATE_UPDATE: (parent, data) => {
+        if (data) {
+            let stateCopy = { ...parent.state, ...data }
+            parent.setState({
+                ...stateCopy
+            })
+        }
+    },
+    HANDLE_CREATE_UPDATE: async (data, funcCreateUpdate, callBackFunc) => {
+        let res = await funcCreateUpdate(data)
+        func.ALERT_RES(res) && callBackFunc()
+    },
     HANDLE_DELETE: (text, data, funcDelete, funcFetchData) => {
         func.ALERT_CONFIRM(text, async () => {
             let res = await funcDelete({ id: data.id })

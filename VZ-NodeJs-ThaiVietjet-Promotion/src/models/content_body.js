@@ -14,8 +14,11 @@ module.exports = (sequelize, DataTypes) => {
         }
     };
     Content_Body.init({
+        name: DataTypes.STRING,
         contentEn: DataTypes.TEXT,
-        contentTh: DataTypes.TEXT
+        contentTh: DataTypes.TEXT,
+        markdownEn: DataTypes.TEXT,
+        markdownTh: DataTypes.TEXT,
     }, {
         sequelize,
         modelName: 'Content_Body',

@@ -5,7 +5,9 @@ export const path = {
 export const api = {
     CAMPAIGNS: `/api/campaigns`,
     BANNERS: '/api/banners',
-    BODYS: '/api/bodys',
+    BODYS: '/api/bodies',
+    FOOTERS: '/api/footers',
+    FOOTER_TEXTS: '/api/footer-texts'
 }
 
 export const LANGUAGES = {

@@ -11,8 +11,6 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             Footer_Text.belongsTo(models.Footer, { foreignKey: 'footerId', as: 'footer_text' })
-
-            // Footer_Text.hasMany(models.Row_Dataset_Dropdown, { foreignKey: 'dropdownId', as: 'dataDropdown' })
         }
     };
     Footer_Text.init({

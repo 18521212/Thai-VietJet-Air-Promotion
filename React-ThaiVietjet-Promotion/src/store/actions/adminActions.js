@@ -3,7 +3,7 @@ import actionTypes from './actionTypes';
 import {
     getAllMenu, getAllMenuItemByMenuId, getAllSubMenuByMenuItemId,
     getAllHeader, getCampaign, getBanners,
-    getBody, getFooter
+    getBody, getFooter, getFooterText
 } from 'services/userService';
 
 export const fetchCampaign = (id) => {
@@ -126,6 +126,20 @@ export const fetchFooter = (id) => {
             let res = await getFooter()
             dispatch({
                 type: actionTypes.FETCH_FOOTER,
+                data: res
+            })
+        } catch (e) {
+            console.log('fetchFooter error', e)
+        }
+    }
+}
+
+export const fetchFooterText = (footerId) => {
+    return async (dispatch, getState) => {
+        try {
+            let res = await getFooterText(footerId)
+            dispatch({
+                type: actionTypes.FETCH_FOOTER_TEXT,
                 data: res
             })
         } catch (e) {

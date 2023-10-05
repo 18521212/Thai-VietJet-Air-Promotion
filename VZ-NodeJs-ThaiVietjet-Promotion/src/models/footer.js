@@ -10,9 +10,7 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            // Footer.belongsTo(models.Input, { foreignKey: 'inputId' })
-
-            Footer.hasOne(models.Footer_Text, { foreignKey: 'footerId', as: 'footer_text' })
+            Footer.hasMany(models.Footer_Text, { foreignKey: 'footerId', as: 'footer_text' })
         }
     };
     Footer.init({

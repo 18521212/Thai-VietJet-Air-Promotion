@@ -5,6 +5,25 @@ import * as actions from 'store/actions';
 import withRouter from "components/withRouter/withRouter"
 import { connect } from 'react-redux'
 
+// Usage
+
+{/* <Table 
+    data={banners.data}
+    thead={['Id', 'Name', 'Image Mobile', 'Image Desktop']}
+    tbody={['id', 'name',
+        { name: 'imageMobile', type: 'image' },
+        { name: 'imageDesktop', type: 'image' }
+    ]}
+    actions={(data) =>
+        <>
+            <button type="button" className="btn btn-warning mx-1"
+                onClick={() => this.handleUpdate(data)}>Update</button>
+            <button type="button" className="btn btn-danger mx-1"
+                onClick={() => this.handleDelete(data)}>Delete</button>
+        </>
+    }
+/> */}
+
 class Table extends Component {
     constructor(props) {
         super(props);
@@ -62,12 +81,18 @@ class Table extends Component {
                                                                     <img src={item?.[itemTbody?.name]} />}
                                                             </td>
                                                         )
+                                                    } else if (itemTbody.type === 'object') {
+                                                        return (
+                                                            <td>
+                                                                {item?.[itemTbody.key1]?.[itemTbody.key2]}
+                                                            </td>
+                                                        )
                                                     }
                                                 }
                                             }
                                         })}
                                         {actions &&
-                                            <td>
+                                            <td className="col-md-4">
                                                 {actions(item)}
                                             </td>
                                         }

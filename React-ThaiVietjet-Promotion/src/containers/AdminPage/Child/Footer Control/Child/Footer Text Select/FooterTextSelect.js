@@ -1,23 +1,14 @@
 import { Component } from "react";
-import './BodySelect.scss'
+import './FooterTextSelect.scss'
 import _ from 'lodash';
 import * as actions from 'store/actions';
 import withRouter from "components/withRouter/withRouter"
 import { connect } from 'react-redux'
-import MarkdownIt from 'markdown-it';
-import MdEditor from 'react-markdown-editor-lite';
-import 'react-markdown-editor-lite/lib/index.css';
-import Table from "components/Table/Table";
-import { func } from 'utils'
-import { deleteBody } from "services/userService";
+import Table from "components/Table/Table"
+import { func, api } from 'utils'
+import { deleteFooter } from "services/userService";
 
-const mdParser = new MarkdownIt(/* Markdown-it options */);
-
-function handleEditorChange({ html, text }) {
-    console.log('handleEditorChange', html, text);
-}
-
-class BodySelect extends Component {
+class FooterTextSelect extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -26,7 +17,7 @@ class BodySelect extends Component {
     }
 
     componentDidMount() {
-        this.props.loadBody()
+        this.props.loadFooterText(this.props.location.state.footer.id)
     }
 
     handleOnChangeSelect = (selectedValue, actions) => {
@@ -38,34 +29,34 @@ class BodySelect extends Component {
     }
 
     handleCreate = () => {
-        func.NAV(this, '../body-form')
+        func.NAV(this, '../footer-text-form', { footer: this.props.location.state.footer })
     }
 
     handleUpdate = (data) => {
-        this.handleNav('../body-form/update', { body: data })
+        func.NAV(this, '../footer-text-form/update', { footer_text: data })
     }
 
     handleDelete = (data) => {
-        func.HANDLE_DELETE('Delete this item?', { id: data.id }, deleteBody, this.props.loadBody)
+        func.HANDLE_DELETE('Delete this Footer?', data, deleteFooter, this.props.loadFooter)
     }
 
     render() {
-        let { bodys } = this.props
+        let { footer_texts } = this.props
         return (
             <>
-                <h3>Body Select</h3>
+                <h4>Footer Text Select</h4>
                 <div className="row my-1 px-3">
+                    <button className="btn btn-primary mr-auto"
+                        onClick={() => func.NAV(this, -1)}>Back</button>
                     <button className="btn btn-success ml-auto"
                         onClick={() => this.handleCreate()}>Create</button>
                 </div>
                 <Table
-                    data={bodys.data}
-                    thead={['Id', 'Name']}
-                    tbody={['id', 'name']}
+                    data={footer_texts.data}
+                    thead={['Id', 'Title', 'Link']}
+                    tbody={['id', 'title', 'link']}
                     actions={(data) =>
                         <>
-                            <button type="button" className="btn btn-success mx-1"
-                                onClick={() => func.NAV(this, '../body-detail', { body: data })}>View</button>
                             <button type="button" className="btn btn-warning mx-1"
                                 onClick={() => this.handleUpdate(data)}>Update</button>
                             <button type="button" className="btn btn-danger mx-1"
@@ -80,14 +71,14 @@ class BodySelect extends Component {
 
 const mapStateToProps = state => {
     return {
-        bodys: state.admin.bodys
+        footer_texts: state.admin.footer_texts
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        loadBody: () => dispatch(actions.fetchBody())
+        loadFooterText: (footerId) => dispatch(actions.fetchFooterText(footerId))
     };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(BodySelect));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(FooterTextSelect));

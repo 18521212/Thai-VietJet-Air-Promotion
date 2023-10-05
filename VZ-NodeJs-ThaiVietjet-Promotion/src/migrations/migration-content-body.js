@@ -12,7 +12,17 @@ module.exports = {
                 type: Sequelize.TEXT,
                 allowNull: false
             },
+            name:{
+                type: Sequelize.STRING,
+                allowNull: false
+            },
             contentTh: {
+                type: Sequelize.TEXT,
+            },
+            markdownEn: {
+                type: Sequelize.TEXT,
+            },
+            markdownTh: {
                 type: Sequelize.TEXT,
             },
             createdAt: {

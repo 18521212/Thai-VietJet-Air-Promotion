@@ -1,3 +1,7 @@
+export const api ={
+    BODYS: '/api/bodies'
+}
+
 export const text = {
     OK: 'Ok',
     MISSING_PARAMETERS: 'Missing required parameters',

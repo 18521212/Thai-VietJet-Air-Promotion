@@ -5,6 +5,7 @@ const db = require('../models');
 // footer
 
 let createFooter = (data) => {
+    console.log('ft')
     return new Promise(async (resolve, reject) => {
         try {
             if (!data.name) {
@@ -28,8 +29,11 @@ let createFooter = (data) => {
 let getAllFooter = () => {
     return new Promise(async (resolve, reject) => {
         try {
-            let dataApi = await db.Footer.findAll()
-
+            let dataApi = await db.Footer.findAll({
+                include: [
+                    { model: db.Footer_Text, as: 'footer_text' }
+                ]
+            })
             resolve(resolveObj.GET(dataApi))
         } catch (e) {
             reject(e);
@@ -92,8 +96,8 @@ let deleteFooter = (id) => {
                 if (data === 0) {
                     resolve(resolveObj.DELETE_UNSUCCEED('Footer'))
                 }
-                resolve(resolveObj.DELETE_SUCCEED('Footer'))
             })
+            resolve(resolveObj.DELETE_SUCCEED('Footer'))
         } catch (e) {
             reject(e);
         }
@@ -103,6 +107,7 @@ let deleteFooter = (id) => {
 // footer text
 
 let createFooterText = (data) => {
+    console.log('cr')
     return new Promise(async (resolve, reject) => {
         try {
             if (!data.footerId || !data.title || !data.link) {
@@ -111,27 +116,27 @@ let createFooterText = (data) => {
             }
             await db.sequelize.transaction(async (t) => {
                 let footer = await db.Footer.findOne({ where: { id: data.footerId } })
-
                 if (!footer) {
                     resolve(resolveObj.NOT_FOUND('Footer'))
                     throw new Error()
                 }
-
-                await db.Footer_Text.create(data, { transaction: t })
-
-                resolve(resolveObj.CREATE_SUCCEED())
+                await db.Footer_Text.create({
+                    footerId: data.footerId,
+                    title: data.title,
+                    link: data.link
+                }, { transaction: t })
             })
+            resolve(resolveObj.CREATE_SUCCEED())
         } catch (e) {
             reject(e);
         }
     })
 }
 
-let getAllFooterText = () => {
+let getAllFooterText = (footerId) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let dataApi = await db.Footer_Text.findAll()
-
+            let dataApi = await db.Footer_Text.findAll({ where: { footerId: footerId } })
             resolve(resolveObj.GET(dataApi))
         } catch (e) {
             reject(e)
@@ -142,29 +147,42 @@ let getAllFooterText = () => {
 let updateFooterText = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.footerId || !data.title || !data.link) {
+            if (!data.id || !data.title || !data.link) {
                 resolve(resolveObj.MISSING_PARAMETERS)
                 return;
             }
 
             await db.sequelize.transaction(async (t) => {
-                let footer = await db.Footer.findOne();
-
-                if (!footer) {
-                    resolve(resolveObj.NOT_FOUND('Footer'))
+                let footer_text = await db.Footer_Text.findOne({ where: { id: data.id } })
+                if (!footer_text) {
+                    resolve(resolveObj.NOT_FOUND('Footer Text'))
                     throw new Error()
                 }
-
-                let footer_text = await db.Footer_Text.findOne({ where: { footerId: data.footerId } })
-                footer_text.update({
+                await footer_text.update({
                     title: data.title,
                     link: data.link
                 }, { transaction: t })
-
-                resolve(resolveObj.UPDATE_SUCCEED('Footer_Text'))
             })
+            resolve(resolveObj.UPDATE_SUCCEED('Footer_Text'))
         } catch (e) {
             reject(e)
+        }
+    })
+}
+
+let deleteFooterText = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!id) {
+                resolve(resolveObj.MISSING_PARAMETERS)
+                return;
+            }
+            await db.sequelize.transaction(async (t) => {
+                await db.Footer_Text.destroy({ where: { id: id } })
+            })
+            resolve(resolveObj.DELETE_SUCCEED('Footer Text'))
+        } catch (e) {
+            reject(e);
         }
     })
 }
@@ -179,4 +197,5 @@ module.exports = {
     getAllFooterText: getAllFooterText,
     getFooterById: getFooterById,
     updateFooterText: updateFooterText,
+    deleteFooterText,
 }

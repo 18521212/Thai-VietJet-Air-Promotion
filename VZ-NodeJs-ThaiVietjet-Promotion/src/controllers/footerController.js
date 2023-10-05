@@ -76,7 +76,7 @@ let createFooterText = async (req, res) => {
 
 let getAllFooterText = async (req, res) => {
     try {
-        let data = await footerService.getAllFooterText();
+        let data = await footerService.getAllFooterText(req.params.id);
         return res.status(200).json(data)
     } catch (e) {
         console.log(e);
@@ -100,6 +100,19 @@ let updateFooterText = async (req, res) => {
     }
 }
 
+let deleteFooterText = async (req, res) => {
+    try {
+        let data = await footerService.deleteFooterText(req.body.id);
+        return res.status(200).json(data)
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
+
 module.exports = {
     createFooter: createFooter,
     getFooter: getFooter,
@@ -108,5 +121,6 @@ module.exports = {
 
     createFooterText: createFooterText,
     getAllFooterText: getAllFooterText,
-    updateFooterText: updateFooterText
+    updateFooterText: updateFooterText,
+    deleteFooterText,
 }
