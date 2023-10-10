@@ -40,7 +40,18 @@ class Header extends Component {
                                     <li className="nav-item"><Link className="nav-link" to='/admin/header'>Header</Link></li>
                                     <li className="nav-item"><Link className="nav-link" to='/admin/banner'>Banner</Link></li>
                                     <li className="nav-item"><Link className="nav-link" to='/admin/body'>Body</Link></li>
-                                    <li className="nav-item"><Link className="nav-link" to='/admin/form'>Form Section</Link></li>
+                                    <li className="nav-item dropdown">
+                                        <a
+                                            className="nav-link dropdown-toggle"
+                                            data-toggle="dropdown"
+                                            role="button"
+                                            id="navbarDropdown"
+                                        >Form</a>
+                                        <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <Link className="dropdown-item" to='/admin/form'>Form</Link>
+                                            <Link className="dropdown-item" to='/admin/input'>Input</Link>
+                                        </div>
+                                    </li>
                                     <li className="nav-item"><Link className="nav-link" to='/admin/footer'>Footer</Link></li>
                                 </ul>
                             </div>

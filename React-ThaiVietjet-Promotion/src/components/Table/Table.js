@@ -12,7 +12,8 @@ import { connect } from 'react-redux'
     thead={['Id', 'Name', 'Image Mobile', 'Image Desktop']}
     tbody={['id', 'name',
         { name: 'imageMobile', type: 'image' },
-        { name: 'imageDesktop', type: 'image' }
+        { name: 'imageDesktop', type: 'image' },
+        { key1: 'k', key2: 'k', type: 'object'}
     ]}
     actions={(data) =>
         <>
@@ -38,6 +39,10 @@ class Table extends Component {
 
     handleNav = (link, data) => {
         this.props.navigate(link, { state: data })
+    }
+
+    renderObject = (parentObject, object) => {
+        return parentObject[object.key1][object.key2]
     }
 
     render() {

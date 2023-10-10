@@ -54,10 +54,15 @@ let initWebRoutes = (app) => {
     router.delete(api.BODYS, bodyController.createUpdateDeleteBody)
 
     // form
-    router.post('/api/forms', formController.createForm)
+    router.post('/api/forms', formController.createUpdateDeleteForm)
     router.get('/api/forms/:id?', formController.getForm)
+    router.put('/api/forms', formController.createUpdateDeleteForm)
+    router.delete('/api/forms', formController.createUpdateDeleteForm)
 
+    // form detail
+    
     router.get('/api/form-details', formController.getAllFormDetail)
+    router.get('/api/form-details/forms/:formId', formController.getFormDetailByFormId)
     router.post('/api/form-details', formController.addInputIntoForm)
     router.put('/api/form-details', formController.updateFormDetail)
     router.delete('/api/form-details', formController.deleteFormDetail)

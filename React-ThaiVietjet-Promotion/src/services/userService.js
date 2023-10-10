@@ -168,6 +168,10 @@ const deleteBody = (data) => {
 
 // form
 
+const createForm = (data) => {
+    return create(api.FORMS, data)
+}
+
 const getForm = (id) => {
     if (id) {
         return axios.get(`/api/forms/${id}`)
@@ -176,8 +180,34 @@ const getForm = (id) => {
     }
 }
 
+const getAllInput = (id) => {
+    return get(api.INPUTS, id)
+}
+
 const getAllTextInput = () => {
     return axios.get('/api/get-all-text-input')
+}
+
+const updateForm = (data) => {
+    return update(api.FORMS, data)
+}
+
+const deleteForm = (data) => {
+    return deleteData(api.FORMS, data.id)
+}
+
+// form detail
+
+const createFormDetail = (data) => {
+    return create(api.FORM_DETAILS, data)
+}
+
+const getFormDetailByFormId = (formId) => {
+    return get(`${api.FORM_DETAILS}/forms/${formId}`)
+}
+
+const deleteFormDetail = (data) => {
+    return deleteData(api.FORM_DETAILS, data.id)
 }
 
 // footer
@@ -217,7 +247,7 @@ const updateFooterText = (data) => {
 }
 
 const deleteFooterText = (data) => {
-    return deleteData(api.FOOTER_TEXTS, data)
+    return deleteData(api.FOOTER_TEXTS, data.id)
 }
 
 // pack
@@ -240,5 +270,7 @@ export {
     createBody, updateBody, deleteBody,
     createFooter, updateFooter, deleteFooter,
     createFooterText, getFooterText, deleteFooterText,
-    updateFooterText,
+    updateFooterText, createForm, deleteForm,
+    updateForm, getFormDetailByFormId, getAllInput,
+    createFormDetail, deleteFormDetail
 }

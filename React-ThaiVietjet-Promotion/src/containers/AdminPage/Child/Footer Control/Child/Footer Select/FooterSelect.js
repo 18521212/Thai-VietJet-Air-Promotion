@@ -55,8 +55,8 @@ class FooterSelect extends Component {
                     tbody={['id', 'name']}
                     actions={(data) =>
                         <>
-                            {data.footer_text ?
-                                <button type="button" className="btn btn-success mx-1"
+                            {data.footer_text.length > 0 ?
+                                <button type="button" className="btn btn-primary mx-1"
                                     onClick={() => func.NAV(this, '../footer-text-select', { footer: data })}>View Text</button>
                                 :
                                 <button type="button" className="btn btn-success mx-1"

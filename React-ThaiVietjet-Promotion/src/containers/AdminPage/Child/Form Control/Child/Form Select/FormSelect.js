@@ -1,14 +1,14 @@
 import { Component } from "react";
-import './FooterTextSelect.scss'
+import './FormSelect.scss'
 import _ from 'lodash';
 import * as actions from 'store/actions';
 import withRouter from "components/withRouter/withRouter"
 import { connect } from 'react-redux'
 import Table from "components/Table/Table"
 import { func, api } from 'utils'
-import { deleteFooterText } from "services/userService";
+import { deleteForm } from "services/userService";
 
-class FooterTextSelect extends Component {
+class FormSelect extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -17,7 +17,7 @@ class FooterTextSelect extends Component {
     }
 
     componentDidMount() {
-        this.props.loadFooterText(this.props.location.state.footer.id)
+        this.props.loadForm()
     }
 
     handleOnChangeSelect = (selectedValue, actions) => {
@@ -28,36 +28,36 @@ class FooterTextSelect extends Component {
         this.props.navigate(link, { state: data })
     }
 
-    handleCreate = () => {
-        func.NAV(this, '../footer-text-form', { footer: this.props.location.state.footer })
-    }
-
     handleUpdate = (data) => {
-        func.NAV(this, '../footer-text-form/update', { footer_text: data })
+        func.NAV(this, '../form-manage/update', { form: data })
     }
 
     handleDelete = (data) => {
-        let footerId = this.props.location.state.footer.id
-        func.HANDLE_DELETE('Delete this Footer?', data, deleteFooterText, () => { this.props.loadFooterText(footerId) })
+        func.HANDLE_DELETE('Delete this Form?', data, deleteForm, () => { this.props.loadForm() })
     }
 
     render() {
-        let { footer_texts } = this.props
+        let { forms } = this.props
         return (
             <>
-                <h4>Footer Text Select</h4>
+                <h3>Form Select</h3>
                 <div className="row my-1 px-3">
-                    <button className="btn btn-primary mr-auto"
-                        onClick={() => func.NAV(this, -1)}>Back</button>
                     <button className="btn btn-success ml-auto"
-                        onClick={() => this.handleCreate()}>Create</button>
+                        onClick={() => func.NAV(this, '../form-manage')}>Create</button>
                 </div>
                 <Table
-                    data={footer_texts.data}
-                    thead={['Id', 'Title', 'Link']}
-                    tbody={['id', 'title', 'link']}
+                    data={forms.data}
+                    thead={['Id', 'Name']}
+                    tbody={['id', 'name']}
                     actions={(data) =>
                         <>
+                            {data.form_detail.length > 0 ?
+                                <button type="button" className="btn btn-primary mx-1"
+                                    onClick={() => func.NAV(this, '../input-select', { form: data })}>View Input</button>
+                                :
+                                <button type="button" className="btn btn-success mx-1"
+                                    onClick={() => func.NAV(this, '../form-manage', { footer: data })}>Add Input</button>
+                            }
                             <button type="button" className="btn btn-warning mx-1"
                                 onClick={() => this.handleUpdate(data)}>Update</button>
                             <button type="button" className="btn btn-danger mx-1"
@@ -72,14 +72,15 @@ class FooterTextSelect extends Component {
 
 const mapStateToProps = state => {
     return {
-        footer_texts: state.admin.footer_texts
+        forms: state.admin.forms,
+        formOption: state.admin.formOption,
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        loadFooterText: (footerId) => dispatch(actions.fetchFooterText(footerId))
+        loadForm: (id) => dispatch(actions.fetchForm(id)),
     };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(FooterTextSelect));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(FormSelect));

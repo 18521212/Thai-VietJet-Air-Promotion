@@ -128,11 +128,6 @@ class Header extends Component {
                                                         }
                                                         href={`${item.Sub_Menus.length > 0 ? '#' : item.link ? item.link : '#'}`}
                                                         {...attributes}
-                                                        // id="navbarDropdown1"
-                                                        // role="button"
-                                                        // data-toggle="dropdown"
-                                                        // aria-haspopup="false"
-                                                        // aria-expanded="false"
                                                         style={{ background: item.highlight !== 'default' ? item.highlight : false }}
                                                     >
                                                         {language === 'en' ?

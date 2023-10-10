@@ -21,7 +21,7 @@ module.exports = {
             },
             widthMdScreen: {
                 type: Sequelize.INTEGER,
-                defaultValue: 1
+                defaultValue: 12
             },
             createdAt: {
                 allowNull: false,

@@ -3,16 +3,27 @@ import { resolveObj } from '../utils';
 
 // form
 
-let createForm = async (req, res) => {
+let createUpdateDeleteForm = async (req, res) => {
     try {
-        let data = await formService.createForm(req.body);
+        let method = req.method
+        let data
+        switch (method) {
+            case 'POST':
+                data = await formService.createForm(req.body);
+                break;
+            case 'PUT':
+                data = await formService.updateForm(req.body);
+                break;
+            case 'DELETE':
+                data = await formService.deleteForm(req.body.id);
+                break;
+            default:
+                break;
+        }
         return res.status(200).json(data)
     } catch (e) {
         console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -36,6 +47,19 @@ let getForm = async (req, res) => {
 let getAllFormDetail = async (req, res) => {
     try {
         let data = await formService.getAllFormDetail();
+        return res.status(200).json(data)
+    } catch (e) {
+        console.log(e)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
+
+let getFormDetailByFormId = async (req, res) => {
+    try {
+        let data = await formService.getFormDetailByFormId(req.params.formId);
         return res.status(200).json(data)
     } catch (e) {
         console.log(e)
@@ -239,10 +263,11 @@ let fetchData = async (req, res) => {
 }
 
 module.exports = {
-    createForm: createForm,
+    createUpdateDeleteForm,
     getForm: getForm,
 
     getAllFormDetail: getAllFormDetail,
+    getFormDetailByFormId,
     addInputIntoForm: addInputIntoForm,
     updateFormDetail: updateFormDetail,
     deleteFormDetail: deleteFormDetail,

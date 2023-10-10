@@ -9,15 +9,15 @@
     .navbar {
         background-color: #e61f20 !important; // #e61f20
 
+        .nav-link {
+            color: #fff !important;
+        }
+
         img {
             height: auto;
             max-width: 100%;
             width: 300px;
             //
-        }
-
-        a {
-            color: white !important;
         }
     }
 }

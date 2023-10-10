@@ -10,8 +10,7 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            Form.hasOne(models.Form_Section, { foreignKey: 'customer_form_id' })
-            Form.hasMany(models.Form_Detail, { foreignKey: 'formId', as: 'Form_Detail' }) // many input
+            Form.hasMany(models.Form_Detail, { foreignKey: 'formId', as: 'form_detail' }) // many input
         }
     };
     Form.init({

@@ -10,14 +10,14 @@ module.exports = {
         //     }
         // )
 
-        // await queryInterface.changeColumn(
-        //     'Headers',
-        //     'imageBackground',
-        //     {
-        //         type: Sequelize.BLOB('long'),
-        //         allowNull: false
-        //     }
-        // )
+        await queryInterface.changeColumn(
+            'Form_Details',
+            'widthMdScreen',
+            {
+                type: Sequelize.INTEGER,
+                defaultValue: 12
+            }
+        )
 
         // await queryInterface.renameColumn(
         //     'Campaigns',
@@ -26,32 +26,24 @@ module.exports = {
         // )
 
         // add column
-        queryInterface.addColumn(
-            'Content_Bodies',
-            'markdownEn',
-            {
-                type: Sequelize.TEXT,
-                // defaultValue: null,
-            }
-        );
-        queryInterface.addColumn(
-            'Content_Bodies',
-            'markdownTh',
-            {
-                type: Sequelize.TEXT,
-                // defaultValue: null,
-            }
-        );
+        // queryInterface.addColumn(
+        //     'Content_Bodies',
+        //     'markdownEn',
+        //     {
+        //         type: Sequelize.TEXT,
+        //         // defaultValue: null,
+        //     }
+        // );
     },
     down: async (queryInterface, Sequelize) => {
-        // await queryInterface.changeColumn(
-        //     'Menus',
-        //     'name',
-        //     {
-        //         type: Sequelize.INTEGER,
-        //         allowNull: false
-        //     }
-        // )
+        await queryInterface.changeColumn(
+            'Form_Details',
+            'widthMdScreen',
+            {
+                type: Sequelize.INTEGER,
+                defaultValue: 1
+            }
+        )
 
         // await queryInterface.renameColumn(
         //     'Campaigns',
@@ -59,13 +51,9 @@ module.exports = {
         //     'formSectionId',
         // )
 
-        queryInterface.removeColumn(
-            'Content_Bodies',
-            'markdownEn',
-        );
-        queryInterface.removeColumn(
-            'Content_Bodies',
-            'markdownTh',
-        );
+        // queryInterface.removeColumn(
+        //     'Content_Bodies',
+        //     'markdownEn',
+        // );
     }
 };

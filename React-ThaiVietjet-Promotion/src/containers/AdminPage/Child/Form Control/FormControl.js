@@ -1,12 +1,16 @@
 import { Component } from "react";
-import './FooterControl.scss'
+import './FormControl.scss'
 import _ from 'lodash';
 import * as actions from 'store/actions';
 import withRouter from "components/withRouter/withRouter"
 import { connect } from 'react-redux'
-import { Routes } from "react-router";
+import { Routes, Route } from "react-router";
+import FormSelect from "./Child/Form Select/FormSelect";
+import FormManage from "./Child/Form Manage/FormManage";
+import InputSelect from "./Child/Input Select/InputSelect";
+import FormDetail from "./Child/Form Detail/FormDetail";
 
-class FooterControl extends Component {
+class FormControl extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -25,10 +29,15 @@ class FooterControl extends Component {
     render() {
         return (
             <>
-                <h3>Form Control</h3>
-                <Routes>
-                    {/* <Route path='*' element={}></Route> */}
-                </Routes>
+                <div className="container-fluid">
+                    <h3>Form Control</h3>
+                    <Routes>
+                        <Route path='*' element={<FormSelect />}></Route>
+                        <Route path='form-manage/:type?' element={<FormManage />}></Route>
+                        <Route path='input-select' element={<InputSelect />}></Route>
+                        <Route path='form-detail' element={<FormDetail />}></Route>
+                    </Routes>
+                </div>
             </>
         )
     }
@@ -45,4 +54,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(FooterControl));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(FormControl));

@@ -5,7 +5,6 @@ const db = require('../models');
 // footer
 
 let createFooter = (data) => {
-    console.log('ft')
     return new Promise(async (resolve, reject) => {
         try {
             if (!data.name) {
@@ -107,7 +106,6 @@ let deleteFooter = (id) => {
 // footer text
 
 let createFooterText = (data) => {
-    console.log('cr')
     return new Promise(async (resolve, reject) => {
         try {
             if (!data.footerId || !data.title || !data.link) {

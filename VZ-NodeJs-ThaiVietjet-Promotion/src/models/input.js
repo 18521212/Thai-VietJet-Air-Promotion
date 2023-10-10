@@ -12,8 +12,8 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             Input.hasMany(models.Form_Detail, { foreignKey: 'inputId' })
 
-            Input.hasOne(models.Text_Input, { foreignKey: 'inputId' })
-            Input.hasOne(models.Dropdown, { foreignKey: 'inputId' })
+            Input.hasOne(models.Text_Input, { foreignKey: 'inputId', as: 'text_input' })
+            Input.hasOne(models.Dropdown, { foreignKey: 'inputId', as: 'dropdown' })
         }
     };
     Input.init({

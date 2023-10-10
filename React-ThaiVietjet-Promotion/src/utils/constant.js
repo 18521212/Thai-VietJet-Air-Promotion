@@ -6,8 +6,11 @@ export const api = {
     CAMPAIGNS: `/api/campaigns`,
     BANNERS: '/api/banners',
     BODYS: '/api/bodies',
+    FORMS: '/api/forms',
     FOOTERS: '/api/footers',
-    FOOTER_TEXTS: '/api/footer-texts'
+    FOOTER_TEXTS: '/api/footer-texts',
+    FORM_DETAILS: '/api/form-details',
+    INPUTS: '/api/inputs',
 }
 
 export const LANGUAGES = {

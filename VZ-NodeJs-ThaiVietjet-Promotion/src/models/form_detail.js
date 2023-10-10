@@ -10,9 +10,9 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            Form_Detail.belongsTo(models.Form, { foreignKey: 'formId', as: 'Form_Detail' })
+            Form_Detail.belongsTo(models.Form, { foreignKey: 'formId', as: 'form_detail' })
 
-            Form_Detail.belongsTo(models.Input, { foreignKey: 'inputId' })
+            Form_Detail.belongsTo(models.Input, { foreignKey: 'inputId', as: 'input' })
         }
     };
     Form_Detail.init({

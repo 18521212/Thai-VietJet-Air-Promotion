@@ -1,5 +1,5 @@
 const db = require('../models');
-const { resolveObj } = require('../utils');
+const { resolveObj, func } = require('../utils');
 
 // form
 
@@ -25,7 +25,11 @@ let createForm = (data) => {
 let getAllForm = () => {
     return new Promise(async (resolve, reject) => {
         try {
-            let data = await db.Form.findAll()
+            let data = await db.Form.findAll({
+                include: [
+                    { model: db.Form_Detail, as: 'form_detail' }
+                ]
+            })
             resolve(resolveObj.GET(data))
         } catch (e) {
             reject(e)
@@ -47,13 +51,96 @@ let getFormById = (id) => {
     })
 }
 
+let updateForm = data => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!func.CHECK_HAS_VALUE(data.id, data.name)) {
+                resolve(resolveObj.MISSING_PARAMETERS)
+                return
+            }
+            await db.sequelize.transaction(async (t) => {
+                let form = await db.Form.findOne({ where: { id: data.id } })
+                await form.update({
+                    name: data.name
+                })
+            })
+            resolve(resolveObj.UPDATE_SUCCEED())
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
+let deleteForm = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!id) {
+                resolve(resolveObj.MISSING_PARAMETERS)
+            }
+            await db.sequelize.transaction(async (t) => {
+                await db.Form_Detail.destroy({ where: { formId: id }, transaction: t })
+                let formDetail = await db.Form_Detail.findAll({ where: { formId: id } })
+                if (formDetail.length > 0) {
+                    resolve(resolveObj.EXIST_REF_KEY)
+                    throw new Error()
+                }
+                let data = await db.Form.destroy({ where: { id: id }, transaction: t })
+                if (data === 0) {
+                    resolve(resolveObj.DELETE_UNSUCCEED())
+                }
+            })
+            resolve(resolveObj.DELETE_SUCCEED())
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
 // form detail
 
 let getAllFormDetail = () => {
     return new Promise(async (resolve, reject) => {
         try {
             let data = await db.Form_Detail.findAll()
-            resolve(resolveObj.GET(Data))
+            resolve(resolveObj.GET(data))
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+let getFormDetailByFormId = (formId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!formId) {
+                resolve(resolveObj.MISSING_PARAMETERS)
+                return
+            }
+            let data = await db.Form_Detail.findAll({
+                where: { formId: formId },
+                include: [
+                    {
+                        model: db.Input, as: 'input',
+                        include: [
+                            {
+                                model: db.Text_Input, as: 'text_input',
+                                include: [
+                                    { model: db.Text_Translation, as: 'titleDataText_Input' },
+                                    { model: db.Text_Translation, as: 'placeHolderDataText_Input' }
+                                ]
+                            },
+                            {
+                                model: db.Dropdown, as: 'dropdown',
+                                include: [
+                                    { model: db.Text_Translation, as: 'titleDataDropdown' },
+                                    { model: db.Row_Dataset_Dropdown, as: 'dataDropdown' },
+                                ]
+                            },
+                        ]
+                    }
+                ]
+            })
+            resolve(resolveObj.GET(data))
         } catch (e) {
             reject(e)
         }
@@ -65,8 +152,9 @@ let addInputIntoForm = (data) => {
         try {
             if (!data.formId || !data.inputId) {
                 resolve(resolveObj.MISSING_PARAMETERS)
-            } else {
-                //check form, input is exist
+                return
+            }
+            await db.sequelize.transaction(async (t) => {
                 let form = await db.Form.findOne({
                     where: {
                         id: data.formId
@@ -76,53 +164,20 @@ let addInputIntoForm = (data) => {
                     where: {
                         id: data.inputId
                     },
-                    include: [
-                        {
-                            model: db.Text_Input
-                        },
-                        {
-                            model: db.Dropdown
-                        }
-                    ]
-                })//
-
-                let valid = 1;
-                if (!form) {
-                    resolve({
-                        errCode: 2,
-                        errMessage: 'Form does not exist'
-                    })
-                    valid = 0;
+                })
+                if (!form || !input) {
+                    !form && resolve(resolveObj.NOT_FOUND('Form'))
+                    !input && resolve(resolveObj.NOT_FOUND('Input'))
+                    throw new Error()
                 }
-                if (!input) {
-                    resolve({
-                        errCode: 2,
-                        errMessage: 'Input does not exist in ' + data.typeInput + ' table'
-                    })
-                    valid = 0;
-                } else {
-                    if (!input.Dropdown && !input.Text_Input) {
-                        resolve({
-                            errCode: 2,
-                            errMessage: 'Input exist but does not have input instance, please check inputId of input instance'
-                        })
-                        valid = 0;
-                    }
-                }
-                if (valid === 1) {
-                    let formDetail = await db.Form_Detail.create({
-                        formId: data.formId,
-                        inputId: data.inputId,
-                        order: data.order,
-                        widthMdScreen: data.widthMdScreen
-                    })
-
-                    resolve({
-                        errCode: 0,
-                        errMessage: `Create Form Detail with inputId: ${formDetail.inputId}, formId: ${formDetail.formId} succeed`
-                    })
-                }
-            }
+                await db.Form_Detail.create({
+                    formId: data.formId,
+                    inputId: data.inputId,
+                    order: data.order ? data.order : undefined,
+                    widthMdScreen: data.widthMdScreen ? data.widthMdScreen : undefined
+                }, { transaction: t })
+            })
+            resolve(resolveObj.CREATE_SUCCEED())
         } catch (e) {
             reject(e)
         }
@@ -174,25 +229,21 @@ let updateFormDetail = (data) => {
 
 let deleteFormDetail = (data) => {
     return new Promise(async (resolve, reject) => {
+        console.log(data)///////////////
         try {
-            if (!data.formId || !data.inputId) {
-                resolve({
-                    errCode: 0,
-                    errMessage: 'Missing required parameters',
-                })
-            } else {
+            if (!data.id) {
+                resolve(resolveObj.MISSING_PARAMETERS)
+                return
+            }
+            await db.sequelize.transaction(async (t) => {
                 await db.Form_Detail.destroy({
                     where: {
-                        formId: data.formId,
-                        inputId: data.inputId
-                    }
+                        id: data.id
+                    },
+                    transaction: t
                 })
-
-                resolve({
-                    errCode: 0,
-                    errMessage: `Remove Form Detail with formId: ${data.formId}, inputId: ${data.inputId} succeed`,
-                })
-            }
+            })
+            resolve(resolveObj.DELETE_SUCCEED())
         } catch (e) {
             reject(e)
         }
@@ -204,7 +255,24 @@ let deleteFormDetail = (data) => {
 let getAllInput = () => {
     return new Promise(async (resolve, reject) => {
         try {
-            let data = await db.Input.findAll()
+            let data = await db.Input.findAll({
+                include: [
+                    {
+                        model: db.Text_Input, as: 'text_input',
+                        include: [
+                            { model: db.Text_Translation, as: 'titleDataText_Input' },
+                            { model: db.Text_Translation, as: 'placeHolderDataText_Input' }
+                        ]
+                    },
+                    {
+                        model: db.Dropdown, as: 'dropdown',
+                        include: [
+                            { model: db.Text_Translation, as: 'titleDataDropdown' },
+                            { model: db.Row_Dataset_Dropdown, as: 'dataDropdown' },
+                        ]
+                    },
+                ]
+            })
             resolve({
                 errCode: 0,
                 errMessage: 'Ok',
@@ -636,8 +704,11 @@ module.exports = {
     createForm: createForm,
     getAllForm: getAllForm,
     getFormById: getFormById,
+    updateForm,
+    deleteForm,
 
     getAllFormDetail: getAllFormDetail,
+    getFormDetailByFormId,
     addInputIntoForm: addInputIntoForm,
     updateFormDetail: updateFormDetail,
     deleteFormDetail: deleteFormDetail,

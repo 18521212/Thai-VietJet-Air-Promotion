@@ -51,10 +51,22 @@ export const func = {
         let res = await funcCreateUpdate(data)
         func.ALERT_RES(res) && callBackFunc()
     },
-    HANDLE_DELETE: (text, data, funcDelete, funcFetchData) => {
+    HANDLE_DELETE: (text, data, funcDelete, callBackFunc) => {
         func.ALERT_CONFIRM(text, async () => {
             let res = await funcDelete({ id: data.id })
-            func.ALERT_RES(res) && funcFetchData()
+            func.ALERT_RES(res) && callBackFunc()
+        })
+    },
+    HADLE_DELETE_CONDITION: (text, data, funcDelete, condition, callBackFunc) => {
+        // Usage
+        // HADLE_DELETE_CONDITION: (text, data, funcDelete, ['key', 'key'], callBackFunc)
+        let object = {}
+        condition.map(item => {
+            object[item] = data[item]
+        })
+        func.ALERT_CONFIRM(text, async () => {
+            let res = await funcDelete(object)
+            func.ALERT_RES(res) && callBackFunc()
         })
     }
 }

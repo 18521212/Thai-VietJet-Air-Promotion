@@ -15,6 +15,8 @@ const initialState = {
     footers: '',
     footer: '',
     footer_texts: '',
+    form_detail_by_forms: '',
+    inputs: '',
     campaignOption: [],
     headerOption: [],
     optionMenus: [],
@@ -61,15 +63,15 @@ const adminReducer = (state = initialState, action) => {
         case actionTypes.FETCH_BODY:
             return mapDataGET(state, action, 'body')
         case actionTypes.FETCH_FORM:
-            return {
-                ...state,
-                forms: action.data,
-                formOption: buildOption(action.data.data)
-            }
+            return mapDataGET(state, action, 'form')
         case actionTypes.FETCH_FOOTER:
             return mapDataGET(state, action, 'footer')
         case actionTypes.FETCH_FOOTER_TEXT:
             return mapDataGET(state, action, 'footer_text')
+        case actionTypes.FETCH_FORM_DETAIL_BY_FORM:
+            return mapDataGET(state, action, 'form_detail_by_form')
+        case actionTypes.FETCH_INPUT:
+            return mapDataGET(state, action, 'input')
         default:
             return state;
     }

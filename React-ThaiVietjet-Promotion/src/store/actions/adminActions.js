@@ -3,7 +3,8 @@ import actionTypes from './actionTypes';
 import {
     getAllMenu, getAllMenuItemByMenuId, getAllSubMenuByMenuItemId,
     getAllHeader, getCampaign, getBanners,
-    getBody, getFooter, getFooterText
+    getBody, getFooter, getFooterText,
+    getForm, getFormDetailByFormId, getAllInput
 } from 'services/userService';
 
 export const fetchCampaign = (id) => {
@@ -109,7 +110,7 @@ export const fetchBody = (id) => {
 export const fetchForm = (id) => {
     return async (dispatch, getState) => {
         try {
-            let res = await getBody(id)
+            let res = await getForm(id)
             dispatch({
                 type: actionTypes.FETCH_FORM,
                 data: res
@@ -144,6 +145,33 @@ export const fetchFooterText = (footerId) => {
             })
         } catch (e) {
             console.log('fetchFooter error', e)
+        }
+    }
+}
+
+export const fetchFormDetailByFormId = (formId) => {
+    return async (dispatch, getState) => {
+        try {
+            let res = await getFormDetailByFormId(formId)
+            dispatch({
+                type: actionTypes.FETCH_FORM_DETAIL_BY_FORM,
+                data: res
+            })
+        } catch (e) {
+            console.log('fetchFooter error', e)
+        }
+    }
+}
+export const fetchInput = () => {
+    return async (dispatch, getState) => {
+        try {
+            let res = await getAllInput()
+            dispatch({
+                type: actionTypes.FETCH_INPUT,
+                data: res
+            })
+        } catch (e) {
+            console.log('fetchInput error', e)
         }
     }
 }
