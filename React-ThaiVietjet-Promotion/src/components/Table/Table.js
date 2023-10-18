@@ -4,6 +4,7 @@ import _ from 'lodash';
 import * as actions from 'store/actions';
 import withRouter from "components/withRouter/withRouter"
 import { connect } from 'react-redux'
+import { func } from 'utils'
 
 // Usage
 
@@ -65,20 +66,27 @@ class Table extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                            {data.map((item) => {
+                            {tbody && data.map((item) => {
                                 return (
                                     <tr>
                                         {tbody && tbody.map((itemTbody, index) => {
                                             if (index === 0) {
                                                 return (
-                                                    <th>{item?.[itemTbody]}</th>
+                                                    <th key={index}>{item?.[itemTbody]}</th>
                                                 )
                                             } else {
-                                                if (typeof (itemTbody) === 'string') {
+                                                let type = typeof (itemTbody)
+                                                if (type === 'string') {
                                                     return (
-                                                        <td>{item?.[itemTbody]}</td>
+                                                        <td key={index}>{item?.[itemTbody]}</td>
                                                     )
-                                                } else if (typeof (itemTbody) === 'object') {
+                                                } else if (Array.isArray(itemTbody)) {
+                                                    return (
+                                                        <td>
+                                                            {func.OBJECT(item, itemTbody)}
+                                                        </td>
+                                                    )
+                                                } else if (type === 'object') {
                                                     if (itemTbody.type === 'image') {
                                                         return (
                                                             <td>

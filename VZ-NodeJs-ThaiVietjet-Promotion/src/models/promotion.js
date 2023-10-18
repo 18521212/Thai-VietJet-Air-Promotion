@@ -3,26 +3,23 @@ const {
     Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    class Pack extends Model {
+    class Promotion extends Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
+            // Promotion.belongsTo(models.Input, { foreignKey: 'inputId' })
 
+            // Promotion.hasMany(models.Row_Dataset_Dropdown, { foreignKey: 'dropdownId', as: 'dataDropdown' })
         }
     };
-    Pack.init({
+    Promotion.init({
         name: DataTypes.STRING,
-        maxNumber: DataTypes.INTEGER,
-        price: DataTypes.FLOAT,
-        currency: DataTypes.STRING,
-        numberRedeem: DataTypes.INTEGER,
-        promotionId: DataTypes.INTEGER,
     }, {
         sequelize,
-        modelName: 'Pack',
+        modelName: 'Promotion',
     });
-    return Pack;
+    return Promotion;
 };

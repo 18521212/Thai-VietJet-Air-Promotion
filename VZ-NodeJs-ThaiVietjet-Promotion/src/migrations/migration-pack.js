@@ -12,6 +12,10 @@ module.exports = {
                 type: Sequelize.STRING,
                 allowNull: false
             },
+            promotionId: {
+                type: Sequelize.INTEGER,
+                allowNull: false
+            },
             maxNumber: {
                 type: Sequelize.INTEGER,
                 allowNull: false

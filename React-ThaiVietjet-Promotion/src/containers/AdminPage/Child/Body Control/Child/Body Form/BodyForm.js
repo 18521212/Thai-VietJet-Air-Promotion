@@ -67,7 +67,6 @@ class BodyForm extends Component {
     }
 
     render() {
-        console.log('st', this.state)
         let { type } = this.state
         return (
             <>

@@ -10,14 +10,14 @@ module.exports = {
         //     }
         // )
 
-        await queryInterface.changeColumn(
-            'Form_Details',
-            'widthMdScreen',
-            {
-                type: Sequelize.INTEGER,
-                defaultValue: 12
-            }
-        )
+        // await queryInterface.changeColumn(
+        //     'Packs',
+        //     'widthMdScreen',
+        //     {
+        //         type: Sequelize.INTEGER,
+        //         defaultValue: 12
+        //     }
+        // )
 
         // await queryInterface.renameColumn(
         //     'Campaigns',
@@ -26,24 +26,25 @@ module.exports = {
         // )
 
         // add column
-        // queryInterface.addColumn(
-        //     'Content_Bodies',
-        //     'markdownEn',
-        //     {
-        //         type: Sequelize.TEXT,
-        //         // defaultValue: null,
-        //     }
-        // );
-    },
-    down: async (queryInterface, Sequelize) => {
-        await queryInterface.changeColumn(
-            'Form_Details',
-            'widthMdScreen',
+        queryInterface.addColumn(
+            'Packs',
+            'promotionId',
             {
                 type: Sequelize.INTEGER,
-                defaultValue: 1
+                allowNull: false
+                // defaultValue: null,
             }
-        )
+        );
+    },
+    down: async (queryInterface, Sequelize) => {
+        // await queryInterface.changeColumn(
+        //     'Packs',
+        //     'widthMdScreen',
+        //     {
+        //         type: Sequelize.INTEGER,
+        //         defaultValue: 1
+        //     }
+        // )
 
         // await queryInterface.renameColumn(
         //     'Campaigns',
@@ -51,9 +52,9 @@ module.exports = {
         //     'formSectionId',
         // )
 
-        // queryInterface.removeColumn(
-        //     'Content_Bodies',
-        //     'markdownEn',
-        // );
+        queryInterface.removeColumn(
+            'Packs',
+            'promotionId',
+        );
     }
 };

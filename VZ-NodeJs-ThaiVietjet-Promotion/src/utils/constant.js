@@ -1,5 +1,9 @@
-export const api ={
-    BODYS: '/api/bodies'
+export const api = {
+    BODYS: '/api/bodies',
+    INPUTS: '/api/inputs',
+    TEXT_INPUTS: '/api/text-inputs',
+    DROPDOWNS: '/api/dropdowns',
+    DATA_DROPDOWNS: '/api/data-dropdowns'
 }
 
 export const text = {
@@ -36,10 +40,11 @@ export const resolveObj = {
         errCode: 1,
         errMessage: text.MISSING_PARAMETERS
     },
-    CREATE_SUCCEED: (data_table) => {
+    CREATE_SUCCEED: (data_table, data) => {
         return {
             errCode: 0,
-            errMessage: text.CREATE_SUCCEED(data_table)
+            errMessage: text.CREATE_SUCCEED(data_table),
+            data: data
         }
     },
     GET: (data) => {
@@ -76,7 +81,12 @@ export const resolveObj = {
         errCode: -1,
         errMessage: 'Error from the server'
     },
-
+    ERROR: (errCode, errMessage) => {
+        return {
+            errCode: errCode,
+            errMessage: errMessage
+        }
+    },
     DELETE_UNSUCCEED: (data_table) => {
         return {
             errCode: 1,
@@ -87,7 +97,6 @@ export const resolveObj = {
 
 export const services = {
     SERVICE: (func) => {
-        console.log('ser')
         return new Promise(async (resolve, reject) => {
             try {
 
@@ -95,6 +104,23 @@ export const services = {
                 reject(e);
             }
         })
+    }
+}
+
+export const controller = {
+    CONTROLLER: async (req, res, func, dataFunc = undefined) => {
+        try {
+            let data
+            if (dataFunc) {
+                data = await func(dataFunc)
+            } else {
+                data = await func()
+            }
+            return res.status(200).json(data)
+        } catch (e) {
+            console.log(e)
+            return res.status(200).json(resolveObj.ERROR_SERVER)
+        }
     }
 }
 
@@ -108,5 +134,27 @@ export const func = {
             }
         })
         return result
+    },
+    CHECK_HAS_VALUE_OR: (...args) => {
+        let result = false
+        args.map((item) => {
+            if (item) {
+                result = true
+                return
+            }
+        })
+        return result
+    },
+    ORDER: (array, property, type) => {
+        if (type === 'asc') {
+            array = array.sort((a, b) => a?.[property] - b?.[property]);
+        } else if (type === 'desc') {
+            array = array.sort((a, b) => b?.[property] - a?.[property]);
+        }
     }
+}
+
+export const type = {
+    TEXT: 'text',
+    DROPDOWN: 'dropdown',
 }

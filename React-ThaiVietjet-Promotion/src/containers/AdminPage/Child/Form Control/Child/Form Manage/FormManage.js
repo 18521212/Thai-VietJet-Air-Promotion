@@ -55,7 +55,6 @@ class FormManage extends Component {
 
     render() {
         let type = this.props.params?.type
-        console.log('st', this.state)
         return (
             <>
                 <h4>Footer Form</h4>

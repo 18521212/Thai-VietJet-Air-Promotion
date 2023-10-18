@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 import { func } from 'utils'
 import Select from "components/Select/Select";
 import RenderInput from "components/Render Input/RenderInput";
-import { createFormDetail } from "services";
+import { createFormDetail, updateFormDetail } from "services";
 
 class FormDetail extends Component {
     constructor(props) {
@@ -26,10 +26,9 @@ class FormDetail extends Component {
     }
 
     mapData = () => {
-        let form = this.props.location.state?.form
-        this.setState({
-            formId: form.id
-        })
+        func.MAP_STATE_ROUTE(this,
+            { object: 'form', property: [{ key1: 'formId', key2: 'id' }] },
+            { object: 'formDetail', property: ['id', 'formId', 'order', 'widthMdScreen'] })
     }
 
     handleOnChangeSelect = (selectedValue, actions) => {
@@ -41,27 +40,21 @@ class FormDetail extends Component {
     }
 
     handleCreate = () => {
-        let type = this.props.params?.type
-        let state = this.state
-        let data = {}
-        data.formId = state.formId
-        data.inputId = state.selectedInput.value.id
-        data.order = state.order
-        data.widthMdScreen = state.widthMdScreen
-        switch (type) {
-            case 'update':
-                // update
-                break;
-            default:
-                // create
-                func.HANDLE_CREATE_UPDATE(data, createFormDetail, () => { func.NAV(this, -1) })
-                break;
-        }
+        func.HANDLE_CREATE_UPDATE_V2(this,
+            ['formId', { key: 'inputId', property: ['selectedInput', 'value', 'id'] }, 'order', 'widthMdScreen'],
+            {
+                func: createFormDetail,
+                callBack: () => { func.NAV(this, -1) }
+            },
+            {
+                func: updateFormDetail,
+                property: ['id', 'order', 'widthMdScreen', 'inputId'],
+                callBack: () => { func.NAV(this, -1) }
+            })
     }
 
     render() {
         let type = this.props.params?.type
-        console.log('s', this.state)
         return (
             <>
                 <h4>Form Detail</h4>
@@ -83,17 +76,26 @@ class FormDetail extends Component {
                             onChange={(event) => func.ONCHANGE_TEXT(this, 'title', event)}
                         />
                     </div>
+                    {this.state.id &&
+                        <div class="form-group col-md-2">
+                            <label for="id">Id</label>
+                            <input type="text" class="form-control" id="id" aria-describedby="emailHelp"
+                                value={this.state?.id} disabled
+                                onChange={(event) => func.ONCHANGE_TEXT(this, 'id', event)}
+                            />
+                        </div>
+                    }
                     <div class="form-group col-md-2">
                         <label for="id">Order</label>
                         <input type="text" class="form-control" id="id" aria-describedby="emailHelp"
-                            value={this.state.link}
+                            value={this.state.order}
                             onChange={(event) => func.ONCHANGE_TEXT(this, 'order', event)}
                         />
                     </div>
                     <div class="form-group col-md-2">
                         <label for="id">{'Width (Medium screen)'}</label>
                         <input type="text" class="form-control" id="id" aria-describedby="emailHelp"
-                            value={this.state.link}
+                            value={this.state.widthMdScreen}
                             onChange={(event) => func.ONCHANGE_TEXT(this, 'widthMdScreen', event)}
                         />
                     </div>

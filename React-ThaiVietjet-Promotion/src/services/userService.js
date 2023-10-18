@@ -48,7 +48,6 @@ const deleteCampaign = (data) => {
 
 // header 
 const createHeader = (data) => {
-    console.log('cre he se')
     return create('/api/headers', data)
 }
 
@@ -180,7 +179,7 @@ const getForm = (id) => {
     }
 }
 
-const getAllInput = (id) => {
+const getInput = (id) => {
     return get(api.INPUTS, id)
 }
 
@@ -204,6 +203,10 @@ const createFormDetail = (data) => {
 
 const getFormDetailByFormId = (formId) => {
     return get(`${api.FORM_DETAILS}/forms/${formId}`)
+}
+
+const updateFormDetail = (data) => {
+    return update(api.FORM_DETAILS, data)
 }
 
 const deleteFormDetail = (data) => {
@@ -271,6 +274,6 @@ export {
     createFooter, updateFooter, deleteFooter,
     createFooterText, getFooterText, deleteFooterText,
     updateFooterText, createForm, deleteForm,
-    updateForm, getFormDetailByFormId, getAllInput,
-    createFormDetail, deleteFormDetail
+    updateForm, getFormDetailByFormId, getInput,
+    createFormDetail, deleteFormDetail, updateFormDetail
 }

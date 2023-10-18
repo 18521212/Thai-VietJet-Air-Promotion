@@ -91,7 +91,6 @@ class RenderInput extends Component {
 
     render() {
         let element = this.buildInput()
-        console.log('da', this.props)
         return (
             <>
                 {element && element}

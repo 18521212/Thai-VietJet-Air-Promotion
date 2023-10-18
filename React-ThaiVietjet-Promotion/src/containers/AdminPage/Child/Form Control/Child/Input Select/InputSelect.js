@@ -63,21 +63,22 @@ class InputSelect extends Component {
                 </div>
                 <Table
                     data={inputData}
-                    thead={['Input Id', 'Order', 'Width (Medium screen size)', 'Input Type', 'title']}
-                    tbody={['inputId', 'order', 'widthMdScreen',
+                    thead={['Id', 'Input Id', 'Order', 'Width (Medium screen size)', 'Input Type', 'title']}
+                    tbody={['id', 'inputId', 'order', 'widthMdScreen',
                         { key1: 'input', key2: 'typeInput', type: 'object' },
                         'title'
                     ]}
                     actions={(data) =>
                         <>
                             <button type="button" className="btn btn-primary mx-1"
-                                onClick={() => func.NAV(this, '../form-detail/update', { form: this.props.location.state.form })}
+                                onClick={() => func.NAV(this, '../../input/input-detail',
+                                    { input: data?.input })}
                                 title="Redirect view detail input"
                             >View</button>
                             <button type="button" className="btn btn-warning mx-1"
-                                // onClick={() => this.handleUpdate(data)}
+                                onClick={() => func.NAV(this, '../form-detail/update', { formDetail: data })}
                                 title="Redirect update input"
-                            >Update</button>
+                            >Update Form</button>
                             <button type="button" className="btn btn-danger mx-1"
                                 onClick={() => this.handleDelete(data)}
                                 title="Delete Input associate with Form Detail"

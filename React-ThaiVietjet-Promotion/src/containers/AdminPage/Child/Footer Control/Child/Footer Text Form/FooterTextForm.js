@@ -60,7 +60,6 @@ class FooterTextForm extends Component {
     render() {
         let type = this.props.params?.type
         let idInputStatus = type === 'update' ? 'id' : 'footerId'
-        console.log('st', this.state)
         return (
             <>
                 <h4>Footer Form</h4>

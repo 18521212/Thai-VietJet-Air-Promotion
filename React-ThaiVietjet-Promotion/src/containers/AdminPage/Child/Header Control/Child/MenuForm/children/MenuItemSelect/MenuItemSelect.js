@@ -38,7 +38,6 @@ class MenuItemSelect extends Component {
 
     render() {
         let menuItem = this.props.menuItemData.data
-        console.log(this.props)
         return (
             <>
                 <div className="row ">

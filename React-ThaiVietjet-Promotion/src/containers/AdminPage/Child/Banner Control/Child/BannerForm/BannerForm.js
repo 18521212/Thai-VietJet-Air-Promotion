@@ -72,7 +72,6 @@ class BannerForm extends Component {
 
     render() {
         let { type } = this.props.params
-        console.log(this.state)
         return (
             <>
                 <h3>Banner Form</h3>

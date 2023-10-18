@@ -60,24 +60,32 @@ let initWebRoutes = (app) => {
     router.delete('/api/forms', formController.createUpdateDeleteForm)
 
     // form detail
-    
+
     router.get('/api/form-details', formController.getAllFormDetail)
     router.get('/api/form-details/forms/:formId', formController.getFormDetailByFormId)
     router.post('/api/form-details', formController.addInputIntoForm)
     router.put('/api/form-details', formController.updateFormDetail)
     router.delete('/api/form-details', formController.deleteFormDetail)
 
-    router.get('/api/inputs', formController.getAllInput)
-    router.delete('/api/inputs/:id', formController.deleteInputById)
+    // input
+    router.get(`${api.INPUTS}/:id?`, formController.getInput)
+    router.delete(api.INPUTS, formController.deleteInputById)
 
-    router.post('/api/text-inputs', formController.createTextInput)
-    router.get('/api/text-inputs', formController.getAllTextInput)
+    // text input
+    router.post(api.TEXT_INPUTS, formController.createTextInput)
+    router.get(api.TEXT_INPUTS, formController.getAllTextInput)
+    router.put(api.TEXT_INPUTS, formController.updateTextInput)
 
-    router.post('/api/dropdowns', formController.createDropdown)
-    router.get('/api/dropdowns/:id', formController.getDropdownById)
-    router.post('/api/row-dataset-dropdowns', formController.createRowDataDropdown)
-    // delete dropdown // delete data dropdown
+    // dropdown
+    router.post(api.DROPDOWNS, formController.createUpdateDropdown)
+    router.get(`${api.DROPDOWNS}/:id`, formController.getDropdownById)
+    router.put(api.DROPDOWNS, formController.createUpdateDropdown)
 
+    // data dropdown
+    router.post(api.DATA_DROPDOWNS, formController.createDeleteDataDropdown)
+    router.delete(api.DATA_DROPDOWNS, formController.createDeleteDataDropdown)
+
+    // pack
     router.post('/api/packs', formController.createPack)
     router.get('/api/packs', formController.getAllPack)
     router.delete('/api/packs/:id', formController.deletePackById)
@@ -96,7 +104,7 @@ let initWebRoutes = (app) => {
     router.put('/api/footer-texts', footerController.updateFooterText)
     router.delete('/api/footer-texts', footerController.deleteFooterText)
 
-    return app.use("/", router) //su dung tat ca fie router ma chung ta khai bao
+    return app.use("/", router)
 }
 
 module.exports = initWebRoutes;

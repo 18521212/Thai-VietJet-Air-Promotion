@@ -14,7 +14,7 @@ const environment = process.env.NODE_ENV || "development";
 let isDevelopment = environment === "development";
 
 //hide redux logs
-isDevelopment = false;
+// isDevelopment = false;
 
 
 export const history = createBrowserHistory({ basename: process.env.REACT_APP_ROUTER_BASE_NAME });
@@ -32,7 +32,8 @@ const middleware = [
     thunkMiddleware,
     createStateSyncMiddleware(reduxStateSyncConfig),
 ]
-if (isDevelopment) middleware.push(logger);
+
+// if (isDevelopment) middleware.push(logger);
 
 const composeEnhancers = (isDevelopment && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : compose;
 

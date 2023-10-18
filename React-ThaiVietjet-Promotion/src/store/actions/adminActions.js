@@ -4,8 +4,11 @@ import {
     getAllMenu, getAllMenuItemByMenuId, getAllSubMenuByMenuItemId,
     getAllHeader, getCampaign, getBanners,
     getBody, getFooter, getFooterText,
-    getForm, getFormDetailByFormId, getAllInput
+    getForm, getFormDetailByFormId,
+    //  getInput
 } from 'services/userService';
+
+import { getInput } from 'services/formService';
 
 export const fetchCampaign = (id) => {
     return async (dispatch, getState) => {
@@ -162,10 +165,10 @@ export const fetchFormDetailByFormId = (formId) => {
         }
     }
 }
-export const fetchInput = () => {
+export const fetchInput = (inputId) => {
     return async (dispatch, getState) => {
         try {
-            let res = await getAllInput()
+            let res = await getInput(inputId)
             dispatch({
                 type: actionTypes.FETCH_INPUT,
                 data: res

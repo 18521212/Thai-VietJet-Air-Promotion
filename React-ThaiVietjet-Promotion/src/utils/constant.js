@@ -1,4 +1,4 @@
-export const path = {
+export const route = {
 
 };
 
@@ -11,6 +11,9 @@ export const api = {
     FOOTER_TEXTS: '/api/footer-texts',
     FORM_DETAILS: '/api/form-details',
     INPUTS: '/api/inputs',
+    TEXT_INPUTS: '/api/text-inputs',
+    DROPDOWNS: '/api/dropdowns',
+    DATA_DROPDOWNS: '/api/data-dropdowns',
 }
 
 export const LANGUAGES = {
@@ -36,4 +39,9 @@ export const YesNoObj = {
 
 export const USER_ROLE = {
     ADMIN: 'ADMIN',
+}
+
+export const type = {
+    TEXT: 'text',
+    DROPDOWN: 'dropdown',
 }

@@ -1,5 +1,5 @@
 import formService from '../services/formService';
-import { resolveObj } from '../utils';
+import { resolveObj, controller } from '../utils';
 
 // form
 
@@ -111,29 +111,22 @@ let deleteFormDetail = async (req, res) => {
 
 // input
 
-let getAllInput = async (req, res) => {
-    try {
-        let data = await formService.getAllInput();
-        return res.status(200).json(data)
-    } catch (e) {
-        console.log(e)
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+let getInput = async (req, res) => {
+    let id = req.params.id
+    if (id) {
+        controller.CONTROLLER(req, res, formService.getInputById, id)
+    } else {
+        controller.CONTROLLER(req, res, formService.getAllInput)
     }
 }
 
 let deleteInputById = async (req, res) => {
     try {
-        let data = await formService.deleteInputById(req.params.id);
+        let data = await formService.deleteInputById(req.body.id);
         return res.status(200).json(data)
     } catch (e) {
         console.log(e)
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -142,9 +135,7 @@ let deleteInputById = async (req, res) => {
 let createTextInput = async (req, res) => {
     try {
         let data = await formService.createTextInput(req.body);
-        return res.status(200).json({
-            data
-        })
+        return res.status(200).json(data)
     } catch (e) {
         console.log(e)
         return res.status(200).json({
@@ -167,19 +158,34 @@ let getAllTextInput = async (req, res) => {
     }
 }
 
+let updateTextInput = async (req, res) => {
+    controller.CONTROLLER(req, res, formService.updateTextInput, req.body)
+}
+
 // dropdown
 
-let createDropdown = async (req, res) => {
-    try {
-        let data = await formService.createDropdown(req.body);
-        return res.status(200).json(data)
-    } catch (e) {
-        console.log(e)
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+let createUpdateDropdown = async (req, res) => {
+    let method = req.method
+    switch (method) {
+        case 'POST':
+            controller.CONTROLLER(req, res, formService.createDropdown, req.body)
+            break;
+        case 'PUT':
+            controller.CONTROLLER(req, res, formService.updateDropdown, req.body)
+            break;
+        default:
+            break;
     }
+    // try {
+    //     let data = await formService.createDropdown(req.body);
+    //     return res.status(200).json(data)
+    // } catch (e) {
+    //     console.log(e)
+    //     return res.status(200).json({
+    //         errCode: -1,
+    //         errMessage: 'Error from the server'
+    //     })
+    // }
 }
 
 let getDropdownById = async (req, res) => {
@@ -195,16 +201,27 @@ let getDropdownById = async (req, res) => {
     }
 }
 
-let createRowDataDropdown = async (req, res) => {
+let createDeleteDataDropdown = async (req, res) => {
+    let method = req.method
+    switch (method) {
+        case 'POST':
+            controller.CONTROLLER(req, res, formService.addDataDropdown, req.body)
+            break;
+        case 'DELETE':
+            controller.CONTROLLER(req, res, formService.deleteDataDropdown, req.body)
+            break;
+        default:
+            break;
+    }
+}
+
+let addDataDropdown = async (req, res) => {
     try {
-        let data = await formService.createRowDataDropdown(req.body);
+        let data = await formService.addDataDropdown(req.body);
         return res.status(200).json(data)
     } catch (e) {
         console.log(e)
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -272,15 +289,18 @@ module.exports = {
     updateFormDetail: updateFormDetail,
     deleteFormDetail: deleteFormDetail,
 
-    getAllInput: getAllInput,
+    getInput,
     deleteInputById: deleteInputById,
 
     createTextInput: createTextInput,
     getAllTextInput: getAllTextInput,
+    updateTextInput,
 
-    createDropdown: createDropdown,
+    createUpdateDropdown,
     getDropdownById: getDropdownById,
-    createRowDataDropdown: createRowDataDropdown,
+
+    addDataDropdown,
+    createDeleteDataDropdown,
 
     createPack: createPack,
     getAllPack: getAllPack,
