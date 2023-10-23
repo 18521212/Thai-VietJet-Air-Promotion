@@ -1,16 +1,14 @@
 import { Component } from "react";
-import './FormControl.scss'
+// import './PromotionControl.scss'
 import _ from 'lodash';
 import * as actions from 'store/actions';
 import withRouter from "components/withRouter/withRouter"
 import { connect } from 'react-redux'
 import { Routes, Route } from "react-router"
-import FormSelect from "./Child/Form Select/FormSelect"
-import FormManage from "./Child/Form Manage/FormManage"
-import InputSelect from "./Child/Input Select/InputSelect"
-import FormDetail from "./Child/Form Detail/FormDetail"
+import PromotionSelect from "./Child/Promotion Select/PromotionSelect";
+import PromotionForm from "./Child/Promotion Form/PromotionForm";
 
-class FormControl extends Component {
+class PromotionControl extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -30,12 +28,10 @@ class FormControl extends Component {
         return (
             <>
                 <div className="container-fluid">
-                    <h3>Form Control</h3>
+                    <h3>Promotion Control</h3>
                     <Routes>
-                        <Route path='*' element={<FormSelect />}></Route>
-                        <Route path='form-manage/:type?' element={<FormManage />}></Route>
-                        <Route path='input-select' element={<InputSelect />}></Route>
-                        <Route path='form-detail/:type?' element={<FormDetail />}></Route>
+                        <Route path='*' element={<PromotionSelect />}></Route>
+                        <Route path='promotion-form/:type?' element={<PromotionForm />}></Route>
                     </Routes>
                 </div>
             </>
@@ -54,4 +50,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(FormControl));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PromotionControl));

@@ -3,7 +3,9 @@ export const api = {
     INPUTS: '/api/inputs',
     TEXT_INPUTS: '/api/text-inputs',
     DROPDOWNS: '/api/dropdowns',
-    DATA_DROPDOWNS: '/api/data-dropdowns'
+    DATA_DROPDOWNS: '/api/data-dropdowns',
+    PROMOTIONS: '/api/promotions',
+    PACKS: '/api/packs',
 }
 
 export const text = {
@@ -108,6 +110,22 @@ export const services = {
 }
 
 export const controller = {
+    SWITCH_CONTROLLER: (req, res, func) => {
+        let method = req.method
+        switch (method) {
+            case 'POST':
+                func?.create && controller.CONTROLLER(req, res, func.create, req.body)
+                break;
+            case 'PUT':
+                func?.update && controller.CONTROLLER(req, res, func.update, req.body)
+                break;
+            case 'DELETE':
+                func?.delete && controller.CONTROLLER(req, res, func.delete, req.body)
+                break;
+            default:
+                break;
+        }
+    },
     CONTROLLER: async (req, res, func, dataFunc = undefined) => {
         try {
             let data

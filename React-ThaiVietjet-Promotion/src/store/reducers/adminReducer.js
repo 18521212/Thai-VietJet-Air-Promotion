@@ -17,6 +17,8 @@ const initialState = {
     footer_texts: '',
     form_detail_by_forms: '',
     inputs: '',
+    promotions: '',
+    packs: '',
     campaignOption: [],
     headerOption: [],
     optionMenus: [],
@@ -72,6 +74,10 @@ const adminReducer = (state = initialState, action) => {
             return mapDataGET(state, action, 'form_detail_by_form')
         case actionTypes.FETCH_INPUT:
             return mapDataGET(state, action, 'input')
+        case actionTypes.FETCH_PROMOTION:
+            return mapDataGET(state, action, 'promotion')
+        case actionTypes.FETCH_PACK:
+            return mapDataGET(state, action, 'pack')
         default:
             return state;
     }

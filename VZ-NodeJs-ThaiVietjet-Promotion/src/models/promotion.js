@@ -10,9 +10,7 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            // Promotion.belongsTo(models.Input, { foreignKey: 'inputId' })
-
-            // Promotion.hasMany(models.Row_Dataset_Dropdown, { foreignKey: 'dropdownId', as: 'dataDropdown' })
+            Promotion.hasMany(models.Pack, { foreignKey: 'promotionId', as: 'pack' })
         }
     };
     Promotion.init({

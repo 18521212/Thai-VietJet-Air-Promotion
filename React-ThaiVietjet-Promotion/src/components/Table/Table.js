@@ -50,8 +50,8 @@ class Table extends Component {
         let { data, thead, tbody, actions } = this.props
         return (
             <>
-                {data &&
-                    <table className="table">
+                {data && data.length > 0 &&
+                    <table table className="table">
                         <thead>
                             <tr>
                                 {thead && thead.map((item, index) => {

@@ -6,6 +6,7 @@ import headerController from "../controllers/headerController";
 import bodyController from "../controllers/bodyController";
 import formController from "../controllers/formController";
 import footerController from "../controllers/footerController";
+import promotionController from '../controllers/promotionController'
 import { api } from "../utils";
 
 let router = express.Router();
@@ -85,10 +86,17 @@ let initWebRoutes = (app) => {
     router.post(api.DATA_DROPDOWNS, formController.createDeleteDataDropdown)
     router.delete(api.DATA_DROPDOWNS, formController.createDeleteDataDropdown)
 
+    // promotion
+    router.post(api.PROMOTIONS, promotionController.createUpdateDeletePromotion)
+    router.get(`${api.PROMOTIONS}/:id?`,promotionController.getPromotion)
+    router.put(api.PROMOTIONS, promotionController.createUpdateDeletePromotion)
+    router.delete(api.PROMOTIONS, promotionController.createUpdateDeletePromotion)
+
     // pack
-    router.post('/api/packs', formController.createPack)
-    router.get('/api/packs', formController.getAllPack)
-    router.delete('/api/packs/:id', formController.deletePackById)
+    router.post(api.PACKS, promotionController.createUpdateDeletePack)
+    router.get(`${api.PACKS}/:id?`, promotionController.getPack)
+    router.put(api.PACKS, promotionController.createUpdateDeletePack)
+    router.delete(api.PACKS, promotionController.createUpdateDeletePack)
 
     router.post('/api/fetch-data', formController.fetchData)
 

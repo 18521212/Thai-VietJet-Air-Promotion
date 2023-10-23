@@ -17,6 +17,8 @@ const actionTypes = Object.freeze({
     FETCH_FOOTER_TEXT: 'FETCH_FOOTER_TEXT',
     FETCH_FORM_DETAIL_BY_FORM: 'FETCH_FORM_DETAIL_BY_FORM',
     FETCH_INPUT: 'FETCH_INPUT',
+    FETCH_PROMOTION: 'FETCH_PROMOTION',
+    FETCH_PACK: 'FETCH_PACK',
 })
 
 export default actionTypes;

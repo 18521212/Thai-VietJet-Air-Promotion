@@ -88,7 +88,7 @@ export const func = {
         })
         switch (type) {
             case 'update':
-                serviceUpdate?.property.length > 0 && serviceUpdate.property.map(item => {
+                serviceUpdate?.property?.length > 0 && serviceUpdate.property.map(item => {
                     handleItem(item)
                 })
                 func.HANDLE_CREATE_UPDATE(data, serviceUpdate.func, serviceUpdate.callBack)
@@ -190,6 +190,8 @@ export const func = {
 
 export const component = {
     BUTTON_SUBMIT: (parent, onClick, className = '') => {
+        // usage
+        // component.BUTTON_SUBMIT(this, this.onCreate)
         let type = parent.props.params?.type, component, text, classButton
         if (type === 'update') {
             classButton = 'btn-warning'

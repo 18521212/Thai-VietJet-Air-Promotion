@@ -13,6 +13,7 @@ import BodyControl from './Child/Body Control/BodyControl';
 import FooterControl from './Child/Footer Control/FooterControl';
 import FormControl from './Child/Form Control/FormControl';
 import InputControl from './Child/Input Control/InputControl';
+import PromotionControl from './Child/Promotion Control/PromotionControl';
 
 class AdminPage extends Component {
     constructor(props) {
@@ -39,6 +40,7 @@ class AdminPage extends Component {
                     <Route path="/form*" element={<FormControl />} />
                     <Route path="/input*" element={<InputControl />} />
                     <Route path="/footer*" element={<FooterControl />} />
+                    <Route path="/promotion*" element={<PromotionControl />} />
                 </Routes>
             </div>
         )

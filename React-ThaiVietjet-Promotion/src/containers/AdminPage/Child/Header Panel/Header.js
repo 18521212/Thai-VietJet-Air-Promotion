@@ -53,6 +53,7 @@ class Header extends Component {
                                         </div>
                                     </li>
                                     <li className="nav-item"><Link className="nav-link" to='/admin/footer'>Footer</Link></li>
+                                    <li className="nav-item"><Link className="nav-link" to='/admin/promotion'>Promotion</Link></li>
                                 </ul>
                             </div>
                         </nav>

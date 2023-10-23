@@ -7,8 +7,8 @@ import {
     getForm, getFormDetailByFormId,
     //  getInput
 } from 'services/userService';
-
 import { getInput } from 'services/formService';
+import { getPromotion, getPack } from 'services/promotionService';
 
 export const fetchCampaign = (id) => {
     return async (dispatch, getState) => {
@@ -175,6 +175,34 @@ export const fetchInput = (inputId) => {
             })
         } catch (e) {
             console.log('fetchInput error', e)
+        }
+    }
+}
+
+export const fetchPromotion = (id) => {
+    return async (dispatch, getState) => {
+        try {
+            let res = await getPromotion(id)
+            dispatch({
+                type: actionTypes.FETCH_PROMOTION,
+                data: res
+            })
+        } catch (e) {
+            console.log('fetchPromotion error', e)
+        }
+    }
+}
+
+export const fetchPack = (id)=>{
+    return async (dispatch, getState) => {
+        try {
+            let res = await getPack(id)
+            dispatch({
+                type: actionTypes.FETCH_PACK,
+                data: res
+            })
+        } catch (e) {
+            console.log('fetchPack error', e)
         }
     }
 }

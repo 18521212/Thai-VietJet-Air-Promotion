@@ -14,6 +14,8 @@ export const api = {
     TEXT_INPUTS: '/api/text-inputs',
     DROPDOWNS: '/api/dropdowns',
     DATA_DROPDOWNS: '/api/data-dropdowns',
+    PROMOTIONS: '/api/promotions',
+    PACKS: '/api/packs',
 }
 
 export const LANGUAGES = {
