@@ -8,7 +8,7 @@ import Select from 'react-select';
 import PowerPack from './Child/PowerPack';
 
 import {
-    getBanners, getAllTextInput, getFormSectionById,
+    getBanner, getAllTextInput, getFormSectionById,
     getAllPack, getBody
 } from "../../../services/userService";
 

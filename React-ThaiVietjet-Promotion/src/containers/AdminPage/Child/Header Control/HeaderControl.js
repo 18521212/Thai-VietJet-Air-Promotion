@@ -3,7 +3,7 @@ import './HeaderControl.scss'
 import Select from 'react-select';
 import _ from 'lodash';
 import {
-    getAllHeader, createHeader, deleteHeader,
+    getHeader, createHeader, deleteHeader,
     getAllMenu
 } from "../../../../services/userService";
 import { event } from "jquery";

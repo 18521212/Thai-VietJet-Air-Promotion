@@ -1,10 +1,9 @@
 import { Component } from "react";
 import './Banner.scss'
 import _ from 'lodash';
-
-import {
-    getBanners,
-} from "services/userService";
+import { getBanner } from "services";
+import { connect } from 'react-redux';
+import * as actions from 'store/actions';
 
 class Banner extends Component {
     constructor(props) {
@@ -15,30 +14,49 @@ class Banner extends Component {
     }
 
     componentDidMount() {
+        this.loadData()
+    }
 
+    loadData = () => {
+        let bannerId = this.props.bannerId
+        bannerId && this.props.loadBanner(bannerId)
     }
 
     render() {
-        let { bannerImage } = this.state;
+        let banner = this.props?.banner.data
         return (
             <>
-                <div className="container-fluid p-0 top-section">
-                    <picture>
-                        < source
-                            // srcSet={bannerImage.mobile ? bannerImage.mobile : ''}
-                            media="(max-width: 600px)"
-                            className="img-fluid"
-                        />
-                        <img
-                            className="img-fluid"
-                            // src={bannerImage.desktop ? bannerImage.desktop : ''}
-                            alt="advertise-banner"
-                        />
-                    </picture>
-                </div>
+                {banner &&
+                    <div className="container-fluid p-0 top-section">
+                        <picture>
+                            < source
+                                srcSet={banner?.imageMobile}
+                                media="(max-width: 600px)"
+                                className="img-fluid"
+                            />
+                            <img
+                                className="img-fluid"
+                                src={banner?.imageDesktop}
+                                alt="advertise-banner"
+                            />
+                        </picture>
+                    </div>
+                }
             </>
         )
     }
 }
 
-export default Banner;
+const mapStateToProps = state => {
+    return {
+        banner: state.admin.banner
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        loadBanner: (id) => dispatch(actions.fetchBanner(id))
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Banner);

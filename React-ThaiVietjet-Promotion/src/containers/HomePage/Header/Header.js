@@ -2,23 +2,19 @@ import { Component } from "react";
 import './Header.scss';
 import logo from '../../../assets/Logo/skyfun_logo.png';
 import Select from 'react-select'
-
-import { getAllMenuItemByMenuId, getAllHeader } from "../../../services/userService";
-
+import { getAllMenuItemByMenuId, getHeader } from "../../../services/userService";
 import { connect } from 'react-redux';
 import { LANGUAGES } from '../../../utils';
 import { FormattedMessage } from 'react-intl';
-import { changeLanguageApp } from '../../../store/actions';
+import { changeLanguageApp, fetchHeader, fetchMenu } from '../../../store/actions';
+import * as actions from 'store/actions';
 
 class Header extends Component {
     constructor(props) {
         super(props);
-
-        this.toggle = this.toggle.bind(this);
-
         this.state = {
-            menuItem: '',
-            menuLanguage: '',
+            firstMenus: '',
+            lastMenus: '',
             header: '',
 
             selectedLanguage: '',
@@ -26,23 +22,27 @@ class Header extends Component {
     }
 
     componentDidMount() {
+        this.loadData()
+    }
+
+    loadData = async () => {
+        await this.props.loadHeader(this.props.headerId)
+        await this.props.loadMenu(this.props.header.data?.menuId)
         this.buildData()
     }
 
-    buildData = async () => {
-        let menuItemData = await getAllMenuItemByMenuId(1);
-        let menuLanguage = menuItemData.data.filter((data) => data.order === -1);
-        let menuItem;
-        menuItem = menuItemData.data.filter((data) => data.order !== -1);
-        menuItem.sort((a, b) => a.order - b.order);
-        // console.log('check menu item:', menuItem.data, menuItem, menuLanguage)
-
-        let header = await getAllHeader();
-
+    buildData = () => {
+        let lastMenus, firstMenus
+        if (this.props.menu.data) {
+            let menuItemData = this.props.menu.data.menu_item
+            lastMenus = menuItemData.filter((data) => data.order === -1);
+            firstMenus = menuItemData.filter((data) => data.order !== -1);
+            firstMenus.sort((a, b) => a.order - b.order);
+        }
         this.setState({
-            menuItem: menuItem,
-            menuLanguage: menuLanguage,
-            header: header.data[0]
+            firstMenus: firstMenus,
+            lastMenus: lastMenus,
+            header: this.props.header.data
         })
     }
 
@@ -54,25 +54,13 @@ class Header extends Component {
         })
     }
 
-    toggle(id) {
-        let stateCopy = { ...this.state }
-        let toggle = stateCopy[id]
-        stateCopy[id] = !toggle
-        this.setState({
-            ...stateCopy
-        })
-        // this.setState(prevState => ({
-        //     dropdownOpenShopping: !prevState.dropdownOpenShopping
-        // }));
-    }
-
     handleOnChangeLanguage = (event) => {
         let language = event.target.name
         this.props.changeLanguageAppRedux(language)
     }
 
     render() {
-        let { menuItem, menuLanguage, header } = this.state;
+        let { firstMenus, lastMenus, header } = this.state;
         let mainUrl = 'https://vietjetthai.com';
         let { language } = this.props;
         return (
@@ -84,7 +72,7 @@ class Header extends Component {
                     {/* <h1><FormattedMessage id="header.language" /></h1> */}
                     <nav className="navbar navbar-expand-lg navbar-dark bg-dark container-fluid sticky-top">
                         <a className="navbar-brand" href={mainUrl}>
-                            <img src={logo} alt='logo' />
+                            <img src={header.imageLogo} alt='logo' />
                         </a>
                         <button
                             className="navbar-toggler col-2"
@@ -100,9 +88,9 @@ class Header extends Component {
 
                         <div className="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul className="navbar-nav mr-auto">
-                                {menuItem && menuItem.length > 0 &&
-                                    menuItem.map((item, index) => {
-                                        let attributes = item.Sub_Menus.length > 0 ?
+                                {firstMenus && firstMenus.length > 0 &&
+                                    firstMenus.map((item, index) => {
+                                        let attributes = item.sub_menu.length > 0 ?
                                             {
                                                 'id': "navbarDropdown1",
                                                 'role': "button",
@@ -115,18 +103,19 @@ class Header extends Component {
                                         return (
                                             <>
                                                 <li
-                                                    className={`nav-item ${item.Sub_Menus.length > 0 ? 'dropdown' : ''} 
+                                                    className={`nav-item ${item.sub_menu.length > 0 ? 'dropdown' : ''} 
                                                     
                                                     `}
                                                     key={index}
                                                 >
                                                     <a
                                                         className={
-                                                            `${item.Sub_Menus.length > 0 ? 'dropdown-toggle' : ''} ` +
+                                                            `${item.sub_menu.length > 0 ? 'dropdown-toggle' : ''} ` +
                                                             `${item.highlight && 'highlight'} ` +
                                                             'nav-link'
                                                         }
-                                                        href={`${item.Sub_Menus.length > 0 ? '#' : item.link ? item.link : '#'}`}
+                                                        key={index}
+                                                        href={`${item.sub_menu.length > 0 ? '#' : item.link ? item.link : '#'}`}
                                                         {...attributes}
                                                         style={{ background: item.highlight !== 'default' ? item.highlight : false }}
                                                     >
@@ -136,11 +125,11 @@ class Header extends Component {
                                                             item.textDataMenu_Item.valueTh
                                                         }
                                                     </a>
-                                                    {item.Sub_Menus && item.Sub_Menus.length > 0 &&
+                                                    {item.sub_menu && item.sub_menu.length > 0 &&
                                                         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                                            {item.Sub_Menus.map((item, index) => {
+                                                            {item.sub_menu.map((item, index) => {
                                                                 return (
-                                                                    <a className="dropdown-item" href={"#"}>
+                                                                    <a className="dropdown-item" key={index} href={item.link ? item.link : '#'}>
                                                                         {language === 'en' ?
                                                                             item.textDataSub_Menu.valueEn
                                                                             :
@@ -158,25 +147,25 @@ class Header extends Component {
                                 }
                             </ul>
                             <ul className="navbar-nav ml-auto">
-                                {menuLanguage && menuLanguage.length > 0 &&
-                                    menuLanguage.map((item, index) => {
+                                {lastMenus && lastMenus.length > 0 &&
+                                    lastMenus.map((item, index) => {
                                         return (
                                             <>
                                                 <li className="nav-item dropdown sl-lan">
                                                     <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        {item.Sub_Menus.length > 0 ?
+                                                        {item.sub_menu.length > 0 ?
                                                             (language === 'en' ?
-                                                                item.Sub_Menus.filter(a => a.textDataSub_Menu.valueEn === 'English')[0].textDataSub_Menu.valueEn
+                                                                item.sub_menu.filter(a => a.textDataSub_Menu.valueEn === 'English')[0].textDataSub_Menu.valueEn
                                                                 :
-                                                                item.Sub_Menus.filter(a => a.textDataSub_Menu.valueEn === 'Thai')[0].textDataSub_Menu.valueTh
+                                                                item.sub_menu.filter(a => a.textDataSub_Menu.valueEn === 'Thai')[0].textDataSub_Menu.valueTh
                                                             )
                                                             :
                                                             item.textDataMenu_Item.valueEn
                                                         }
                                                     </a>
-                                                    {item.Sub_Menus && item.Sub_Menus.length > 0 &&
+                                                    {item.sub_menu && item.sub_menu.length > 0 &&
                                                         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                                            {item.Sub_Menus.map((item, index) => {
+                                                            {item.sub_menu.map((item, index) => {
                                                                 return (
                                                                     <>
                                                                         <a
@@ -217,13 +206,16 @@ class Header extends Component {
 const mapStateToProps = state => {
     return {
         language: state.app.language,
-        menuData: state.admin.menus
+        header: state.admin.header,
+        menu: state.admin.menu,
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        changeLanguageAppRedux: (language) => dispatch(changeLanguageApp(language))
+        changeLanguageAppRedux: (language) => dispatch(actions.changeLanguageApp(language)),
+        loadHeader: (id) => dispatch(actions.fetchHeader(id)),
+        loadMenu: (id) => dispatch(actions.fetchMenu(id)),
     };
 };
 

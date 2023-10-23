@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     };
     Campaign.init({
         name: DataTypes.STRING,
+        promotionId: DataTypes.INTEGER,
         headerId: DataTypes.INTEGER,
         bannerId: DataTypes.INTEGER,
         bodyId: DataTypes.INTEGER,

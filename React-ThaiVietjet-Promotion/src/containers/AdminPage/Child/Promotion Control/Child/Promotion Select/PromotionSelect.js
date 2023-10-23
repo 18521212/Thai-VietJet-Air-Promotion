@@ -54,17 +54,17 @@ class PromotionSelect extends Component {
                         <>
                             {data?.pack?.length > 0 ?
                                 <button className="btn btn-primary mr-2"
-                                // onClick={() => func.NAV(this, '../promotion-form/update', { promotion: data })}
+                                    onClick={() => func.NAV(this, '../pack-select', { promotion: data })}
                                 >View Packs</button>
                                 :
                                 <button className="btn btn-success mr-2"
-                                // onClick={() => func.NAV(this, '../promotion-form/update', { promotion: data })}
+                                    onClick={() => func.NAV(this, '../pack-form', { promotion: data })}
                                 >Add Packs</button>
                             }
                             <button className="btn btn-warning mr-2"
                                 onClick={() => func.NAV(this, '../promotion-form/update', { promotion: data })}
                             >Update</button>
-                            <button className="btn btn-danger"
+                            <button className="btn btn-danger" disabled={data.pack.length > 0 ? 'disabled' : ''}
                                 onClick={() => this.onDelete(data)}
                             >Delete</button>
                         </>

@@ -1,5 +1,5 @@
 import { Component } from "react";
-import './DefaultClass.scss'
+// import './DefaultClass.scss'
 import _ from 'lodash';
 import * as actions from 'store/actions';
 import withRouter from "components/withRouter/withRouter"

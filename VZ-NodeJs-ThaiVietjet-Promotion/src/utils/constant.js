@@ -1,4 +1,7 @@
 export const api = {
+    HEADERS: '/api/headers',
+    MENUS: '/api/menus',
+    BANNERS: '/api/banners',
     BODYS: '/api/bodies',
     INPUTS: '/api/inputs',
     TEXT_INPUTS: '/api/text-inputs',
@@ -169,6 +172,10 @@ export const func = {
         } else if (type === 'desc') {
             array = array.sort((a, b) => b?.[property] - a?.[property]);
         }
+    },
+    DECODE_IMAGE:(encodeImage)=>{
+        let decode = new Buffer(encodeImage, 'base64').toString('binary')
+        return decode
     }
 }
 

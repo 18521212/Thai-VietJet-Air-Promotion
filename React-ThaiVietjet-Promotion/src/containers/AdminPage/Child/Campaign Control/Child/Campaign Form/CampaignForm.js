@@ -17,7 +17,8 @@ class CampaignForm extends Component {
             banner: '',
             body: '',
             form: '',
-            footer: ''
+            footer: '',
+            promotion: '',
         }
     }
 
@@ -31,6 +32,7 @@ class CampaignForm extends Component {
         await this.props.loadBody()
         await this.props.loadForm()
         await this.props.loadFooter()
+        await this.props.loadPromotion()
         this.props.location?.state?.campaign && this.mapData()
     }
 
@@ -44,6 +46,7 @@ class CampaignForm extends Component {
             body: bodyOption.find(item => item.value.id === campaign.bodyId),
             form: formOption.find(item => item.value.id === campaign.formId),
             footer: footerOption.find(item => item.value.id === campaign.footerId),
+            promotion: footerOption.find(item => item.value.id === campaign.promotionId),
         })
     }
 
@@ -63,25 +66,20 @@ class CampaignForm extends Component {
 
     handleSave = async () => {
         let type = this.props.params.type
-        let { header, banner, body, form, footer, name } = this.state
+        let { header, banner, body, form, footer, name, promotion } = this.state
         let data = {}, res;
+        data.name = name
+        data.headerId = header?.value?.id
+        data.bannerId = banner?.value?.id
+        data.bodyId = body?.value?.id
+        data.formId = form?.value?.id
+        data.footerId = footer?.value?.id
+        data.promotionId = promotion?.value?.id
         if (type === 'update') {
             let { campaign } = this.props.location.state
             data.id = campaign.id
-            data.name = name
-            data.headerId = header?.value?.id
-            data.bannerId = banner?.value?.id
-            data.bodyId = body?.value?.id
-            data.formId = form?.value?.id
-            data.footerId = footer?.value?.id
             res = await updateCampaign(data)
         } else {
-            data.name = name
-            data.headerId = header?.value?.id
-            data.bannerId = banner?.value?.id
-            data.bodyId = body?.value?.id
-            data.formId = form?.value?.id
-            data.footerId = footer?.value?.id
             res = await createCampaign(data)
         }
 
@@ -125,10 +123,15 @@ class CampaignForm extends Component {
                             <Select value='footer' options='footerOption'
                                 parent={this} />
                         </div>
+                        <div className="form-group">
+                            <label for="exampleInputEmail1">Promotion</label>
+                            <Select value='promotion' options='promotionOption'
+                                parent={this} />
+                        </div>
                         <button type="button" className={`btn ${type === 'update' ? 'btn-warning' : 'btn-success'} mx-1`}
                             onClick={() => this.handleSave()}>
                             {type === 'update' ? 'Save' : 'Create'}</button>
-                        <button type="button" className="btn btn-secondary mx-1" onClick={() => this.handleNav(-1)}>Cancel</button>
+                        <button type="button" className="btn btn-dark mx-1" onClick={() => this.handleNav(-1)}>Cancel</button>
                     </form>
                 </div>
             </>
@@ -143,6 +146,7 @@ const mapStateToProps = state => {
         bodyOption: state.admin.bodyOption,
         formOption: state.admin.formOption,
         footerOption: state.admin.footerOption,
+        promotionOption: state.admin.promotionOption,
     };
 };
 
@@ -153,6 +157,7 @@ const mapDispatchToProps = dispatch => {
         loadBody: (id) => dispatch(actions.fetchBody(id)),
         loadForm: (id) => dispatch(actions.fetchForm(id)),
         loadFooter: (id) => dispatch(actions.fetchFooter(id)),
+        loadPromotion: (id) => dispatch(actions.fetchPromotion(id)),
     };
 };
 

@@ -3,7 +3,7 @@ import './HeaderForm.scss'
 import _ from 'lodash';
 import Select from 'react-select';
 import {
-    getAllHeader, createHeader, deleteHeader,
+    getHeader, createHeader, deleteHeader,
     getAllMenu
 } from "services/userService";
 import {
@@ -45,7 +45,7 @@ class HeaderForm extends Component {
     }
 
     buildDataAndMapState = async () => {
-        let listHeader = await getAllHeader();
+        let listHeader = await getHeader();
 
         this.setState({
             listHeader: listHeader.data,
@@ -76,9 +76,9 @@ class HeaderForm extends Component {
             <>
                 <div className='header-form container-fluid'>
                     <h3>Header Form</h3><br />
-                        {
-                            this.renderSwitch(this.state.selectedPageHeader.name)
-                        }
+                    {
+                        this.renderSwitch(this.state.selectedPageHeader.name)
+                    }
                 </div>
             </>
         )

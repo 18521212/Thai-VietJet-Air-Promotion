@@ -1,4 +1,4 @@
-import { text, resolveObj, services } from '../utils'
+import { resolveObj, func } from '../utils'
 
 const db = require('../models');
 
@@ -17,7 +17,8 @@ let createCampaign = (data) => {
                     bannerId: data.bannerId,
                     bodyId: data.bodyId,
                     formId: data.formId,
-                    footerId: data.footerId
+                    footerId: data.footerId,
+                    promotion: data.promotionId
                 }, { transaction: t })
             })
             resolve(resolveObj.CREATE_SUCCEED('Campaign'))
@@ -60,7 +61,7 @@ let updateCampaign = (data) => {
             // -- have value, it's equal to '', not equal to null
             if (!data.id ||
                 !(data.name || data.headerId || data.bannerId
-                    || data.bodyId || data.formId || data.footerId)
+                    || data.bodyId || data.formId || data.footerId || data.promotionId)
             ) {
                 resolve(resolveObj.MISSING_PARAMETERS)
                 return;
@@ -90,7 +91,8 @@ let updateCampaign = (data) => {
                     bannerId: data.bannerId ? data.bannerId : null,
                     bodyId: data.bodyId ? data.bodyId : null,
                     formId: data.formId ? data.formId : null,
-                    footerId: data.footerId ? data.footerId : null
+                    footerId: data.footerId ? data.footerId : null,
+                    promotionId: data.promotionId ? data.promotionId : null
                 }, { transaction: t })
             })
 
@@ -161,6 +163,13 @@ let checkChildTableDataExist = async (data) => {
         if (!dataApi) {
             result = false
             table_name = 'Footer'
+        }
+    }
+    if (data.promotionId) {
+        let dataApi = await db.Promotion.findOne({ where: { id: data.promotionId } })
+        if (!dataApi) {
+            result = false
+            table_name = 'Promotion'
         }
     }
 

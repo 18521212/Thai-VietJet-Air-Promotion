@@ -7,6 +7,8 @@ import { connect } from 'react-redux'
 import { Routes, Route } from "react-router"
 import PromotionSelect from "./Child/Promotion Select/PromotionSelect";
 import PromotionForm from "./Child/Promotion Form/PromotionForm";
+import PackForm from "./Child/Pack Form/PackForm";
+import PackSelect from "./Child/Pack Select/Pack Select";
 
 class PromotionControl extends Component {
     constructor(props) {
@@ -32,6 +34,8 @@ class PromotionControl extends Component {
                     <Routes>
                         <Route path='*' element={<PromotionSelect />}></Route>
                         <Route path='promotion-form/:type?' element={<PromotionForm />}></Route>
+                        <Route path='pack-form/:type?' element={<PackForm />}></Route>
+                        <Route path='pack-select' element={<PackSelect />}></Route>
                     </Routes>
                 </div>
             </>

@@ -21,21 +21,21 @@ let initWebRoutes = (app) => {
     router.delete('/api/campaigns', campaignController.deleteCampaign);
 
     // banner
-    router.post('/api/banners', bannerController.createBanner);
-    router.get('/api/banners/:id?', bannerController.getBanner);
-    router.put('/api/banners', bannerController.updateBanner);
-    router.delete('/api/banners', bannerController.deleteBanner);
+    router.post(api.BANNERS, bannerController.createBanner);
+    router.get(`${api.BANNERS}/:id?`, bannerController.getBanner);
+    router.put(api.BANNERS, bannerController.updateBanner);
+    router.delete(api.BANNERS, bannerController.deleteBanner);
 
     // header
-    router.post('/api/headers', headerController.createHeader);
-    router.get('/api/headers', headerController.getAllHeader);
-    router.put('/api/headers', headerController.updateHeader);
-    router.delete('/api/headers', headerController.deleteHeader);
+    router.post(api.HEADERS, headerController.createHeader);
+    router.get(`${api.HEADERS}/:id?`, headerController.getHeader);
+    router.put(api.HEADERS, headerController.updateHeader);
+    router.delete(api.HEADERS, headerController.deleteHeader);
 
-    router.post('/api/menus', headerController.createMenu)
-    router.get('/api/menus/:id?', headerController.getAllMenu)
-    router.put('/api/menus', headerController.updateMenu)
-    router.delete('/api/menus', headerController.deleteMenu)
+    router.post(api.MENUS, headerController.createMenu)
+    router.get(`${api.MENUS}/:id?`, headerController.getMenu)
+    router.put(api.MENUS, headerController.updateMenu)
+    router.delete(api.MENUS, headerController.deleteMenu)
 
     router.post('/api/menu-items', headerController.createMenuItem);
     router.get('/api/menu-items/menus/:id?', headerController.getAllMenuItemByMenuId);
@@ -50,7 +50,7 @@ let initWebRoutes = (app) => {
 
     // body
     router.post(api.BODYS, bodyController.createUpdateDeleteBody)
-    router.get('/api/bodies/:id?', bodyController.getBody)
+    router.get(`${api.BODYS}/:id?`, bodyController.getBody)
     router.put(api.BODYS, bodyController.createUpdateDeleteBody)
     router.delete(api.BODYS, bodyController.createUpdateDeleteBody)
 
@@ -88,7 +88,7 @@ let initWebRoutes = (app) => {
 
     // promotion
     router.post(api.PROMOTIONS, promotionController.createUpdateDeletePromotion)
-    router.get(`${api.PROMOTIONS}/:id?`,promotionController.getPromotion)
+    router.get(`${api.PROMOTIONS}/:id?`, promotionController.getPromotion)
     router.put(api.PROMOTIONS, promotionController.createUpdateDeletePromotion)
     router.delete(api.PROMOTIONS, promotionController.createUpdateDeletePromotion)
 

@@ -1,4 +1,5 @@
 import headerService from '../services/headerService';
+import { controller, resolveObj } from '../utils';
 
 // header
 
@@ -15,17 +16,8 @@ let createHeader = async (req, res) => {
     }
 }
 
-let getAllHeader = async (req, res) => {
-    try {
-        let data = await headerService.getAllHeader();
-        return res.status(200).json(data)
-    } catch (e) {
-        console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
-    }
+let getHeader = async (req, res) => {
+    controller.CONTROLLER(req, res, headerService.getHeader, req?.params?.id)
 }
 
 let updateHeader = async (req, res) => {
@@ -69,17 +61,8 @@ let createMenu = async (req, res) => {
     }
 }
 
-let getAllMenu = async (req, res) => {
-    try {
-        let data = await headerService.getAllMenu();
-        return res.status(200).json(data)
-    } catch (e) {
-        console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
-    }
+let getMenu = async (req, res) => {
+    controller.CONTROLLER(req, res, headerService.getMenu, req?.params?.id)
 }
 
 let updateMenu = async (req, res) => {
@@ -218,12 +201,12 @@ let deleteSubMenuById = async (req, res) => {
 
 module.exports = {
     createHeader: createHeader,
-    getAllHeader: getAllHeader,
+    getHeader: getHeader,
     deleteHeader: deleteHeader,
     updateHeader: updateHeader,
 
     createMenu: createMenu,
-    getAllMenu: getAllMenu,
+    getMenu,
     updateMenu: updateMenu,
     deleteMenu: deleteMenu,
 

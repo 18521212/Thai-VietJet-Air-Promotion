@@ -70,6 +70,11 @@ let deletePromotion = (data) => {
                 return
             }
             await db.sequelize.transaction(async (t) => {
+                let pack = await db.Pack.findAll({ where: { promotionId: data.id } })
+                if (pack.length > 0) {
+                    resolve(resolveObj.EXIST_REF_KEY)
+                    throw new Error()
+                }
                 let deleted = await db.Promotion.destroy({ where: { id: data.id }, transaction: t })
                 if (deleted === 0) { resolve(resolveObj.DELETE_UNSUCCEED('Promotion')); throw new Error() }
             })
@@ -126,13 +131,13 @@ let getPack = (id) => {
 let updatePack = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (func.CHECK_HAS_VALUE(data.id) || func.CHECK_HAS_VALUE_OR(data.name, data.maxNumber,
+            if (!func.CHECK_HAS_VALUE(data.id) || !func.CHECK_HAS_VALUE_OR(data.name, data.maxNumber,
                 data.price, data.currency, data.numberRedeem)) {
                 resolve(resolveObj.MISSING_PARAMETERS)
                 return
             }
             await db.sequelize.transaction(async (t) => {
-                let pack = await db.Pack.findOne({ where: { id: id } })
+                let pack = await db.Pack.findOne({ where: { id: data.id } })
                 await pack.update({
                     name: data?.name,
                     maxNumber: data?.maxNumber,

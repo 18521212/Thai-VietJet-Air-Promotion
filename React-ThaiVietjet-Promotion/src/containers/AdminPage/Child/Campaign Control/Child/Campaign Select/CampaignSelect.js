@@ -79,6 +79,7 @@ class CampaignSelect extends Component {
                                         <th scope="col">Body Id</th>
                                         <th scope="col">Form Id</th>
                                         <th scope="col">Footer Id</th>
+                                        <th scope="col">Promotion Id</th>
                                         <th scope="col">Action</th>
                                     </tr>
                                 </thead>
@@ -92,9 +93,11 @@ class CampaignSelect extends Component {
                                                 <td>{item.bodyId}</td>
                                                 <td>{item.formId}</td>
                                                 <td>{item.footerId}</td>
+                                                <td>{item.promotionId}</td>
                                                 <td>
-                                                    <button type="button" className="btn btn-success mx-1"
-                                                        onClick={() => this.handleView(item)}>View</button>
+                                                    <button type="button" className="btn btn-warning mx-1"
+                                                        onClick={() => func.NAV(this, '../campaign-form/update', { campaign: item })}
+                                                    >Update</button>
                                                     <button type="button" className="btn btn-danger mx-1"
                                                         onClick={() => this.handleDelete(item.id)}>Delete</button>
                                                 </td>

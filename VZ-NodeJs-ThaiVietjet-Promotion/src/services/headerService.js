@@ -17,7 +17,7 @@ let createHeader = (data) => {
                     imageLogo: data.imageLogo,
                     imageBackground: data.imageBackground,
                     menuId: data.menuId
-                }, {transaction: t})
+                }, { transaction: t })
             })
 
             resolve(resolveObj.CREATE_SUCCEED('Header'))
@@ -27,24 +27,29 @@ let createHeader = (data) => {
     })
 }
 
-let getAllHeader = () => {
+let decodeImageOfHeader = (header) => {
+    if (header.imageLogo) {
+        header.imageLogo = func.DECODE_IMAGE(header.imageLogo)
+    }
+    if (header.imageBackground) {
+        header.imageBackground = func.DECODE_IMAGE(header.imageBackground)
+    }
+}
+
+let getHeader = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let data = await db.Header.findAll();
-            if (data) data.map((item) => {
-                if (func.CHECK_HAS_VALUE(item.imageLogo)) {
-                    item.imageLogo = new Buffer(item.imageLogo, 'base64').toString('binary');
-                }
-                if (func.CHECK_HAS_VALUE(item.imageLogo)) {
-                    item.imageBackground = new Buffer(item.imageBackground, 'base64').toString('binary');
-                }
-            })
-
-            resolve({
-                errCode: 0,
-                errMessage: 'Ok',
-                data
-            })
+            let data
+            if (id) {
+                data = await db.Header.findOne({ where: { id: id } })
+                decodeImageOfHeader(data)
+            } else {
+                data = await db.Header.findAll();
+                if (data) data.map(item => {
+                    decodeImageOfHeader(item)
+                })
+            }
+            resolve(resolveObj.GET(data))
         } catch (e) {
             reject(e);
         }
@@ -119,18 +124,39 @@ let createMenu = (data) => {
     })
 }
 
-let getAllMenu = () => {
+let getMenu = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let dataApi = await db.Menu.findAll({
-                include: [
-                    {
-                        model: db.Menu_Item, as: 'Menu_Item', attributes: ['id']
-                    },
-                ],
-            })
-
-            resolve(resolveObj.GET(dataApi))
+            let data
+            if (id) {
+                data = await db.Menu.findOne({
+                    where: { id: id },
+                    include: [
+                        {
+                            model: db.Menu_Item, as: 'menu_item',
+                            include: [
+                                { model: db.Text_Translation, as: 'textDataMenu_Item' },
+                                {
+                                    model: db.Sub_Menu, as: 'sub_menu',
+                                    attributes: ['menuParentId', 'order', 'text', 'link'],
+                                    include: [
+                                        { model: db.Text_Translation, as: 'textDataSub_Menu' }
+                                    ]
+                                }
+                            ]
+                        },
+                    ],
+                })
+            } else {
+                data = await db.Menu.findAll({
+                    include: [
+                        {
+                            model: db.Menu_Item, as: 'menu_item', attributes: ['id']
+                        },
+                    ],
+                });
+            }
+            resolve(resolveObj.GET(data))
         } catch (e) {
             reject(e);
         }
@@ -238,7 +264,7 @@ let getAllMenuItemByMenuId = (menuId) => {
                     include: [
                         { model: db.Text_Translation, as: 'textDataMenu_Item' },
                         {
-                            model: db.Sub_Menu,
+                            model: db.Sub_Menu, as: 'sub_menu',
                             attributes: ['menuParentId', 'order', 'text', 'link'],
                             include: [
                                 { model: db.Text_Translation, as: 'textDataSub_Menu' }
@@ -491,12 +517,12 @@ let deleteSubMenuById = (id) => {
 
 module.exports = {
     createHeader: createHeader,
-    getAllHeader: getAllHeader,
+    getHeader,
     deleteHeader: deleteHeader,
     updateHeader: updateHeader,
 
     createMenu: createMenu,
-    getAllMenu: getAllMenu,
+    getMenu,
     updateMenu: updateMenu,
     deleteMenu: deleteMenu,
 

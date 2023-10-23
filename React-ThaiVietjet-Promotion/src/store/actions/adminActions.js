@@ -1,12 +1,14 @@
 import actionTypes from './actionTypes';
 
 import {
-    getAllMenu, getAllMenuItemByMenuId, getAllSubMenuByMenuItemId,
-    getAllHeader, getCampaign, getBanners,
+    getAllMenuItemByMenuId, getAllSubMenuByMenuItemId,
+    getCampaign,
     getBody, getFooter, getFooterText,
     getForm, getFormDetailByFormId,
     //  getInput
 } from 'services/userService';
+import { getHeader, getMenu } from 'services/headerService';
+import { getBanner } from 'services/bannerService';
 import { getInput } from 'services/formService';
 import { getPromotion, getPack } from 'services/promotionService';
 
@@ -24,10 +26,10 @@ export const fetchCampaign = (id) => {
     }
 }
 
-export const fetchHeader = () => {
+export const fetchHeader = (id) => {
     return async (dispatch, getState) => {
         try {
-            let res = await getAllHeader()
+            let res = await getHeader(id)
             dispatch({
                 type: actionTypes.FETCH_HEADER,
                 data: res
@@ -38,10 +40,10 @@ export const fetchHeader = () => {
     }
 }
 
-export const fetchMenu = () => {
+export const fetchMenu = (id) => {
     return async (dispatch, getState) => {
         try {
-            let res = await getAllMenu()
+            let res = await getMenu(id)
             dispatch({
                 type: actionTypes.FETCH_MENU,
                 data: res
@@ -85,7 +87,7 @@ export const fetchSubMenu = (menuParentId) => {
 export const fetchBanner = (id) => {
     return async (dispatch, getState) => {
         try {
-            let res = await getBanners(id)
+            let res = await getBanner(id)
             dispatch({
                 type: actionTypes.FETCH_BANNER,
                 data: res
@@ -193,7 +195,7 @@ export const fetchPromotion = (id) => {
     }
 }
 
-export const fetchPack = (id)=>{
+export const fetchPack = (id) => {
     return async (dispatch, getState) => {
         try {
             let res = await getPack(id)

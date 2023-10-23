@@ -11,11 +11,11 @@ module.exports = {
         // )
 
         // await queryInterface.changeColumn(
-        //     'Packs',
-        //     'widthMdScreen',
+        //     'Campaigns',
+        //     'promotionId',
         //     {
         //         type: Sequelize.INTEGER,
-        //         defaultValue: 12
+        //         allowNull: true
         //     }
         // )
 
@@ -27,7 +27,7 @@ module.exports = {
 
         // add column
         queryInterface.addColumn(
-            'Packs',
+            'Campaigns',
             'promotionId',
             {
                 type: Sequelize.INTEGER,
@@ -38,11 +38,11 @@ module.exports = {
     },
     down: async (queryInterface, Sequelize) => {
         // await queryInterface.changeColumn(
-        //     'Packs',
-        //     'widthMdScreen',
+        //     'Campaigns',
+        //     'promotionId',
         //     {
         //         type: Sequelize.INTEGER,
-        //         defaultValue: 1
+        //         allowNull: false
         //     }
         // )
 
@@ -53,7 +53,7 @@ module.exports = {
         // )
 
         queryInterface.removeColumn(
-            'Packs',
+            'Campaigns',
             'promotionId',
         );
     }

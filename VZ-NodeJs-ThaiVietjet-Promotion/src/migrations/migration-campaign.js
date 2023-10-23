@@ -12,6 +12,9 @@ module.exports = {
                 type: Sequelize.STRING,
                 allowNull: false,
             },
+            promotionId: {
+                type: Sequelize.INTEGER
+            },
             headerId: {
                 type: Sequelize.INTEGER
             },

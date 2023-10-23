@@ -4,6 +4,8 @@ export const route = {
 
 export const api = {
     CAMPAIGNS: `/api/campaigns`,
+    HEADERS: '/api/headers',
+    MENUS: '/api/menus',
     BANNERS: '/api/banners',
     BODYS: '/api/bodies',
     FORMS: '/api/forms',

@@ -1,32 +1,7 @@
 import { toast } from "react-toastify";
 import axios from "../axios";
 import { api } from "utils";
-
-// CRUD
-
-const create = (link, data) => {
-    return axios.post(link, data)
-}
-
-const get = (link, id) => {
-    if (id) {
-        return axios.get(`${link}/${id}`)
-    } else {
-        return axios.get(`${link}`)
-    }
-}
-
-const update = (link, data) => {
-    return axios.put(link, data)
-}
-
-const deleteData = (link, id) => {
-    return axios.delete(link, {
-        data: {
-            ['id']: id
-        }
-    })
-}
+import { create, get, update, deleteData } from 'services/constantService'
 
 // campaign
 
@@ -51,7 +26,7 @@ const createHeader = (data) => {
     return create('/api/headers', data)
 }
 
-const getAllHeader = () => {
+const getHeader = () => {
     return axios.get('/api/headers');
 }
 
@@ -135,7 +110,7 @@ const createBanner = (data) => {
     return create(api.BANNERS, data)
 }
 
-const getBanners = (id) => {
+const getBanner = (id) => {
     return get(api.BANNERS, id)
 }
 
@@ -260,7 +235,7 @@ const getAllPack = () => {
 }
 
 export {
-    getAllMenuItemByMenuId, getAllHeader,
+    getAllMenuItemByMenuId, getHeader,
     getAllTextInput, getAllPack,
     getBody, createHeader,
     deleteHeader, getAllMenu, createMenu, deleteMenu,
@@ -268,7 +243,7 @@ export {
     updateMenuItem, createSubMenu, getAllSubMenuByMenuItemId,
     deleteSubMenu, updateSubMenu, updateHeader,
     getCampaign, getForm, getFooter, updateCampaign,
-    createCampaign, deleteCampaign, getBanners,
+    createCampaign, deleteCampaign, getBanner,
     createBanner, deleteBanner, updateBanner,
     createBody, updateBody, deleteBody,
     createFooter, updateFooter, deleteFooter,

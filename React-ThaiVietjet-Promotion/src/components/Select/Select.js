@@ -33,27 +33,50 @@ class Select extends Component {
 
     render() {
         let parent = this.props.parent
+        let typeSelect = this.props?.typeSelect
         return (
             <>
-                <SelectReact className="select-number"
-                    value={parent.state[this.props.value]}
-                    options={parent.props[this.props.options]}
-                    name={this.props.value}
-                    onChange={this.handleOnChange}
-                    placeholder='Please choose an option'
-                    isClearable={true}
-                    styles={{
-                        indicatorSeparator: () => { },
-                    }}
-                    menuPosition="fixed"
-                    theme={(theme) => ({
-                        ...theme,
-                        colors: {
-                            ...theme.colors,
-                            primary: 'grey'
-                        }
-                    })}
-                />
+                {typeSelect === 'state' ?
+                    <SelectReact className="select-number"
+                        value={parent.state[this.props.value]}
+                        options={parent.state[this.props.options]}
+                        name={this.props.value}
+                        onChange={this.handleOnChange}
+                        placeholder='Please choose an option'
+                        isClearable={true}
+                        styles={{
+                            indicatorSeparator: () => { },
+                        }}
+                        menuPosition="fixed"
+                        theme={(theme) => ({
+                            ...theme,
+                            colors: {
+                                ...theme.colors,
+                                primary: 'grey'
+                            }
+                        })}
+                    />
+                    :
+                    <SelectReact className="select-number"
+                        value={parent.state[this.props.value]}
+                        options={parent.props[this.props.options]}
+                        name={this.props.value}
+                        onChange={this.handleOnChange}
+                        placeholder='Please choose an option'
+                        isClearable={true}
+                        styles={{
+                            indicatorSeparator: () => { },
+                        }}
+                        menuPosition="fixed"
+                        theme={(theme) => ({
+                            ...theme,
+                            colors: {
+                                ...theme.colors,
+                                primary: 'grey'
+                            }
+                        })}
+                    />
+                }
             </>
         )
     }

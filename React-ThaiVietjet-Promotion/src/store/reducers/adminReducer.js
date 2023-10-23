@@ -34,22 +34,9 @@ const adminReducer = (state = initialState, action) => {
         case actionTypes.FETCH_CAMPAIGN:
             return mapDataGET(state, action, 'campaign')
         case actionTypes.FETCH_HEADER:
-            return {
-                ...state,
-                headers: action.data,
-                headerOption: buildOption(action.data.data)
-            }
+            return mapDataGET(state, action, 'header')
         case actionTypes.FETCH_MENU:
-            let menuData = action.data.data
-            let option = [];
-            menuData.length > 0 && menuData.map((item) => {
-                option.push({ value: item, label: item.name })
-            })
-            return {
-                ...state,
-                menus: action.data,
-                optionMenus: option
-            }
+            return mapDataGET(state, action, 'menu')
         case actionTypes.FETCH_MENUITEM:
             return {
                 ...state,
