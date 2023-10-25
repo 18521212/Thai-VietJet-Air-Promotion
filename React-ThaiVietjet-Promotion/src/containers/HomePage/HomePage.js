@@ -45,7 +45,7 @@ class HomePage extends Component {
                     <>
                         <Header headerId={campaign.headerId} />
                         <Banner bannerId={campaign.bannerId} />
-                        <Body bodyId={campaign.bodyId} />
+                        {/* <Body bodyId={campaign.bodyId} /> */}
                         <section className="join-us" id="register-purchase">
                             <Form formId={campaign.formId} />
                             <Footer footerId={campaign.footerId} />

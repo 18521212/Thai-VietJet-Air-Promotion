@@ -4,15 +4,15 @@ import './Body.scss';
 // import banner_mobile from '../../../assets/Banner/banner-mobile.jpg';
 import top_cloud from '../../../assets/Background/top_cloud.png';
 import Select from 'react-select';
-
 import PowerPack from './Child/PowerPack';
-
 import {
     getBanner, getAllTextInput, getFormSectionById,
     getAllPack, getBody
 } from "../../../services/userService";
-
 import _ from 'lodash';
+import { connect } from 'react-redux';
+import * as actions from 'store/actions';
+import withRouter from 'components/withRouter/withRouter';
 
 class Body extends Component {
     constructor(props) {
@@ -29,6 +29,11 @@ class Body extends Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
 
+    }
+
+    loadData = async () => {
+        let bodyId = this.props.bodyId
+        // await this.props.loadBody(bodyId)
     }
 
     getDataAndMapState = async () => {
@@ -67,4 +72,16 @@ class Body extends Component {
     }
 }
 
-export default Body;
+const mapStateToProps = state => {
+    return {
+        // bodies: state.admin.bodys
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        loadBody: (id) => dispatch(actions.fetchBody(id))
+    };
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps))(Body);

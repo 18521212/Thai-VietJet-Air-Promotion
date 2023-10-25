@@ -3,12 +3,13 @@ import actionTypes from './actionTypes';
 import {
     getAllMenuItemByMenuId, getAllSubMenuByMenuItemId,
     getCampaign,
-    getBody, getFooter, getFooterText,
+    getFooter, getFooterText,
     getForm, getFormDetailByFormId,
     //  getInput
 } from 'services/userService';
 import { getHeader, getMenu } from 'services/headerService';
 import { getBanner } from 'services/bannerService';
+import { getBody } from 'services/bodyService';
 import { getInput } from 'services/formService';
 import { getPromotion, getPack } from 'services/promotionService';
 

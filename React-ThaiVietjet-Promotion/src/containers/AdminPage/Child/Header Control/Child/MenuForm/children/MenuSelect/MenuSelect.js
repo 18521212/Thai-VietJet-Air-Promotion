@@ -65,7 +65,7 @@ class MenuSelect extends Component {
     }
 
     render() {
-        let { menuData } = this.props
+        let menuData = this.props?.menuData
         return (
             <>
                 <div className="row px-3 my-1">
@@ -92,7 +92,7 @@ class MenuSelect extends Component {
                     <div className="border-right m-2"></div>
                     <button className="btn btn-success" onClick={() => this.onClickCreate()}>+ Add new</button>
                     <div className="w-100"></div>
-                    <div className="bg-danger text-white col-1 mx-auto">menu</div>
+                    <div className="bg-danger text-white col-1 mx-auto" style={{height: '2rem'}}>MENU</div>
                 </div>
                 <div className="row px-3">
                     <table className="table table-menu col-12 table-striped">
@@ -116,7 +116,7 @@ class MenuSelect extends Component {
                                             <button className="btn btn-warning mx-1"
                                                 onClick={() => this.handleNavigate('menu-create/update', { menuId: item.id })}>
                                                 Update</button>
-                                            {item.Menu_Item.length === 0 &&
+                                            {item?.menu_item?.length === 0 &&
                                                 <button className="btn btn-danger mx-1"
                                                     onClick={() => { this.onClickDelete(item.id) }}>
                                                     Delete</button>
