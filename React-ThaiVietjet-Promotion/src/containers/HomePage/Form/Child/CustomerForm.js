@@ -2,9 +2,9 @@ import { Component } from "react";
 import Select from 'react-select';
 import './CustomerForm.scss';
 import _ from 'lodash';
-
-import { connect } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
+import { connect } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
+import { func } from 'utils'
 
 class CustomerForm extends Component {
     constructor(props) {
@@ -29,15 +29,15 @@ class CustomerForm extends Component {
                 <div className="row">
                     {dataInputCustomerForm && dataInputCustomerForm.length > 0 &&
                         dataInputCustomerForm.map((item, index) => {
-                            if (item.Input.typeInput === 'dropdown') {
-                                let stateName = _.camelCase('selected' + item.Input.Dropdown.title)
-                                let optionStateName = _.camelCase('option' + item.Input.Dropdown.title)
+                            if (item.input.typeInput === 'dropdown') {
+                                let stateName = _.camelCase('selected' + item.input.dropdown.title)
+                                let optionStateName = _.camelCase('option' + item.input.dropdown.title)
                                 let name = {
                                     parentState: 'inputCustomerForm',
-                                    name: _.camelCase('selected' + item.Input.Dropdown.title)
+                                    name: _.camelCase('selected' + item.input.dropdown.title)
                                 }
-                                let title = language === 'en' ? item.Input.Dropdown.titleDataDropdown.valueEn :
-                                    item.Input.Dropdown.titleDataDropdown.valueTh;
+                                let title = language === 'en' ? item.input.dropdown.titleDataDropdown.valueEn :
+                                    item.input.dropdown.titleDataDropdown.valueTh;
                                 return (
                                     <div
                                         className={`form-group 
@@ -68,16 +68,16 @@ class CustomerForm extends Component {
                                         />
                                     </div>
                                 )
-                            } else if (item.Input.typeInput === 'text') {
+                            } else if (item.input.typeInput === 'text') {
                                 let title, placeHolder;
                                 if (language === 'en') {
-                                    title = item.Input.Text_Input.titleDataText_Input.valueEn
-                                    placeHolder = item.Input.Text_Input.placeHolderDataText_Input.valueEn
+                                    title = item.input.text_input.titleDataText_Input.valueEn
+                                    placeHolder = item.input.text_input.placeHolderDataText_Input.valueEn
                                 } else {
-                                    title = item.Input.Text_Input.titleDataText_Input.valueTh
-                                    placeHolder = item.Input.Text_Input.placeHolderDataText_Input.valueTh
+                                    title = item.input.text_input.titleDataText_Input.valueTh
+                                    placeHolder = item.input.text_input.placeHolderDataText_Input.valueTh
                                 }
-                                let stateName = _.camelCase(item.Input.Text_Input.title);
+                                let stateName = func.STATENAME_INPUT(item);
                                 return (
                                     <div
                                         className={`form-group 

@@ -45,7 +45,6 @@ class FooterTextSelect extends Component {
         let { footer_texts } = this.props
         return (
             <>
-                <h4>Footer Text Select</h4>
                 <div className="row my-1 px-3">
                     <button className="btn btn-primary mr-auto"
                         onClick={() => func.NAV(this, -1)}>Back</button>

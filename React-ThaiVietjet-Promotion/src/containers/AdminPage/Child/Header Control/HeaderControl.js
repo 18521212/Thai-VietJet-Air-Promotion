@@ -29,7 +29,6 @@ class HeaderControl extends Component {
     render() {
         return (
             <div className="header-control">
-                <h1>header control</h1>
                 <HeaderForm listMenu={this.state.listMenu} />
                 <MenuForm />
             </div>

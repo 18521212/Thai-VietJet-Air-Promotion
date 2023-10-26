@@ -30,7 +30,7 @@ class PromotionControl extends Component {
         return (
             <>
                 <div className="container-fluid">
-                    <h3>Promotion Control</h3>
+                    <h3>Promotion</h3>
                     <Routes>
                         <Route path='*' element={<PromotionSelect />}></Route>
                         <Route path='promotion-form/:type?' element={<PromotionForm />}></Route>

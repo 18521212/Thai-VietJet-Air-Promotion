@@ -1,4 +1,5 @@
 import footerService from '../services/footerService';
+import { controller } from '../utils';
 
 // footer
 
@@ -16,21 +17,7 @@ let createFooter = async (req, res) => {
 }
 
 let getFooter = async (req, res) => {
-    try {
-        let data
-        if (req.params.id) {
-            data = await footerService.getFooterById(req.params.id);
-        } else {
-            data = await footerService.getAllFooter();
-        }
-        return res.status(200).json(data)
-    } catch (e) {
-        console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
-    }
+    controller.CONTROLLER(req, res, footerService.getFooter, req?.params?.id)
 }
 
 let updateFooter = async (req, res) => {

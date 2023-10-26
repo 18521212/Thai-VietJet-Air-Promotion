@@ -25,35 +25,24 @@ let createFooter = (data) => {
     })
 }
 
-let getAllFooter = () => {
+let getFooter = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let dataApi = await db.Footer.findAll({
+            let query = {
                 include: [
                     { model: db.Footer_Text, as: 'footer_text' }
                 ]
-            })
-            resolve(resolveObj.GET(dataApi))
-        } catch (e) {
-            reject(e);
-        }
-    })
-}
-
-let getFooterById = (id) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            if (!id) {
-                resolve(resolveObj.MISSING_PARAMETERS)
             }
-            let dataApi = await db.Footer.findOne({
-                where: { id: id },
-                include: [
-                    { model: db.Footer_Text, as: 'footer_text' }
-                ]
-            })
-
-            resolve(resolveObj.GET(dataApi))
+            let data
+            if (id) {
+                data = await db.Footer.findOne({
+                    where: { id: id },
+                    ...query
+                })
+            } else {
+                data = await db.Footer.findAll(query)
+            }
+            resolve(resolveObj.GET(data))
         } catch (e) {
             reject(e);
         }
@@ -187,13 +176,12 @@ let deleteFooterText = (id) => {
 
 module.exports = {
     createFooter: createFooter,
-    getAllFooter: getAllFooter,
+    getFooter,
     updateFooter: updateFooter,
     deleteFooter: deleteFooter,
 
     createFooterText: createFooterText,
     getAllFooterText: getAllFooterText,
-    getFooterById: getFooterById,
     updateFooterText: updateFooterText,
     deleteFooterText,
 }

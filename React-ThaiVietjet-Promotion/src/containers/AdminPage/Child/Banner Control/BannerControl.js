@@ -31,7 +31,7 @@ class BannerControl extends Component {
         return (
             <>
                 <div className="container-fluid">
-                    <h3>Banner Control</h3>
+                    <h3>Banner</h3>
                     <Routes>
                         <Route path="*" element={<BannerSelect />} />
                         <Route path="banner-form/:type?" element={<BannerForm />} />

@@ -185,6 +185,18 @@ export const func = {
                 })
                 break;
         }
+    },
+    STATENAME_INPUT: (item) => {
+        let name
+        let titleEn = item.input.text_input.titleDataText_Input.valueEn
+        name = _.camelCase(titleEn + item.input.id)
+        return name
+    },
+    STATENAME_DROPDOWN: (item) => {
+        let title = item.input.dropdown.title;
+        let name
+        name = [_.camelCase('selected' + title), _.camelCase('option' + title)]
+        return name
     }
 }
 

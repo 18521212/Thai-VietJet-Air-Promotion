@@ -38,6 +38,7 @@ class Banner extends Component {
                                 className="img-fluid"
                                 src={banner?.imageDesktop}
                                 alt="advertise-banner"
+                                style={{width: '100%', maxHeight: '30rem'}}
                             />
                         </picture>
                     </div>

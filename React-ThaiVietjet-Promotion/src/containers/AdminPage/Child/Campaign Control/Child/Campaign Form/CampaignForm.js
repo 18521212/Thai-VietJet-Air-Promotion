@@ -33,12 +33,14 @@ class CampaignForm extends Component {
         await this.props.loadForm()
         await this.props.loadFooter()
         await this.props.loadPromotion()
-        this.props.location?.state?.campaign && this.mapData()
+        this.mapData()
     }
 
     mapData = () => {
-        let { campaign } = this.props.location.state
-        let { headerOption, bannerOption, bodyOption, formOption, footerOption } = this.props
+        let campaign = this.props.location.state?.campaign
+        if (!campaign) return 
+            console.log('c')
+        let { headerOption, bannerOption, bodyOption, formOption, footerOption, promotionOption } = this.props
         this.setState({
             name: campaign.name,
             header: headerOption.find(item => item.value.id === campaign.headerId),
@@ -46,7 +48,7 @@ class CampaignForm extends Component {
             body: bodyOption.find(item => item.value.id === campaign.bodyId),
             form: formOption.find(item => item.value.id === campaign.formId),
             footer: footerOption.find(item => item.value.id === campaign.footerId),
-            promotion: footerOption.find(item => item.value.id === campaign.promotionId),
+            promotion: promotionOption.find(item => item.value.id === campaign.promotionId),
         })
     }
 

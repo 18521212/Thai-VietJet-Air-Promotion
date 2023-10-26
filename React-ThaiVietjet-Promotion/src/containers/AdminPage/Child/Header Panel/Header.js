@@ -20,9 +20,9 @@ class Header extends Component {
                         className="header-admin col-12"
                     >
                         <nav className="navbar navbar-expand-lg navbar-dark bg-dark container-fluid sticky-top">
-                            <a className="navbar-brand" href='#'>
-                                <img src={logo} alt='logo' />
-                            </a>
+                            <Link className="navbar-brand" to='/admin'>
+                            <img src={logo} alt='logo' />
+                            </Link>
                             <button
                                 className="navbar-toggler col-2"
                                 type="button"

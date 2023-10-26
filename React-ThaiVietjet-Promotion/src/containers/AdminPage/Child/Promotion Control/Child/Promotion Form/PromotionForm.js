@@ -55,7 +55,6 @@ class PromotionForm extends Component {
         let type = this.props.params?.type
         return (
             <>
-                <h3>Promotion Form</h3>
                 <div className="row">
                     {type === 'update' &&
                         <div class="form-group col-md-2">

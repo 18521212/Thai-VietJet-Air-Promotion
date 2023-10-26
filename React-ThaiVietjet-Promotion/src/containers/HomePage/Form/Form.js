@@ -1,19 +1,14 @@
 import { Component } from "react";
 import './Form.scss'
 import _ from 'lodash';
-
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
-
 import CustomerForm from './Child/CustomerForm';
 import FrameCard from "./Child/FrameCard";
 import PurchaseBreakdown from "./Child/PurchaseBreakdown";
-
 import Footer from "../Footer/Footer";
-
-import {
-    
-} from "services/userService";
+import * as actions from 'store/actions';
+import { func } from 'utils'
 
 class Form extends Component {
     constructor(props) {
@@ -35,6 +30,7 @@ class Form extends Component {
 
     componentDidMount() {
         // this.getDataAndMapState();
+        this.loadData()
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -53,68 +49,59 @@ class Form extends Component {
         }
     }
 
-    // getDataAndMapState = async () => {
-    //     // get data
-    //     let formSection = await getFormSectionById(1);
-    //     // console.log('formSection:', formSection.data.Form.Form_Detail)
-    //     let listInput = formSection.data.Form.Form_Detail;
-    //     listInput.sort((a, b) => a.order - b.order);
+    loadData = async () => {
+        await this.props.loadFormDetail(this.props?.formId)
+        this.mapState()
+    }
 
-    //     let { inputCustomerForm } = this.state;
-    //     let stateCopy = {
-    //         ...inputCustomerForm,
-    //     }
+    mapState = async () => {
+        let listInput = this.props.form_details.data;
+        listInput.sort((a, b) => a.order - b.order);
 
-    //     // map state
-    //     listInput.map((item, index) => {
-    //         if (item.Input.typeInput === 'text') {
-    //             stateCopy[_.camelCase(item.Input.Text_Input.title)] = '';
-    //         } else if (item.Input.typeInput === 'dropdown') {
-    //             let title = item.Input.Dropdown.title;
-    //             stateCopy[_.camelCase('selected' + title)] = '';// object
-    //             stateCopy[_.camelCase('option' + title)] = [];
+        let { inputCustomerForm } = this.state;
+        let stateCopy = {
+            ...inputCustomerForm,
+        }
 
-    //             // map dropdown data
-    //             item.Input.Dropdown.dataDropdown.map((item, index) => {
-    //                 let option = { value: item.value, label: item.label }
-    //                 stateCopy[_.camelCase('option' + title)].push(option)
-    //             })
-    //             // set default selected option
-    //             stateCopy[_.camelCase('selected' + title)] = stateCopy[_.camelCase('option' + title)][0];
-    //         }
-    //     })
-
-    //     // pack data
-    //     let packData = await getAllPack();
-
-    //     // map state pack data
-    //     // let stateCopy2 = {
-    //     //     ...this.state.inputFrameCard,
-    //     // }
-
-    //     let { inputFrameCard } = this.state
-    //     let stateCopy2 = {
-    //         ...inputFrameCard
-    //     }
-
-    //     packData.data.map((item, index) => {
-    //         stateCopy2[_.camelCase('option' + item.name)] = '';
-    //         let option = []
-    //         for (let i = 0; i <= item.maxNumber; i++) {
-    //             option.push({ value: i, label: i })
-    //         }
-    //         stateCopy2[_.camelCase('option' + item.name)] = option;
-    //         stateCopy2[_.camelCase('selected' + item.name)] = stateCopy2[_.camelCase('option' + item.name)][0];
-    //     })
-
-    //     this.setState({
-    //         ...this.state,
-    //         inputCustomerForm: stateCopy,
-    //         dataInputCustomerForm: listInput,
-    //         packData: packData.data,
-    //         inputFrameCard: stateCopy2,
-    //     })
-    // }
+        // map state
+        listInput.map((item, index) => {
+            if (item.input?.typeInput === 'text') {
+                stateCopy[func.STATENAME_INPUT(item)] = ''
+            } else if (item.input.typeInput === 'dropdown') {
+                let title = item.input.dropdown.title;
+                let name = func.STATENAME_DROPDOWN(item)
+                let selectedName = name[0], optionName = name[1]
+                stateCopy[selectedName] = '';
+                stateCopy[optionName] = [];
+                item.input.dropdown.dataDropdown.map((item, index) => {
+                    let option = { value: item.value, label: item.label }
+                    stateCopy[optionName].push(option)
+                })
+                stateCopy[selectedName] = stateCopy[optionName][0];
+            }
+        })
+        let packData = this.props.promotion
+        let { inputFrameCard } = this.state
+        let stateCopy2 = {
+            ...inputFrameCard
+        }
+        packData?.data.pack.map((item, index) => {
+            stateCopy2[_.camelCase('option' + item.name)] = '';
+            let option = []
+            for (let i = 0; i <= item.maxNumber; i++) {
+                option.push({ value: i, label: i })
+            }
+            stateCopy2[_.camelCase('option' + item.name)] = option;
+            stateCopy2[_.camelCase('selected' + item.name)] = stateCopy2[_.camelCase('option' + item.name)][0];
+        })
+        this.setState({
+            ...this.state,
+            inputCustomerForm: stateCopy,
+            dataInputCustomerForm: listInput,
+            packData: packData?.data.pack,
+            inputFrameCard: stateCopy2,
+        })
+    }
 
     handleOnChangeSelect = (selectedOption, action) => {
         this.setState({
@@ -156,6 +143,7 @@ class Form extends Component {
             alert('Please choose at least 1 promote package')
             event.preventDefault();
         }
+        console.log('s', this.state)
         // event.preventDefault();
     }
 
@@ -235,12 +223,15 @@ class Form extends Component {
 
 const mapStateToProps = state => {
     return {
-        language: state.app.language
+        language: state.app.language,
+        form_details: state.admin.form_details,
+        promotion: state.admin.promotion
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
+        loadFormDetail: (id) => dispatch(actions.fetchFormDetailByFormId(id))
     };
 };
 

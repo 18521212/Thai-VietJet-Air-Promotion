@@ -15,7 +15,7 @@ const initialState = {
     footers: '',
     footer: '',
     footer_texts: '',
-    form_detail_by_forms: '',
+    form_detail: '',
     inputs: '',
     promotions: '',
     packs: '',
@@ -58,7 +58,7 @@ const adminReducer = (state = initialState, action) => {
         case actionTypes.FETCH_FOOTER_TEXT:
             return mapDataGET(state, action, 'footer_text')
         case actionTypes.FETCH_FORM_DETAIL_BY_FORM:
-            return mapDataGET(state, action, 'form_detail_by_form')
+            return mapDataGET(state, action, 'form_detail')
         case actionTypes.FETCH_INPUT:
             return mapDataGET(state, action, 'input')
         case actionTypes.FETCH_PROMOTION:

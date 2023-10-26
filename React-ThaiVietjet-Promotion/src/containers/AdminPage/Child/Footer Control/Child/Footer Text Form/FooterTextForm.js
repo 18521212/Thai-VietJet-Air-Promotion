@@ -62,7 +62,6 @@ class FooterTextForm extends Component {
         let idInputStatus = type === 'update' ? 'id' : 'footerId'
         return (
             <>
-                <h4>Footer Form</h4>
                 <div className="row">
                     <div class="form-group col-md-2">
                         <label for="id">

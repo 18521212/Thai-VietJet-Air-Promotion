@@ -28,18 +28,7 @@ let createUpdateDeleteForm = async (req, res) => {
 }
 
 let getForm = async (req, res) => {
-    try {
-        let data
-        if (req.params.id) {
-            data = await formService.getFormById(req.params.id)
-        } else {
-            data = await formService.getAllForm()
-        }
-        return res.status(200).json(data)
-    } catch (e) {
-        console.log(e);
-        return res.status(200).json(resolveObj.ERROR_SERVER)
-    }
+    controller.CONTROLLER(req, res, formService.getForm, req?.params?.id)
 }
 
 // form detail

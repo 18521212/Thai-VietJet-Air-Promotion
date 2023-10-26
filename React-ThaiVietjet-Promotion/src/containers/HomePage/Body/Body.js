@@ -25,6 +25,7 @@ class Body extends Component {
 
     componentDidMount() {
         this.getDataAndMapState();
+        this.loadData()
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -33,7 +34,8 @@ class Body extends Component {
 
     loadData = async () => {
         let bodyId = this.props.bodyId
-        // await this.props.loadBody(bodyId)
+        await this.props.loadBody(bodyId)
+        console.log(this.props.body)
     }
 
     getDataAndMapState = async () => {
@@ -50,7 +52,7 @@ class Body extends Component {
 
     render() {
         let {
-            packData, contentBodyData
+            packData
         } = this.state;
 
         return (
@@ -59,8 +61,9 @@ class Body extends Component {
                     style={{ paddingBottom: '10%' }}
                 >
                     <PowerPack
-                        packData={packData}
-                        contentBodyData={contentBodyData}
+                        // packData={packData}
+                        packData={this.props.promotion?.data.pack}
+                        contentBodyData={this.props.body.data}
                     />
 
                     <span className="img-container">
@@ -74,7 +77,8 @@ class Body extends Component {
 
 const mapStateToProps = state => {
     return {
-        // bodies: state.admin.bodys
+        body: state.admin.body,
+        promotion: state.admin.promotion,
     };
 };
 
@@ -84,4 +88,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps))(Body);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Body));

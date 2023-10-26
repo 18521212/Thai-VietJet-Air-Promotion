@@ -50,7 +50,6 @@ class FooterForm extends Component {
         let type = this.props.params?.type
         return (
             <>
-                <h4>Footer Form</h4>
                 <div className="row">
                     <div class="form-group col-4">
                         <label for="id">Name</label>

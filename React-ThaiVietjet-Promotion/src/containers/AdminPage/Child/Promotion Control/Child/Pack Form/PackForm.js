@@ -62,13 +62,11 @@ class PackForm extends Component {
 
     render() {
         let type = this.props.params?.type
-        console.log('p', this.props)
         return (
             <>
-                <h3>Promotion Form</h3>
                 <div className="row">
                     <div class="form-group col-md-2">
-                        <label for="id">Promotion Id</label>
+                        <label for="id">{'Id (Promotion Id)'}</label>
                         <input type="text" class="form-control" id="id" aria-describedby="emailHelp"
                             value={this.state.promotionId} disabled
                             onChange={(event) => func.ONCHANGE_TEXT(this, 'promotionId', event)}
@@ -76,7 +74,7 @@ class PackForm extends Component {
                     </div>
                     {type === 'update' &&
                         <div class="form-group col-md-2">
-                            <label for="id">{'Id (Promotion Id)'}</label>
+                            <label for="id">{'Id (Pack Id)'}</label>
                             <input type="text" class="form-control" id="id" aria-describedby="emailHelp"
                                 value={this.state.id} disabled
                                 onChange={(event) => func.ONCHANGE_TEXT(this, 'id', event)}

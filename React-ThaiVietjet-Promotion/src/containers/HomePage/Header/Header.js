@@ -8,6 +8,7 @@ import { LANGUAGES } from '../../../utils';
 import { FormattedMessage } from 'react-intl';
 import { changeLanguageApp, fetchHeader, fetchMenu } from '../../../store/actions';
 import * as actions from 'store/actions';
+import { Link, NavLink } from 'react-router-dom';
 
 class Header extends Component {
     constructor(props) {
@@ -27,13 +28,13 @@ class Header extends Component {
 
     loadData = async () => {
         await this.props.loadHeader(this.props.headerId)
-        await this.props.loadMenu(this.props.header.data?.menuId)
+        await this.props.loadMenu(this.props.header?.data?.menuId)
         this.buildData()
     }
 
     buildData = () => {
         let lastMenus, firstMenus
-        if (this.props.menu.data) {
+        if (this.props.menu?.data) {
             let menuItemData = this.props.menu.data.menu_item
             lastMenus = menuItemData.filter((data) => data.order === -1);
             firstMenus = menuItemData.filter((data) => data.order !== -1);
@@ -71,9 +72,9 @@ class Header extends Component {
                 >
                     {/* <h1><FormattedMessage id="header.language" /></h1> */}
                     <nav className="navbar navbar-expand-lg navbar-dark bg-dark container-fluid sticky-top">
-                        <a className="navbar-brand" href={mainUrl}>
+                        <Link className="navbar-brand" to='/'>
                             <img src={header.imageLogo} alt='logo' />
-                        </a>
+                        </Link>
                         <button
                             className="navbar-toggler col-2"
                             type="button"

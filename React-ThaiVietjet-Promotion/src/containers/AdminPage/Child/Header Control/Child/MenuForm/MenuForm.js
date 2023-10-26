@@ -66,7 +66,7 @@ class MenuForm extends Component {
         return (
             <>
                 <div className="container-fluid">
-                    <h3>Menu Form</h3>
+                    <h3>Menu</h3>
                     <Routes>
                         <Route path="*" element={<MenuSelect selectedMenu={this.state.selectedMenu} optionMenu={this.state.optionMenu}
                             handleOnChangeSelect={this.handleOnChangeSelect} />} />

@@ -130,7 +130,7 @@ export const fetchForm = (id) => {
 export const fetchFooter = (id) => {
     return async (dispatch, getState) => {
         try {
-            let res = await getFooter()
+            let res = await getFooter(id)
             dispatch({
                 type: actionTypes.FETCH_FOOTER,
                 data: res

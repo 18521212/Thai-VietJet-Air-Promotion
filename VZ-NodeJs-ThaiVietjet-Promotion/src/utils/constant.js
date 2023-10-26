@@ -3,12 +3,14 @@ export const api = {
     MENUS: '/api/menus',
     BANNERS: '/api/banners',
     BODYS: '/api/bodies',
+    FORMS: '/api/forms',
     INPUTS: '/api/inputs',
     TEXT_INPUTS: '/api/text-inputs',
     DROPDOWNS: '/api/dropdowns',
     DATA_DROPDOWNS: '/api/data-dropdowns',
     PROMOTIONS: '/api/promotions',
     PACKS: '/api/packs',
+    FOOTERS: '/api/footers'
 }
 
 export const text = {

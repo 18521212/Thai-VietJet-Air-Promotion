@@ -17,13 +17,17 @@ class HomePage extends Component {
         }
     }
 
-    async componentDidMount() {
+    componentDidMount() {
         document.title = "VietjetAir - Gift Voucher dev"
+        this.loadData()
+    }
+
+    loadData = async () => {
         await this.props.loadCampaign(this.props.params.id)
         this.mapCampaignData()
     }
 
-    mapCampaignData = () => {
+    mapCampaignData = async () => {
         let campaign = this.props.campaign ?
             this.props.campaign.data
             :
@@ -31,6 +35,7 @@ class HomePage extends Component {
                 this.props.campaigns.data[0]
                 :
                 ''
+        await this.props.loadPromotion(campaign?.promotionId)
         this.setState({
             campaign: campaign
         })
@@ -38,14 +43,13 @@ class HomePage extends Component {
 
     render() {
         let { campaign } = this.state
-        // console.log(campaign)
         return (
             <>
-                {campaign && // if doesn't has this line, first mount (not did mount) or first render will not get value id
+                {campaign &&
                     <>
                         <Header headerId={campaign.headerId} />
                         <Banner bannerId={campaign.bannerId} />
-                        {/* <Body bodyId={campaign.bodyId} /> */}
+                        <Body bodyId={campaign.bodyId} />
                         <section className="join-us" id="register-purchase">
                             <Form formId={campaign.formId} />
                             <Footer footerId={campaign.footerId} />
@@ -66,7 +70,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        loadCampaign: (id) => dispatch(actions.fetchCampaign(id))
+        loadCampaign: (id) => dispatch(actions.fetchCampaign(id)),
+        loadPromotion: (id) => dispatch(actions.fetchPromotion(id))
     };
 };
 

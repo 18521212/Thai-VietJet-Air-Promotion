@@ -22,31 +22,26 @@ let createForm = (data) => {
     })
 }
 
-let getAllForm = () => {
+let getForm = (id)=>{
     return new Promise(async (resolve, reject) => {
         try {
-            let data = await db.Form.findAll({
+            let query = {
                 include: [
                     { model: db.Form_Detail, as: 'form_detail' }
                 ]
-            })
-            resolve(resolveObj.GET(data))
-        } catch (e) {
-            reject(e)
-        }
-    })
-}
-
-let getFormById = (id) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            if (!id) {
-                resolve(resolveObj.MISSING_PARAMETERS)
             }
-            let data = await db.Form.findOne({ where })
+            let data
+            if (id) {
+                data = await db.Form.findOne({
+                    where: { id: id },
+                    ...query
+                })
+            } else {
+                data = await db.Form.findAll(query)
+            }
             resolve(resolveObj.GET(data))
         } catch (e) {
-            reject(e)
+            reject(e);
         }
     })
 }
@@ -777,8 +772,7 @@ let fetchData = () => {
 
 module.exports = {
     createForm: createForm,
-    getAllForm: getAllForm,
-    getFormById: getFormById,
+    getForm,
     updateForm,
     deleteForm,
 

@@ -40,7 +40,7 @@ class InputSelect extends Component {
 
     render() {
         let inputs = this.props?.inputs
-        let inputData = inputs.data
+        let inputData = inputs?.data
         inputData && inputData.map((item) => {
             if (item.input.text_input) {
                 item.title = item.input.text_input.titleDataText_Input.valueEn
@@ -93,7 +93,7 @@ class InputSelect extends Component {
 
 const mapStateToProps = state => {
     return {
-        inputs: state.admin.form_detail_by_forms
+        inputs: state.admin.form_details
     };
 };
 

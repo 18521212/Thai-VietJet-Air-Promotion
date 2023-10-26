@@ -33,6 +33,7 @@ class AdminPage extends Component {
                 <Header />
                 <h1 className='title-admin'>Admin Page</h1>
                 <Routes>
+                    <Route index element={<CampaignControl />} />
                     <Route path="/campaign*" element={<CampaignControl />} />
                     <Route path="/header*" element={<HeaderControl />} />
                     <Route path="/banner*" element={<BannerControl />} />

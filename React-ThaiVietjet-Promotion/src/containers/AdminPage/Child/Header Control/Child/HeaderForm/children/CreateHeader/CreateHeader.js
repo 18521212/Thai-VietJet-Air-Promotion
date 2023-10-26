@@ -7,7 +7,7 @@ import { createHeader, updateHeader } from "services/userService";
 import { toast } from 'react-toastify';
 import { connect } from 'react-redux'
 import * as actions from 'store/actions';
-import { CommonUtils } from "utils";
+import { CommonUtils, component } from "utils";
 // import bsCustomFileInput from 'bs-custom-file-input'
 
 class CreateHeader extends Component {
@@ -21,7 +21,12 @@ class CreateHeader extends Component {
     }
 
     componentDidMount() {
+        this.loadData()
         this.mapDataUpdate()
+    }
+
+    loadData = async () => {
+        await this.props.loadMenu()
     }
 
     mapDataUpdate = () => {
@@ -31,7 +36,7 @@ class CreateHeader extends Component {
             this.setState({
                 imageLogoInput: selectedHeader.imageLogo,
                 imageBackgroundInput: selectedHeader.imageBackground,
-                selectedMenu: this.props.optionMenus.filter(item => item.value.id === this.props.selectedHeader.menuId)
+                selectedMenu: this.props.menuOption.filter(item => item.value.id === this.props.selectedHeader.menuId)
             })
         }
     }
@@ -88,6 +93,7 @@ class CreateHeader extends Component {
     }
 
     render() {
+        console.log()
         return (
             <>
                 <h1>create header</h1>
@@ -114,7 +120,7 @@ class CreateHeader extends Component {
 
                         <Select className="select-menu col-md-4 form-group"
                             value={this.state.selectedMenu}
-                            options={this.props.optionMenus}
+                            options={this.props.menuOption}
                             name={'selectedMenu'}
                             onChange={this.handleOnChangeSelect}
                             placeholder='Adding menu'
@@ -132,9 +138,9 @@ class CreateHeader extends Component {
                             })}
                         />
                         <div className="w-100"></div>
-                        <button type="button" className={`btn ${this.state.isUpdateHeader ? 'btn-warning' : 'btn-primary'} mx-1`}
+                        <button type="button" className={`btn ${this.props.isUpdate ? 'btn-warning' : 'btn-primary'} mx-1`}
                             onClick={(event) => this.handleCreateHeader(event)}
-                        >{this.state.isUpdateHeader ? 'Update' : 'Create'}</button>
+                        >{this.props.isUpdate ? 'Update' : 'Create'}</button>
                         <button type="button" className="btn btn-secondary mx-1"
                             onClick={() => this.backHeaderSelect()}
                         >Cancel</button>
@@ -148,13 +154,13 @@ class CreateHeader extends Component {
 const mapStateToProps = state => {
     return {
         menuData: state.admin.menus,
-        optionMenus: state.admin.optionMenus
+        menuOption: state.admin.menuOption
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        // loadMenu: () => dispatch(actions.fetchMenu())
+        loadMenu: (id) => dispatch(actions.fetchMenu(id))
     };
 };
 

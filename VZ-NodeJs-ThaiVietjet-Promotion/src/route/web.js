@@ -55,10 +55,10 @@ let initWebRoutes = (app) => {
     router.delete(api.BODYS, bodyController.createUpdateDeleteBody)
 
     // form
-    router.post('/api/forms', formController.createUpdateDeleteForm)
-    router.get('/api/forms/:id?', formController.getForm)
-    router.put('/api/forms', formController.createUpdateDeleteForm)
-    router.delete('/api/forms', formController.createUpdateDeleteForm)
+    router.post(api.FORMS, formController.createUpdateDeleteForm)
+    router.get(`${api.FORMS}/:id?`, formController.getForm)
+    router.put(api.FORMS, formController.createUpdateDeleteForm)
+    router.delete(api.FORMS, formController.createUpdateDeleteForm)
 
     // form detail
 
@@ -101,10 +101,10 @@ let initWebRoutes = (app) => {
     router.post('/api/fetch-data', formController.fetchData)
 
     // footer
-    router.post('/api/footers', footerController.createFooter)
-    router.get('/api/footers/:id?', footerController.getFooter)
-    router.put('/api/footers', footerController.updateFooter)
-    router.delete('/api/footers', footerController.deleteFooter)
+    router.post(api.FOOTERS, footerController.createFooter)
+    router.get(`${api.FOOTERS}/:id?`, footerController.getFooter)
+    router.put(api.FOOTERS, footerController.updateFooter)
+    router.delete(api.FOOTERS, footerController.deleteFooter)
 
     // footer text
     router.post('/api/footer-texts', footerController.createFooterText)

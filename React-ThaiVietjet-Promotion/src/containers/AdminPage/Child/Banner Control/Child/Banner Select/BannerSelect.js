@@ -41,7 +41,6 @@ class BannerSelect extends Component {
         let { banners, bannerOption } = this.props
         return (
             <>
-                <h3>Banner Select</h3>
                 <div className="row mb-3">
                     <div className="col-md-6">
                         <Select

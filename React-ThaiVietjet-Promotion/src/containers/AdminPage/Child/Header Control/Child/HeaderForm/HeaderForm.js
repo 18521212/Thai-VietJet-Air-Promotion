@@ -75,7 +75,7 @@ class HeaderForm extends Component {
         return (
             <>
                 <div className='header-form container-fluid'>
-                    <h3>Header Form</h3><br />
+                    <h3>Header</h3>
                     {
                         this.renderSwitch(this.state.selectedPageHeader.name)
                     }

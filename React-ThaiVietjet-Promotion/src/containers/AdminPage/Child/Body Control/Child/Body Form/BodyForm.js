@@ -70,8 +70,6 @@ class BodyForm extends Component {
         let { type } = this.state
         return (
             <>
-                <h3>Body Form</h3>
-                <h4>Content English</h4>
                 <div className="row">
                     <div className="form-group col-md-4">
                         <label for="exampleInputEmail1">Name</label>
@@ -101,7 +99,7 @@ class BodyForm extends Component {
                             onClick={() => this.handleSubmit()}
                         >
                             {type === 'update' ? `Save` : `Create`}</button>
-                        <button className="btn btn-secondary ml-1"
+                        <button className="btn btn-dark ml-1"
                             onClick={() => { func.NAV(this, -1) }}>Cancel</button>
                     </div>
                 </div>

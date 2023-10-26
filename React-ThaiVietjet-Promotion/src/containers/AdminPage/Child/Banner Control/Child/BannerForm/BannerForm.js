@@ -74,7 +74,6 @@ class BannerForm extends Component {
         let { type } = this.props.params
         return (
             <>
-                <h3>Banner Form</h3>
                 <form className="row">
                     <div className="form-group col-md-4">
                         <label for="exampleInputEmail1">Name</label>

@@ -44,7 +44,6 @@ class FooterSelect extends Component {
         let { footers } = this.props
         return (
             <>
-                <h4>Footer Select</h4>
                 <div className="row my-1 px-3">
                     <button className="btn btn-success ml-auto"
                         onClick={() => this.handleCreate()}>Create</button>

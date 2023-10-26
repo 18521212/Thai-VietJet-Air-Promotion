@@ -58,7 +58,6 @@ class HeaderSelect extends Component {
         let listHeader = this.props.headerData.data
         return (
             <>
-                <h1>select header</h1>
                 <div className="row px-3 my-1">
                     <input value='+ Add New' type="button" className="btn btn-success ml-auto"
                         onClick={() => this.directCreateHeader()}
@@ -71,7 +70,7 @@ class HeaderSelect extends Component {
                             <th scope="col">id</th>
                             <th scope="col">Logo Image</th>
                             <th scope="col">Background Image</th>
-                            <th scope="col">Menu Panel Id</th>
+                            <th scope="col">Menu Id</th>
                             <th scope="col">Actions</th>
                         </tr>
                     </thead>
