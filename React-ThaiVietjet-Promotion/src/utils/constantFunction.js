@@ -1,6 +1,7 @@
 import { toast } from 'react-toastify'
 import { CommonUtils } from "utils"
 import _ from 'lodash'
+import { type } from 'utils'
 
 export const func = {
     ALERT_RES: (res) => {
@@ -218,5 +219,19 @@ export const component = {
             >{text}</button>
         </>
         return component
+    },
+    CR_UP_TEXT: (param) => {
+        let text, typeParam = param.props?.params?.type
+        text = typeParam === type.UPDATE ? 'Update' : 'Create'
+        return text
+    }
+}
+
+export const auth = {
+    ACCESS_TOKEN: (param) => {
+        let accessToken =
+            param.signInUserSession.accessToken.jwtToken
+            || param.props.user.signInUserSession.accessToken.jwtToken
+        return accessToken
     }
 }

@@ -1,17 +1,45 @@
 import actionTypes from './actionTypes';
 
 import {
-    getAllMenuItemByMenuId, getAllSubMenuByMenuItemId,
     getCampaign,
-    getFooter, getFooterText,
-    getForm, getFormDetailByFormId,
-    //  getInput
 } from 'services/userService';
-import { getHeader, getMenu } from 'services/headerService';
-import { getBanner } from 'services/bannerService';
-import { getBody } from 'services/bodyService';
-import { getInput } from 'services/formService';
-import { getPromotion, getPack } from 'services/promotionService';
+import {
+    getHeader, getMenu, getAllMenuItemByMenuId,
+    getAllSubMenuByMenuItemId
+} from 'services/headerService';
+import { getBanner } from 'services/bannerService'
+import { getBody } from 'services/bodyService'
+import {
+    getInput, getForm,
+    getFormDetailByFormId,
+} from 'services/formService'
+import { getFooter, getFooterText } from 'services/footerService'
+import { getPromotion, getPack } from 'services/promotionService'
+
+export const saveUser = (user) => {
+    return (dispatch, getState) => {
+        try {
+            dispatch({
+                type: actionTypes.SAVE_USER,
+                data: user
+            })
+        } catch (e) {
+            console.log('saveUser error', e)
+        }
+    }
+}
+
+export const clearUser = () => {
+    return (dispatch, getState) => {
+        try {
+            dispatch({
+                type: actionTypes.CLEAR_USER,
+            })
+        } catch (e) {
+            console.log('clearUser error', e)
+        }
+    }
+}
 
 export const fetchCampaign = (id) => {
     return async (dispatch, getState) => {

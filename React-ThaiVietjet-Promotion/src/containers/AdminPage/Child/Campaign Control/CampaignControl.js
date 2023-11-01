@@ -20,7 +20,8 @@ class CampaignControl extends Component {
     render() {
         return (
             <div className="container-fluid">
-                <h3>Campaign</h3>
+                <h3>Campaign Section</h3>
+                <hr></hr>
                 <Routes>
                     <Route path="*" element={<CampaignSelect />} />
                     <Route path="campaign-form/:type?" element={<CampaignForm />} />

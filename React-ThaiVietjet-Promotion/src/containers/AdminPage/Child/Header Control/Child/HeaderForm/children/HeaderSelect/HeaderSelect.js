@@ -4,7 +4,7 @@ import _ from 'lodash';
 import withRouter from "components/withRouter/withRouter";
 import { connect } from 'react-redux'
 import * as actions from 'store/actions';
-import { deleteHeader } from "services/userService";
+import { deleteHeader } from "services/headerService";
 import { toast } from 'react-toastify'
 
 class HeaderSelect extends Component {
@@ -22,7 +22,7 @@ class HeaderSelect extends Component {
 
     handleDeleteHeader = async (headerId) => {
         if (window.confirm('Are you sure you wish to delete this item?') === true) {
-            let res = await deleteHeader(headerId)
+            let res = await deleteHeader({ id: headerId })
             res.errCode === 0 && this.props.loadHeader()
             res.errCode === 0 ? toast.success(res.errMessage) : toast.error(res.errMessage)
         } else {
@@ -58,6 +58,7 @@ class HeaderSelect extends Component {
         let listHeader = this.props.headerData.data
         return (
             <>
+                <h3>Headers</h3>
                 <div className="row px-3 my-1">
                     <input value='+ Add New' type="button" className="btn btn-success ml-auto"
                         onClick={() => this.directCreateHeader()}

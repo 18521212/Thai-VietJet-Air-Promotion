@@ -3,7 +3,7 @@ import './MenuItemSelect.scss'
 import _ from 'lodash';
 import { toast } from 'react-toastify';
 import withRouter from "components/withRouter/withRouter";
-import { getAllMenuItemByMenuId, deleteMenuItem } from "services/userService";
+import { deleteMenuItem } from "services/headerService";
 import { connect } from 'react-redux'
 import * as actions from 'store/actions';
 
@@ -24,12 +24,17 @@ class MenuItemSelect extends Component {
         this.props.navigate(link, { state: data })
     }
 
+    fetchMenuItem = () => {
+        let menuId = this.props.location.state.menuId
+        this.props.fetchMenuItem(menuId)
+    }
+
     handleDelete = async (id) => {
         if (window.confirm('Are you sure you wish to delete this Menu Item?') === true) {
             let res = await deleteMenuItem({ id: id })
             res.errCode === 0 ? toast.success(res.errMessage) : toast.error(res.errMessage)
             if (res.errCode === 0) {
-                this.getAllMenuItemByMenuId()
+                this.fetchMenuItem()
             }
         } else {
             return;
@@ -40,6 +45,7 @@ class MenuItemSelect extends Component {
         let menuItem = this.props.menuItemData.data
         return (
             <>
+                <h3>Menu Items</h3>
                 <div className="row px-3 mb-1">
                     <button className="btn btn-primary mr-auto"
                         onClick={() => this.handleNavigate(-1)}>

@@ -31,6 +31,16 @@ const initialState = {
 
 const adminReducer = (state = initialState, action) => {
     switch (action.type) {
+        case actionTypes.SAVE_USER:
+            return {
+                ...state,
+                user: action.data
+            }
+        case actionTypes.CLEAR_USER:
+            return {
+                ...state,
+                user: null
+            }
         case actionTypes.FETCH_CAMPAIGN:
             return mapDataGET(state, action, 'campaign')
         case actionTypes.FETCH_HEADER:

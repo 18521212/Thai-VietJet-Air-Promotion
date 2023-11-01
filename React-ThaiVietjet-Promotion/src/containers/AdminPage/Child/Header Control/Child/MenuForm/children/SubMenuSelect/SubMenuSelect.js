@@ -4,7 +4,7 @@ import _, { conforms } from 'lodash';
 import withRouter from "components/withRouter/withRouter";
 import { connect } from 'react-redux'
 import * as actions from 'store/actions';
-import { deleteSubMenu } from "services/userService";
+import { deleteSubMenu } from "services/headerService";
 import { toast } from 'react-toastify';
 
 class SubMenuSelect extends Component {
@@ -43,6 +43,7 @@ class SubMenuSelect extends Component {
         let SubMenus = this.props.subMenuData.data;
         return (
             <>
+                <h3>Sub Menus</h3>
                 <div className="row px-3 my-1">
                     <button className="btn btn-primary mr-auto" onClick={() => this.handleNavigate(-1)}>Back</button>
                     <div className="bg-info text-white p-1">SUB MENU</div>

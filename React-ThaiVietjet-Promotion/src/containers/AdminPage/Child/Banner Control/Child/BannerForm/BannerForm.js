@@ -4,8 +4,8 @@ import _ from 'lodash';
 import * as actions from 'store/actions';
 import withRouter from "components/withRouter/withRouter"
 import { connect } from 'react-redux'
-import { func } from 'utils'
-import { createBanner, updateBanner } from "services/userService";
+import { func, component } from 'utils'
+import { createBanner, updateBanner } from "services/bannerService";
 
 class BannerForm extends Component {
     constructor(props) {
@@ -74,6 +74,7 @@ class BannerForm extends Component {
         let { type } = this.props.params
         return (
             <>
+                <h3>{component.CR_UP_TEXT(this)} Banner</h3>
                 <form className="row">
                     <div className="form-group col-md-4">
                         <label for="exampleInputEmail1">Name</label>

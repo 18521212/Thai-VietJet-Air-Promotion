@@ -7,8 +7,8 @@ import { connect } from 'react-redux'
 import MarkdownIt from 'markdown-it';
 import MdEditor from 'react-markdown-editor-lite';
 import 'react-markdown-editor-lite/lib/index.css';
-import { func } from 'utils'
-import { createBody, updateBody } from "services/userService";
+import { func, component } from 'utils'
+import { createBody, updateBody } from "services/bodyService";
 
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 
@@ -70,6 +70,7 @@ class BodyForm extends Component {
         let { type } = this.state
         return (
             <>
+                <h3>{component.CR_UP_TEXT(this)} Body</h3>
                 <div className="row">
                     <div className="form-group col-md-4">
                         <label for="exampleInputEmail1">Name</label>

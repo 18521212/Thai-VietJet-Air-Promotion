@@ -35,7 +35,7 @@ class BodyDetail extends Component {
     render() {
         return (
             <>
-                <h3>Body Detail </h3>
+                <h3>View Body </h3>
                 <div className="row mb-2 px-3">
                     <button className="btn btn-primary mr-auto"
                         onClick={() => func.NAV(this, -1)}>Back</button>

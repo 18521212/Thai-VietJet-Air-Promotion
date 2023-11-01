@@ -5,6 +5,8 @@ const actionTypes = Object.freeze({
     CHANGE_LANGUAGE: 'CHANGE_LANGUAGE',
 
     //admin
+    SAVE_USER: 'SAVE_USER',
+    CLEAR_USER: 'CLEAR_USER',
     FETCH_CAMPAIGN: 'FETCH_CAMPAIGN',
     FETCH_HEADER: 'FETCH_HEADER',
     FETCH_MENU: 'FETCH_MENU',

@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 import { func } from 'utils'
 import Select from "components/Select/Select";
 import RenderInput from "components/Render Input/RenderInput";
-import { createFormDetail, updateFormDetail } from "services";
+import { createFormDetail, updateFormDetail } from "services/formService";
 
 class FormDetail extends Component {
     constructor(props) {
@@ -58,16 +58,6 @@ class FormDetail extends Component {
         return (
             <>
                 <h4>Form Detail</h4>
-                <div className="row">
-                    <div class="form-group col-md-2">
-                        <button
-                            className="btn btn-primary mr-auto"
-                            onClick={() => func.NAV(this, -1)}
-                        >
-                            Back
-                        </button>
-                    </div>
-                </div>
                 <div className="row">
                     <div class="form-group col-md-2">
                         <label for="id">Form Id</label>

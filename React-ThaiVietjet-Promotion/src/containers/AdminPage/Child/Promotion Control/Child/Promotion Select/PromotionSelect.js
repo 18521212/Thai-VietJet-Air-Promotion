@@ -33,14 +33,11 @@ class PromotionSelect extends Component {
     }
 
     render() {
-        // console.log('pr', this.props)
         let promotions = this.props.promotions
         return (
             <>
+                <h3>Promotions</h3>
                 <div className="row px-3 mb-1">
-                    <button className="btn btn-primary mr-auto"
-                        onClick={() => func.NAV(this, -1)}
-                    >Back</button>
                     <button className="btn btn-success ml-auto"
                         onClick={() => func.NAV(this, '../promotion-form')}
                     >Create</button>

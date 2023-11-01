@@ -3,7 +3,7 @@ import './CreateHeader.scss'
 import _ from 'lodash';
 import withRouter from "components/withRouter/withRouter";
 import Select from 'react-select';
-import { createHeader, updateHeader } from "services/userService";
+import { createHeader, updateHeader } from "services/headerService";
 import { toast } from 'react-toastify';
 import { connect } from 'react-redux'
 import * as actions from 'store/actions';
@@ -96,7 +96,7 @@ class CreateHeader extends Component {
         console.log()
         return (
             <>
-                <h1>create header</h1>
+                <h3>Header Form</h3>
                 <form>
                     <div class="form-row">
                         <div class="form-group col-md-6">
@@ -107,6 +107,7 @@ class CreateHeader extends Component {
                                 />
                                 <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
                             </div>
+                            <img src={this.state.imageLogoInput} />
                         </div>
                         <div class="form-group col-md-6">
                             <label for="inputPassword4">Background Image</label>
@@ -116,8 +117,8 @@ class CreateHeader extends Component {
                                 />
                                 <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
                             </div>
+                            <img src={this.state.imageBackgroundInput} />
                         </div>
-
                         <Select className="select-menu col-md-4 form-group"
                             value={this.state.selectedMenu}
                             options={this.props.menuOption}
@@ -154,7 +155,8 @@ class CreateHeader extends Component {
 const mapStateToProps = state => {
     return {
         menuData: state.admin.menus,
-        menuOption: state.admin.menuOption
+        menuOption: state.admin.menuOption,
+        user: state.admin.user
     };
 };
 

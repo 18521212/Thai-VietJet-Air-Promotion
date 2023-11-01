@@ -6,7 +6,7 @@ import withRouter from "components/withRouter/withRouter"
 import { connect } from 'react-redux'
 import Table from "components/Table/Table"
 import { func, api } from 'utils'
-import { deleteFooter } from "services/userService";
+import { deleteFooter } from "services/footerService";
 
 class FooterSelect extends Component {
     constructor(props) {
@@ -44,6 +44,7 @@ class FooterSelect extends Component {
         let { footers } = this.props
         return (
             <>
+                <h3>Footers</h3>
                 <div className="row my-1 px-3">
                     <button className="btn btn-success ml-auto"
                         onClick={() => this.handleCreate()}>Create</button>

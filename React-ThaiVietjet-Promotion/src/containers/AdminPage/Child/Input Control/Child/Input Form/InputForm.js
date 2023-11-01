@@ -30,7 +30,6 @@ class InputForm extends Component {
     render() {
         return (
             <>
-                    <h3>Input Control</h3>
                     <Routes>
                         <Route path='text/:type?' element={<TextInputForm />}></Route>
                         <Route path='dropdown/:type?' element={<DropdownForm />}></Route>

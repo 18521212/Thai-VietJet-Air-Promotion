@@ -17,7 +17,6 @@ class Header extends Component {
             firstMenus: '',
             lastMenus: '',
             header: '',
-
             selectedLanguage: '',
         }
     }
@@ -148,52 +147,36 @@ class Header extends Component {
                                 }
                             </ul>
                             <ul className="navbar-nav ml-auto">
-                                {lastMenus && lastMenus.length > 0 &&
-                                    lastMenus.map((item, index) => {
-                                        return (
-                                            <>
-                                                <li className="nav-item dropdown sl-lan">
-                                                    <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        {item.sub_menu.length > 0 ?
-                                                            (language === 'en' ?
-                                                                item.sub_menu.filter(a => a.textDataSub_Menu.valueEn === 'English')[0].textDataSub_Menu.valueEn
-                                                                :
-                                                                item.sub_menu.filter(a => a.textDataSub_Menu.valueEn === 'Thai')[0].textDataSub_Menu.valueTh
-                                                            )
-                                                            :
-                                                            item.textDataMenu_Item.valueEn
-                                                        }
-                                                    </a>
-                                                    {item.sub_menu && item.sub_menu.length > 0 &&
-                                                        <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                                            {item.sub_menu.map((item, index) => {
-                                                                return (
-                                                                    <>
-                                                                        <a
-                                                                            className="dropdown-item"
-                                                                            href="#"
-                                                                            name={
-                                                                                item.textDataSub_Menu.valueEn === 'English' ? LANGUAGES.EN :
-                                                                                    item.textDataSub_Menu.valueEn === 'Thai' ? LANGUAGES.TH : LANGUAGES.TH
-                                                                            }
-                                                                            onClick={(event) => this.handleOnChangeLanguage(event)}
-                                                                        >
-                                                                            {item.textDataSub_Menu.valueEn === 'English' ?
-                                                                                item.textDataSub_Menu.valueEn
-                                                                                :
-                                                                                item.textDataSub_Menu.valueTh
-                                                                            }
-                                                                        </a>
-                                                                    </>
-                                                                )
-                                                            })}
-                                                        </div>
-                                                    }
-                                                </li>
-                                            </>
-                                        )
-                                    })
-                                }
+                                <li className="nav-item dropdown sl-lan">
+                                    <a className="nav-link dropdown-toggle" href="#"
+                                        id="navbarDropdown" role="button"
+                                        data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false">
+                                        {language === 'en' ?
+                                            'English'
+                                            :
+                                            'ภาษาไทย'
+                                        }
+                                    </a>
+                                    <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a
+                                            className="dropdown-item"
+                                            href="#"
+                                            name={LANGUAGES.EN}
+                                            onClick={(event) => this.handleOnChangeLanguage(event)}
+                                        >
+                                            English
+                                        </a>
+                                        <a
+                                            className="dropdown-item"
+                                            href="#"
+                                            name={LANGUAGES.TH}
+                                            onClick={(event) => this.handleOnChangeLanguage(event)}
+                                        >
+                                            ภาษาไทย
+                                        </a>
+                                    </div>
+                                </li>
                             </ul>
                         </div>
 

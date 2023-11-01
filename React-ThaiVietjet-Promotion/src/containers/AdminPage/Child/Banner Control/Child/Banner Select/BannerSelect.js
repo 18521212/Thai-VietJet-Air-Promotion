@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 import Table from "components/Table/Table";
 import Select from "components/Select/Select";
 import { func } from 'utils'
-import { deleteBanner } from "services/userService";
+import { deleteBanner } from "services/bannerService";
 
 class BannerSelect extends Component {
     constructor(props) {
@@ -41,6 +41,7 @@ class BannerSelect extends Component {
         let { banners, bannerOption } = this.props
         return (
             <>
+                <h3>Banners</h3>
                 <div className="row mb-3">
                     <div className="col-md-6">
                         <Select
@@ -52,7 +53,7 @@ class BannerSelect extends Component {
                         />
                     </div>
                 </div>
-                <div className="row">
+                <div className="row mx-0">
                     <button type="button" className="btn btn-success mx-1 mb-1 ml-auto"
                         onClick={() => this.handleCreate()}>Create</button>
                 </div>

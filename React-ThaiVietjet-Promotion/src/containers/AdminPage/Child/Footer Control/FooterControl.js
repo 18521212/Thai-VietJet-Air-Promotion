@@ -30,7 +30,8 @@ class FooterControl extends Component {
         return (
             <>
                 <div className="container-fluid">
-                    <h3>Footer</h3>
+                    <h3>Footer Section</h3>
+                    <hr></hr>
                     <Routes>
                         <Route path='*' element={<FooterSelect />}></Route>
                         <Route path='footer-form/:type?' element={<FooterForm />}></Route>

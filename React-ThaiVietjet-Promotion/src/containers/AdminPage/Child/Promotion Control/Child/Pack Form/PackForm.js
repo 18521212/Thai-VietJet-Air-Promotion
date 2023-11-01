@@ -64,6 +64,7 @@ class PackForm extends Component {
         let type = this.props.params?.type
         return (
             <>
+                <h3>{component.CR_UP_TEXT(this)} Pack</h3>
                 <div className="row">
                     <div class="form-group col-md-2">
                         <label for="id">{'Id (Promotion Id)'}</label>

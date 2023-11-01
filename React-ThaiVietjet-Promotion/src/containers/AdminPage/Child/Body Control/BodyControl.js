@@ -34,7 +34,8 @@ class BodyControl extends Component {
     render() {
         return (
             <div className="container-fluid">
-                <h3>Body</h3>
+                <h3>Body Section</h3>
+                <hr></hr>
                 <Routes>
                     <Route path="*" element={<BodySelect />} />
                     <Route path="body-detail" element={<BodyDetail />} />

@@ -5,7 +5,7 @@ import Select from 'react-select';
 import {
     getHeader, createHeader, deleteHeader,
     getAllMenu
-} from "services/userService";
+} from "services/headerService";
 import {
     Routes,
     Route,
@@ -75,7 +75,8 @@ class HeaderForm extends Component {
         return (
             <>
                 <div className='header-form container-fluid'>
-                    <h3>Header</h3>
+                    <h3>Header Section</h3>
+                    <hr></hr>
                     {
                         this.renderSwitch(this.state.selectedPageHeader.name)
                     }

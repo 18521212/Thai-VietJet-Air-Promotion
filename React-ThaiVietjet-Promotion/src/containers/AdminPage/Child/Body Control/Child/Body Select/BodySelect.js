@@ -9,7 +9,7 @@ import MdEditor from 'react-markdown-editor-lite';
 import 'react-markdown-editor-lite/lib/index.css';
 import Table from "components/Table/Table";
 import { func } from 'utils'
-import { deleteBody } from "services/userService";
+import { deleteBody } from "services/bodyService";
 
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 
@@ -53,6 +53,7 @@ class BodySelect extends Component {
         let { bodys } = this.props
         return (
             <>
+                <h3>Bodys</h3>
                 <div className="row my-1 px-3">
                     <button className="btn btn-success ml-auto"
                         onClick={() => this.handleCreate()}>Create</button>

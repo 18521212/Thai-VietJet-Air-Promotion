@@ -6,9 +6,9 @@ import top_cloud from '../../../assets/Background/top_cloud.png';
 import Select from 'react-select';
 import PowerPack from './Child/PowerPack';
 import {
-    getBanner, getAllTextInput, getFormSectionById,
-    getAllPack, getBody
+    getAllPack
 } from "../../../services/userService";
+import { getBody } from "services/bodyService";
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import * as actions from 'store/actions';

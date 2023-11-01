@@ -4,7 +4,8 @@ import _ from 'lodash';
 import { connect } from 'react-redux'
 import * as actions from 'store/actions';
 import withRouter from "components/withRouter/withRouter";
-import { createMenu, updateMenu } from "services/userService";
+import { createMenu, updateMenu } from "services/headerService";
+import {component} from 'utils'
 
 class CreateMenu extends Component {
     constructor(props) {
@@ -48,6 +49,7 @@ class CreateMenu extends Component {
         let { type } = this.props.params
         return (
             <>
+                <h3>{component.CR_UP_TEXT(this)} Menu</h3>
                 <div className="create-menu-form form-row">
                     <div className="form-group col-4">
                         <input value={this.state.name}

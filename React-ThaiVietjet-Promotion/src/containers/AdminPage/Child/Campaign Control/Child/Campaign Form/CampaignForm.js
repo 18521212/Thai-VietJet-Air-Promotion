@@ -6,7 +6,7 @@ import withRouter from "components/withRouter/withRouter"
 import { connect } from 'react-redux'
 import * as actions from 'store/actions'
 import { updateCampaign, createCampaign } from "services/userService"
-import { func } from 'utils'
+import { func, component } from 'utils'
 
 class CampaignForm extends Component {
     constructor(props) {
@@ -38,8 +38,7 @@ class CampaignForm extends Component {
 
     mapData = () => {
         let campaign = this.props.location.state?.campaign
-        if (!campaign) return 
-            console.log('c')
+        if (!campaign) return
         let { headerOption, bannerOption, bodyOption, formOption, footerOption, promotionOption } = this.props
         this.setState({
             name: campaign.name,
@@ -92,7 +91,7 @@ class CampaignForm extends Component {
         let type = this.props.params.type
         return (
             <>
-                <h3>Campaign form</h3>
+                <h3>{component.CR_UP_TEXT(this)} Campaign</h3>
                 <div className="row">
                     <form className="col-md-5">
                         <div className="form-group">

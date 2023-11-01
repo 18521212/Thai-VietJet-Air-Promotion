@@ -10,40 +10,32 @@ import {
     useMatch,
     useResolvedPath,
 } from "react-router-dom";
-
 import './App.scss';
-
 import HomePage from './HomePage/HomePage';
 import AdminPage from './AdminPage/AdminPage';
 
-class App extends Component {
-    componentDidMount() {
+function App() {
+    return (
+        <>
+            <Routes>
+                <Route path="/:id?" element={<HomePage />} />
+                <Route path="/admin/*" element={<AdminPage />} />
+            </Routes>
 
-    }
-
-    render() {
-        return (
-            <>
-                <Routes>
-                    <Route path="/:id?" element={<HomePage />} />
-                    <Route path="/admin/*" element={<AdminPage />} />
-                </Routes>
-
-                <ToastContainer
-                    position="top-right"
-                    autoClose={2000}
-                    hideProgressBar={false}
-                    newestOnTop={false}
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                    theme="colored"
-                />
-            </>
-        )
-    }
+            <ToastContainer
+                position="top-right"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+            />
+        </>
+    )
 }
 
 export default App;

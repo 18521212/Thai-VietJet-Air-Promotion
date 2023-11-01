@@ -95,7 +95,6 @@ let updateCampaign = (data) => {
                     promotionId: data.promotionId ? data.promotionId : null
                 }, { transaction: t })
             })
-
             resolve(resolveObj.UPDATE_SUCCEED('Campaign'))
         } catch (e) {
             reject(e);
@@ -172,7 +171,6 @@ let checkChildTableDataExist = async (data) => {
             table_name = 'Promotion'
         }
     }
-
     return { result, table_name };
 }
 

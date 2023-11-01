@@ -51,6 +51,7 @@ class CampaignSelect extends Component {
         let campaigns = this.props.campaigns.data
         return (
             <>
+                <h3>Campaigns</h3>
                 <div className="container-fluid">
                     <div className="row">
                         <div className="select-campaign col-md-5">
@@ -59,7 +60,7 @@ class CampaignSelect extends Component {
                                 value='selectedCampaign'
                                 options='campaignOption'
                                 nameProps='campaign'
-                                linkNav='../campaign-detail'
+                                linkNav='../campaign-form/update'
                                 parent={this}
                             />
                         </div>
@@ -74,6 +75,7 @@ class CampaignSelect extends Component {
                                 <thead>
                                     <tr>
                                         <th scope="col">Id</th>
+                                        <th scope="col">Name</th>
                                         <th scope="col">Header Id</th>
                                         <th scope="col">Banner Id</th>
                                         <th scope="col">Body Id</th>
@@ -88,6 +90,7 @@ class CampaignSelect extends Component {
                                         return (
                                             <tr>
                                                 <th>{item?.['id']}</th>
+                                                <td>{item.name}</td>
                                                 <td>{item.headerId}</td>
                                                 <td>{item.bannerId}</td>
                                                 <td>{item.bodyId}</td>

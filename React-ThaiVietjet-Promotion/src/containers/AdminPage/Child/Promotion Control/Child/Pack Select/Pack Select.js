@@ -43,6 +43,7 @@ class PackSelect extends Component {
         let packs = this.props.promotion?.data?.pack
         return (
             <>
+                <h3>Packs</h3>
                 <div className="row px-3 mb-1">
                     <button className="btn btn-primary mr-auto"
                         onClick={() => func.NAV(this, '../../promotion')}

@@ -1,0 +1,25 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-thaivzaws-dev-175843-authRole",
+      "UnauthRoleArn": "arn:aws:iam::452666141855:role/amplify-thaivzaws-dev-175843-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::452666141855:role/amplify-thaivzaws-dev-175843-authRole",
+      "Region": "ap-southeast-2",
+      "DeploymentBucketName": "amplify-thaivzaws-dev-175843-deployment",
+      "UnauthRoleName": "amplify-thaivzaws-dev-175843-unauthRole",
+      "StackName": "amplify-thaivzaws-dev-175843",
+      "StackId": "arn:aws:cloudformation:ap-southeast-2:452666141855:stack/amplify-thaivzaws-dev-175843/771417a0-77dc-11ee-a17e-0ac58dd38623",
+      "AmplifyAppId": "d303z1n4m5s370"
+    },
+    "categories": {
+      "auth": {
+        "thaivzawsa62aa766": {
+          "userPoolId": "ap-southeast-2_96jNOxn74",
+          "userPoolName": "usrpool_vz",
+          "webClientId": "32n0tc9q44ldfiuk0kk0jtvap0",
+          "nativeClientId": "32n0tc9q44ldfiuk0kk0jtvap0"
+        }
+      }
+    }
+  }
+}

@@ -1,8 +1,20 @@
 import { toast } from "react-toastify";
 import axios from "../axios";
 import { api } from "utils";
+import reduxStore from '../../src/redux';
+
+const getRedux = (dispatch, getState) => {
+    return reduxStore.getState()
+}
+
+const attachToken = (data) => {
+    let reduxState = getRedux()
+    let user = reduxState.admin.user
+    data.accessToken = user?.signInUserSession?.accessToken?.jwtToken
+}
 
 const create = (link, data) => {
+    attachToken(data)
     return axios.post(link, data)
 }
 
@@ -15,14 +27,17 @@ const get = (link, id) => {
 }
 
 const update = (link, data) => {
+    attachToken(data)
     return axios.put(link, data)
 }
 
 const deleteData = (link, id) => {
+    let data = {
+        ['id']: id
+    }
+    attachToken(data)
     return axios.delete(link, {
-        data: {
-            ['id']: id
-        }
+        data: data
     })
 }
 

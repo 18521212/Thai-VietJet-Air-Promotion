@@ -30,7 +30,8 @@ class FormControl extends Component {
         return (
             <>
                 <div className="container-fluid">
-                    <h3>Form Control</h3>
+                    <h3>Form Section</h3>
+                    <hr></hr>
                     <Routes>
                         <Route path='*' element={<FormSelect />}></Route>
                         <Route path='form-manage/:type?' element={<FormManage />}></Route>

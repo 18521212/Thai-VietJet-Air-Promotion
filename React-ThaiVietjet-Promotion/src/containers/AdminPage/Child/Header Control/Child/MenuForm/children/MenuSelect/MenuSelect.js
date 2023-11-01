@@ -5,7 +5,7 @@ import Select from 'react-select';
 import { connect } from 'react-redux'
 import * as actions from 'store/actions';
 import withRouter from "components/withRouter/withRouter";
-import { getAllMenuItemByMenuId, deleteMenu } from "services/userService";
+import { deleteMenu } from "services/headerService";
 
 class MenuSelect extends Component {
     constructor(props) {
@@ -68,6 +68,7 @@ class MenuSelect extends Component {
         let menuData = this.props?.menuData
         return (
             <>
+                <h3>Menus</h3>
                 <div className="row px-3 my-1">
                     {<Select className="select-menu col-md-4 col-8 p-0"
                         value={this.state.selectedMenu}
@@ -92,7 +93,7 @@ class MenuSelect extends Component {
                     <div className="border-right m-2"></div>
                     <button className="btn btn-success" onClick={() => this.onClickCreate()}>+ Add new</button>
                     <div className="w-100"></div>
-                    <div className="bg-danger text-white col-1 mx-auto" style={{height: '2rem'}}>MENU</div>
+                    <div className="bg-danger text-white col-1 mx-auto" style={{ height: '2rem' }}>MENU</div>
                 </div>
                 <div className="row px-3">
                     <table className="table table-menu col-12 table-striped">

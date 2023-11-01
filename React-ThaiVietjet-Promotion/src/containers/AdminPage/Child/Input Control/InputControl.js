@@ -32,7 +32,8 @@ class InputControl extends Component {
         return (
             <>
                 <div className="container-fluid">
-                    <h3>Input Control</h3>
+                    <h3>Input Section</h3>
+                    <hr></hr>
                     <Routes>
                         <Route path='*' element={<InputSelect />}></Route>
                         <Route path='input-detail' element={<InputDetail />}></Route>

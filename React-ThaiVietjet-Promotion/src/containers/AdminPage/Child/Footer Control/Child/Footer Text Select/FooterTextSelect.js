@@ -6,7 +6,7 @@ import withRouter from "components/withRouter/withRouter"
 import { connect } from 'react-redux'
 import Table from "components/Table/Table"
 import { func, api } from 'utils'
-import { deleteFooterText } from "services/userService";
+import { deleteFooterText } from "services/footerService";
 
 class FooterTextSelect extends Component {
     constructor(props) {
@@ -45,6 +45,7 @@ class FooterTextSelect extends Component {
         let { footer_texts } = this.props
         return (
             <>
+                <h3>Footer Texts</h3>
                 <div className="row my-1 px-3">
                     <button className="btn btn-primary mr-auto"
                         onClick={() => func.NAV(this, -1)}>Back</button>

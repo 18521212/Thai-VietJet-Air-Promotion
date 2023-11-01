@@ -6,7 +6,7 @@ import withRouter from "components/withRouter/withRouter"
 import { connect } from 'react-redux'
 import Table from "components/Table/Table"
 import { func, api } from 'utils'
-import { deleteForm } from "services/userService";
+import { deleteForm } from "services/formService";
 
 class FormSelect extends Component {
     constructor(props) {
@@ -40,7 +40,7 @@ class FormSelect extends Component {
         let { forms } = this.props
         return (
             <>
-                <h3>Form Select</h3>
+                <h3>Forms</h3>
                 <div className="row my-1 px-3">
                     <button className="btn btn-success ml-auto"
                         onClick={() => func.NAV(this, '../form-manage')}>Create</button>

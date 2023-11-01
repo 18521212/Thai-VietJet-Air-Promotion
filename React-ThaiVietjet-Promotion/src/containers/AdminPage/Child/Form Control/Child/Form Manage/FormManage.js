@@ -4,7 +4,7 @@ import _ from 'lodash';
 import * as actions from 'store/actions';
 import withRouter from "components/withRouter/withRouter"
 import { connect } from 'react-redux'
-import { createForm, updateForm } from "services/userService";
+import { createForm, updateForm } from "services/formService";
 import { func } from 'utils'
 
 class FormManage extends Component {
@@ -57,7 +57,7 @@ class FormManage extends Component {
         let type = this.props.params?.type
         return (
             <>
-                <h4>Footer Form</h4>
+                <h4>{type === 'update' ? 'Update' : 'Create'} Form</h4>
                 <div className="row">
                     {type === 'update' &&
                         <div class="form-group col-2">

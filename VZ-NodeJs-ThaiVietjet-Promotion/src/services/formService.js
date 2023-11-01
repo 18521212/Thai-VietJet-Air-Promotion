@@ -22,7 +22,7 @@ let createForm = (data) => {
     })
 }
 
-let getForm = (id)=>{
+let getForm = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
             let query = {
@@ -714,6 +714,8 @@ let fetchData = () => {
     return new Promise(async (resolve, reject) => {
         try {
             const result = await db.sequelize.transaction(async (t) => {
+                let data = await db.Text_Translation.findAll()
+                if (data.length > 0) throw new Error()
                 await db.Text_Translation.truncate();
 
                 await db.Text_Translation.bulkCreate([

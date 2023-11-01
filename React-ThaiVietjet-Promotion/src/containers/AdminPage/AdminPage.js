@@ -14,6 +14,15 @@ import FooterControl from './Child/Footer Control/FooterControl';
 import FormControl from './Child/Form Control/FormControl';
 import InputControl from './Child/Input Control/InputControl';
 import PromotionControl from './Child/Promotion Control/PromotionControl';
+import withRouter from 'components/withRouter/withRouter';
+import { connect } from 'react-redux'
+import * as actions from 'store/actions';
+
+import { Authenticator, withAuthenticator } from '@aws-amplify/ui-react';
+import '@aws-amplify/ui-react/styles.css';
+import { Amplify, Auth } from 'aws-amplify';
+import awsconfig from 'aws-exports'
+Amplify.configure(awsconfig);
 
 class AdminPage extends Component {
     constructor(props) {
@@ -25,13 +34,24 @@ class AdminPage extends Component {
 
     componentDidMount() {
         document.title = 'System Admin'
+        this.saveUser()
+    }
+
+    saveUser = () => {
+        let user = this.props.user
+        if (user) this.props.saveUser(user)
     }
 
     render() {
+        const { signOut, user } = this.props;
         return (
-            <div className='admin-page'>
-                <Header />
-                <h1 className='title-admin'>Admin Page</h1>
+            <div className='admin-page'
+                style={{ width: '100vw', height: '100vh' }}
+            >
+                <Header
+                    signOut={signOut}
+                />
+                <h1 className='title-admin'>Admin Page</h1> <hr></hr>
                 <Routes>
                     <Route index element={<CampaignControl />} />
                     <Route path="/campaign*" element={<CampaignControl />} />
@@ -48,4 +68,17 @@ class AdminPage extends Component {
     }
 }
 
-export default AdminPage;
+const mapStateToProps = state => {
+    return {
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        saveUser: (user) => dispatch(actions.saveUser(user))
+    };
+};
+
+export default withAuthenticator(
+    withRouter(connect(mapStateToProps, mapDispatchToProps)(AdminPage))
+    , { hideSignUp: true });

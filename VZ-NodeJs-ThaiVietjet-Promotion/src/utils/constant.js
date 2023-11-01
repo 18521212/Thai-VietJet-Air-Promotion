@@ -1,4 +1,5 @@
 export const api = {
+    CAMPAIGNS: '/api/campaigns',
     HEADERS: '/api/headers',
     MENUS: '/api/menus',
     BANNERS: '/api/banners',
@@ -87,6 +88,10 @@ export const resolveObj = {
     ERROR_SERVER: {
         errCode: -1,
         errMessage: 'Error from the server'
+    },
+    UNAUTHEN_ERROR: {
+        errCode: 1,
+        errMessage: 'Authentication Error'
     },
     ERROR: (errCode, errMessage) => {
         return {

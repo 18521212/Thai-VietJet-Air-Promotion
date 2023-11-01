@@ -6,6 +6,8 @@ export const api = {
     CAMPAIGNS: `/api/campaigns`,
     HEADERS: '/api/headers',
     MENUS: '/api/menus',
+    MENU_ITEMS: '/api/menu-items',
+    SUB_MENUS: '/api/sub-menus',
     BANNERS: '/api/banners',
     BODYS: '/api/bodies',
     FORMS: '/api/forms',
@@ -48,4 +50,5 @@ export const USER_ROLE = {
 export const type = {
     TEXT: 'text',
     DROPDOWN: 'dropdown',
+    UPDATE: 'update'
 }

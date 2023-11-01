@@ -62,7 +62,6 @@ let updateFooter = (data) => {
                 await footer.update({
                     name: data.name
                 }, { transaction: t })
-
                 resolve(resolveObj.UPDATE_SUCCEED('Footer'))
             })
         } catch (e) {

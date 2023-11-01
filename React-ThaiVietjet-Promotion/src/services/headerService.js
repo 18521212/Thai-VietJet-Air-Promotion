@@ -35,6 +35,43 @@ const deleteMenu = (data) => {
     return deleteData(api.MENUS, data)
 }
 
+// menu item
+
+const createMenuItem = (data) => {
+    return create(api.MENU_ITEMS, data)
+}
+
+const getAllMenuItemByMenuId = (menuId) => {
+    return get(`/api/menu-items/menus`, menuId)
+}
+
+const updateMenuItem = (data) => {
+    return update(api.MENU_ITEMS, data)
+}
+
+const deleteMenuItem = (data) => {
+    return deleteData(api.MENU_ITEMS, data.id)
+}
+
+// sub menu
+
+const createSubMenu = (data) => {
+    return create(api.SUB_MENUS, data)
+}
+
+const getAllSubMenuByMenuItemId = (menuParentId) => {
+    return get(`/api/sub-menus/menu-items`, menuParentId)
+    // return axios.get(`/api/sub-menus/menu-items/${menuParentId}`)
+}
+
+const updateSubMenu = (data) => {
+    return update(api.SUB_MENUS, data)
+}
+
+const deleteSubMenu = (data) => {
+    return deleteData(api.SUB_MENUS, data.id)
+}
+
 export {
     createHeader,
     getHeader,
@@ -45,4 +82,14 @@ export {
     getMenu,
     updateMenu,
     deleteMenu,
+
+    createMenuItem,
+    getAllMenuItemByMenuId,
+    updateMenuItem,
+    deleteMenuItem,
+
+    createSubMenu,
+    getAllSubMenuByMenuItemId,
+    updateSubMenu,
+    deleteSubMenu,
 }

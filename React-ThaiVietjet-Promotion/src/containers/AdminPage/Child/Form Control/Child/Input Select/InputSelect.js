@@ -6,7 +6,7 @@ import withRouter from "components/withRouter/withRouter"
 import { connect } from 'react-redux'
 import Table from "components/Table/Table"
 import { func } from 'utils'
-import { deleteFormDetail } from "services";
+import { deleteFormDetail } from "services/formService";
 
 class InputSelect extends Component {
     constructor(props) {
@@ -50,7 +50,7 @@ class InputSelect extends Component {
         })
         return (
             <>
-                <h3>Input Select</h3>
+                <h3>Input</h3>
                 <div className="row my-1 px-3">
                     <button className="btn btn-primary mr-auto"
                         onClick={() => func.NAV(this, -1)}

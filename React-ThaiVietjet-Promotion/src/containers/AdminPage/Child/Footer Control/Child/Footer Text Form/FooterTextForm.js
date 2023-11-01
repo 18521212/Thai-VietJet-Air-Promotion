@@ -4,8 +4,8 @@ import _ from 'lodash';
 import * as actions from 'store/actions';
 import withRouter from "components/withRouter/withRouter"
 import { connect } from 'react-redux'
-import { createFooterText, updateFooterText } from "services/userService";
-import { func } from 'utils'
+import { createFooterText, updateFooterText } from "services/footerService";
+import { func, component } from 'utils'
 
 class FooterTextForm extends Component {
     constructor(props) {
@@ -62,6 +62,7 @@ class FooterTextForm extends Component {
         let idInputStatus = type === 'update' ? 'id' : 'footerId'
         return (
             <>
+                <h3>{component.CR_UP_TEXT(this)} Footer Text</h3>
                 <div className="row">
                     <div class="form-group col-md-2">
                         <label for="id">
