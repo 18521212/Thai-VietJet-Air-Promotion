@@ -20,6 +20,10 @@ class FooterForm extends Component {
     }
 
     mapStateUpdate = () => {
+        func.MAP_STATE_ROUTE(this, {}, {
+            object: 'footer',
+            property: ['id']
+        })
         func.MAP_STATE_UPDATE(this, this.props.location.state?.footer)
     }
 
@@ -52,6 +56,16 @@ class FooterForm extends Component {
             <>
                 <h3>{component.CR_UP_TEXT(this)} Footer</h3>
                 <div className="row">
+                    {type === 'update' &&
+                        <>
+                            <div className="form-group col-md-2">
+                                <label for="exampleInputEmail1">Footer Id</label>
+                                <input className="form-control" value={this.state?.id}
+                                    type='text' disabled />
+                            </div>
+                            <div className="w-100"></div>
+                        </>
+                    }
                     <div class="form-group col-4">
                         <label for="id">Name</label>
                         <input type="text" class="form-control" id="id" aria-describedby="emailHelp"

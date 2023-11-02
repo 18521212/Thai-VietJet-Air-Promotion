@@ -31,6 +31,10 @@ class BodyForm extends Component {
     }
 
     mapDataUpdate = () => {
+        func.MAP_STATE_ROUTE(this, {}, {
+            object: 'body',
+            property: ['id']
+        })
         let body = this.props?.location?.state?.body
         body && func.MAP_STATE_UPDATE(this, body)
     }
@@ -72,6 +76,16 @@ class BodyForm extends Component {
             <>
                 <h3>{component.CR_UP_TEXT(this)} Body</h3>
                 <div className="row">
+                    {type === 'update' &&
+                        <>
+                            <div className="form-group col-md-2">
+                                <label for="exampleInputEmail1">Body Id</label>
+                                <input className="form-control" value={this.state?.id}
+                                    type='text' disabled />
+                            </div>
+                            <div className="w-100"></div>
+                        </>
+                    }
                     <div className="form-group col-md-4">
                         <label for="exampleInputEmail1">Name</label>
                         <input className="form-control" value={this.state.name}

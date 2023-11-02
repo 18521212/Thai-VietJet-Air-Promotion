@@ -32,8 +32,10 @@ class CreateHeader extends Component {
     mapDataUpdate = () => {
         if (!this.props.isUpdate) return
         let { selectedHeader } = this.props
+        console.log('h', selectedHeader)
         if (selectedHeader) {
             this.setState({
+                id: selectedHeader.id,
                 imageLogoInput: selectedHeader.imageLogo,
                 imageBackgroundInput: selectedHeader.imageBackground,
                 selectedMenu: this.props.menuOption.filter(item => item.value.id === this.props.selectedHeader.menuId)
@@ -93,12 +95,21 @@ class CreateHeader extends Component {
     }
 
     render() {
-        console.log()
         return (
             <>
                 <h3>Header Form</h3>
                 <form>
                     <div class="form-row">
+                        {this.props.isUpdate &&
+                            <>
+                                <div className="form-group">
+                                    <label for="exampleInputEmail1">Header Id</label>
+                                    <input className="form-control" value={this.state?.id}
+                                        type='text' disabled />
+                                </div>
+                                <div className="w-100"></div>
+                            </>
+                        }
                         <div class="form-group col-md-6">
                             <label for="inputEmail4">Logo Image</label>
                             <div class="custom-file">

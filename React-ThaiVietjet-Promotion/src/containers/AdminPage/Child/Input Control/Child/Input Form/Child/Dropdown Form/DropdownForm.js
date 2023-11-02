@@ -78,7 +78,7 @@ class DropdownForm extends Component {
             {
                 func: updateDropdown,
                 property: ['id'],
-                callBack: () => { func.NAV(this, -1) }
+                callBack: () => { func.NAV(this, '../../input') }
             }
         )
     }

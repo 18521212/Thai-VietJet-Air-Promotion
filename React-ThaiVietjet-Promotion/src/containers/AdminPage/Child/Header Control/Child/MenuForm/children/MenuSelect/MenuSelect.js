@@ -112,10 +112,10 @@ class MenuSelect extends Component {
                                         <td className="col-4">{item.name}</td>
                                         <td className="col-3">
                                             <button className="btn btn-success mx-1"
-                                                onClick={() => this.handleNavigate('menu-item-select', { menuId: item.id })}>
+                                                onClick={() => this.handleNavigate('menu-item-select', { menuId: item.id, menu: item })}>
                                                 Menu Item</button>
                                             <button className="btn btn-warning mx-1"
-                                                onClick={() => this.handleNavigate('menu-create/update', { menuId: item.id })}>
+                                                onClick={() => this.handleNavigate('menu-create/update', { menuId: item.id, menu: item })}>
                                                 Update</button>
                                             {item?.menu_item?.length === 0 &&
                                                 <button className="btn btn-danger mx-1"

@@ -6,7 +6,7 @@ import withRouter from "components/withRouter/withRouter";
 import { createSubMenu, updateSubMenu } from "services/headerService";
 import { connect } from "react-redux";
 import * as actions from 'store/actions';
-import { component } from 'utils'
+import { component, func } from 'utils'
 
 class SubMenuForm extends Component {
     constructor(props) {
@@ -25,6 +25,10 @@ class SubMenuForm extends Component {
     }
 
     mapDataUpdate = () => {
+        func.MAP_STATE_ROUTE(this, {}, {
+            object: 'subMenu',
+            property: ['id']
+        })
         let { type } = this.props.params
         if (type !== 'update') {
             return
@@ -85,10 +89,20 @@ class SubMenuForm extends Component {
                 <h3>{component.CR_UP_TEXT(this)} Sub Menu</h3>
                 <form className="form-row">
                     <div class="form-group col-2">
-                        <label for="menuItemParentId">Id menu item parent</label>
+                        <label for="menuItemParentId">Menu Item Id</label>
                         <input class="form-control" id="menuItemParentId" aria-describedby="emailHelp" placeholder="id" disabled
                             value={this.state.menuParentId} onChange={(e) => this.handleOnChangeText('menuParentId', e)} />
                     </div>
+                    {type === 'update' &&
+                        <>
+                            <div className="form-group">
+                                <label for="exampleInputEmail1">{'Id (Sub Menu Id)'}</label>
+                                <input className="form-control" value={this.state?.id}
+                                    type='text' disabled />
+                            </div>
+                            <div className="w-100"></div>
+                        </>
+                    }
                     <div class="form-group col-1">
                         <label for="exampleInputPassword1">Order</label>
                         <input value={this.state.order} class="form-control" id="exampleInputPassword1" placeholder="Order"

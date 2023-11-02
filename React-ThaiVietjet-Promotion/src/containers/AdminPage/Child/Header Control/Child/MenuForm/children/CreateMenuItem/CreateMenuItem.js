@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { toast } from 'react-toastify';
 import withRouter from "components/withRouter/withRouter";
 import { createMenuItem, updateMenuItem } from 'services/headerService';
-import { component } from 'utils'
+import { component, func } from 'utils'
 
 class CreateMenuItem extends Component {
     constructor(props) {
@@ -34,6 +34,10 @@ class CreateMenuItem extends Component {
     }
 
     mapDataUpdate = () => {
+        func.MAP_STATE_ROUTE(this, {}, {
+            object: 'menuItem',
+            property: ['id']
+        })
         let { type } = this.props.params;
         let { menuItem } = this.props.location.state;
         if (type === 'update') {
@@ -120,6 +124,16 @@ class CreateMenuItem extends Component {
                             className="form-control" disabled id='menuId'
                         />
                     </div>
+                    {type === 'update' &&
+                        <>
+                            <div className="form-group">
+                                <label for="exampleInputEmail1">{'Id (Menu Item Id)'}</label>
+                                <input className="form-control" value={this.state?.id}
+                                    type='text' disabled />
+                            </div>
+                            <div className="w-100"></div>
+                        </>
+                    }
                     <div className="form-group col-2">
                         <label for="order">Order</label>
                         <input value={this.state.order} onChange={(e) => this.handleOnChangeText('order', e)}
@@ -165,11 +179,11 @@ class CreateMenuItem extends Component {
                     <div className="w-100"></div>
                     <button type="button" className={`btn ${type === 'update' ? 'btn-warning' : 'btn-primary'} mx-1`} onClick={() => this.handleSubmit()}>
                         {type === 'update' ? 'Save' : 'Create Menu Item'}</button>
-                    <button type="button" className="btn btn-secondary mx-1" onClick={() => this.handleNavigate(-1)}>Cancel</button>
+                    <button type="button" className="btn btn-dark mx-1" onClick={() => this.handleNavigate(-1)}>Cancel</button>
                 </form>
             </>
         )
     }
 }
 
-export default withRouter(CreateMenuItem);
+export default withRouter(CreateMenuItem); 

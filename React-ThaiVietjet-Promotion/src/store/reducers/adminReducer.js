@@ -70,7 +70,7 @@ const adminReducer = (state = initialState, action) => {
         case actionTypes.FETCH_FORM_DETAIL_BY_FORM:
             return mapDataGET(state, action, 'form_detail')
         case actionTypes.FETCH_INPUT:
-            return mapDataGET(state, action, 'input')
+            return mapDataGET(state, action, 'input', ['typeInput'])
         case actionTypes.FETCH_PROMOTION:
             return mapDataGET(state, action, 'promotion')
         case actionTypes.FETCH_PACK:
@@ -80,12 +80,12 @@ const adminReducer = (state = initialState, action) => {
     }
 }
 
-const mapDataGET = (state = initialState, action, name) => {
+const mapDataGET = (state = initialState, action, name, optionArr) => {
     if (Array.isArray(action.data.data)) {
         return {
             ...state,
             [name + 's']: action.data,
-            [name + 'Option']: buildOption(action.data.data)
+            [name + 'Option']: buildOption(action.data.data, optionArr)
         }
     } else {
         return {
@@ -95,11 +95,22 @@ const mapDataGET = (state = initialState, action, name) => {
     }
 }
 
-const buildOption = (data) => {
+const buildOption = (data, optionArr) => {
     let option = []
-    data.map((item) => {
-        option.push({ value: item, label: item.name ? item.name : 'id: ' + item.id })
-    })
+    if (optionArr && optionArr.length > 0) {
+        data.map((item) => {
+            let label = item.name ? item.name : 'id: ' + item.id + ''
+            optionArr.map(itemArr => {
+                console.log('a', item[itemArr])
+                label = label + `; ${item?.[itemArr]}`
+            })
+            option.push({ value: item, label: label })
+        })
+    } else {
+        data.map((item) => {
+            option.push({ value: item, label: item.name ? item.name : 'id: ' + item.id })
+        })
+    }
     return option
 }
 

@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify'
 import { CommonUtils } from "utils"
-import _ from 'lodash'
+import _, { property } from 'lodash'
 import { type } from 'utils'
 
 export const func = {
@@ -106,6 +106,31 @@ export const func = {
                 res = object[item]
             } else {
                 res = res[item]
+            }
+        })
+        return res
+    },
+    OBJECT_V2: (object, property) => {
+        let res
+        let getProperty = (data, itemParam) => {
+            let property
+            if (Array.isArray(itemParam)) {
+                itemParam.map(item => {
+                    if (!_.isEmpty(data.item)) {
+                        property = item
+                        return
+                    }
+                })
+            } else {
+                property = itemParam
+            }
+            return property
+        }
+        (property.length > 0) && property.map((item, index) => {
+            if (!res) {
+                res = object[getProperty(item)]
+            } else {
+                res = res[getProperty(item)]
             }
         })
         return res

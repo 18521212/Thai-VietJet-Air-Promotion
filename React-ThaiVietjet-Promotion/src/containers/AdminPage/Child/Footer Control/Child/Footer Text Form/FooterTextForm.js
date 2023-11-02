@@ -100,7 +100,7 @@ class FooterTextForm extends Component {
                         >
                             {type === 'update' ? 'Save' : 'Submit'}
                         </button>
-                        <button type="button" className="btn btn-secondary mx-1"
+                        <button type="button" className="btn btn-dark mx-1"
                             onClick={() => this.handleNav(-1)}>Cancel</button>
                     </div>
                 </div>

@@ -25,6 +25,10 @@ class BannerForm extends Component {
     }
 
     mapDataUpdate = () => {
+        func.MAP_STATE_ROUTE(this, {}, {
+            object: 'banner',
+            property: ['id']
+        })
         let { type } = this.props.params
         if (type === 'update') {
             let { banner } = this.props.location.state
@@ -76,6 +80,16 @@ class BannerForm extends Component {
             <>
                 <h3>{component.CR_UP_TEXT(this)} Banner</h3>
                 <form className="row">
+                    {type === 'update' &&
+                        <>
+                            <div className="form-group col-md-2">
+                                <label for="exampleInputEmail1">Banner Id</label>
+                                <input className="form-control" value={this.state?.id}
+                                    type='text' disabled />
+                            </div>
+                            <div className="w-100"></div>
+                        </>
+                    }
                     <div className="form-group col-md-4">
                         <label for="exampleInputEmail1">Name</label>
                         <input className="form-control" value={this.state.name}
@@ -90,6 +104,7 @@ class BannerForm extends Component {
                             />
                             <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
                         </div>
+                        <img src={this.state.imageMobile} />
                     </div>
                     <div class="form-group col-md-6">
                         <label for="inputEmail4">Image Desktop</label>
@@ -99,6 +114,7 @@ class BannerForm extends Component {
                             />
                             <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
                         </div>
+                        <img src={this.state.imageDesktop} />
                     </div>
                     <div className="w-100"></div>
                     <div class="form-group col-md-6">

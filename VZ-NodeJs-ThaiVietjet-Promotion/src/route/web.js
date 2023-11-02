@@ -17,10 +17,10 @@ let initWebRoutes = (app) => {
     router.get("/", homeController.getHomePage);
 
     // campaign
-    router.post('/api/campaigns',validateAuth, campaignController.createCampaign);
+    router.post('/api/campaigns', validateAuth, campaignController.createCampaign);
     router.get('/api/campaigns/:id?', campaignController.getCampaign);
-    router.put('/api/campaigns',validateAuth, campaignController.updateCampaign);
-    router.delete('/api/campaigns',validateAuth, campaignController.deleteCampaign);
+    router.put('/api/campaigns', validateAuth, campaignController.updateCampaign);
+    router.delete('/api/campaigns', validateAuth, campaignController.deleteCampaign);
 
     // banner
     router.post(api.BANNERS, validateAuth, bannerController.createBanner);
