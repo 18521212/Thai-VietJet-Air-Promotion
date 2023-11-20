@@ -61,7 +61,7 @@ let getBanner = (id) => {
 let updateBanner = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (func.CHECK_HAS_VALUE(data.id, data.name)) {
+            if (!func.CHECK_HAS_VALUE(data.id, data.name)) {
                 resolve(resolveObj.MISSING_PARAMETERS)
                 return
             }

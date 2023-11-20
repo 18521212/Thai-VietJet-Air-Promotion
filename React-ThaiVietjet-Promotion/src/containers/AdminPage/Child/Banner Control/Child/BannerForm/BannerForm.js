@@ -60,15 +60,16 @@ class BannerForm extends Component {
         let data = {}, res
         if (type === 'update') {
             let { banner } = this.props.location.state
+            console.log('b', name)
             data.id = banner.id
             data.name = name
-            data.imageDesktop = imageDesktop
-            data.imageMobile = imageMobile
+            // data.imageDesktop = imageDesktop
+            // data.imageMobile = imageMobile
             res = await updateBanner(data)
         } else {
             data.name = name
-            data.imageDesktop = imageDesktop
-            data.imageMobile = imageMobile
+            // data.imageDesktop = imageDesktop
+            // data.imageMobile = imageMobile
             res = await createBanner(data)
         }
         func.ALERT_RES(res) && this.handleNav(-1)
@@ -96,7 +97,7 @@ class BannerForm extends Component {
                             onChange={(e) => func.ONCHANGE_TEXT(this, 'name', e)} type='text' />
                     </div>
                     <div className="w-100"></div>
-                    <div class="form-group col-md-6">
+                    {/* <div class="form-group col-md-6">
                         <label for="inputEmail4">Image Mobile</label>
                         <div class="custom-file">
                             <input type="file" className="custom-file-input" id="validatedCustomFile"
@@ -115,7 +116,7 @@ class BannerForm extends Component {
                             <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
                         </div>
                         <img src={this.state.imageDesktop} />
-                    </div>
+                    </div> */}
                     <div className="w-100"></div>
                     <div class="form-group col-md-6">
                         <button type="button"
