@@ -97,7 +97,6 @@ let deleteHeader = (id) => {
                 await db.sequelize.transaction(async (t) => {
                     await db.Header.destroy({ where: { id: id }, transaction: t })
                 })
-
                 resolve(resolveObj.DELETE_SUCCEED('Header'))
             }
         } catch (e) {
@@ -198,9 +197,7 @@ let deleteMenu = (data) => {
                     resolve(resolveObj.EXIST_REF_KEY)
                     throw new Error()
                 }
-
                 await db.Menu.destroy({ where: { id: data.id }, transaction: t })
-
                 resolve(resolveObj.DELETE_SUCCEED('Menu'))
             })
         } catch (e) {
@@ -272,7 +269,6 @@ let getAllMenuItemByMenuId = (menuId) => {
                         }
                     ]
                 })
-
                 resolve({
                     errCode: 0,
                     errMessage: `Ok`,
@@ -301,27 +297,23 @@ let updateMenuItemById = (data) => {
                         id: data.id
                     }
                 })
-
                 await menu_item.update({
                     order: data.order,
                     link: data.link,
                     highlight: data.highlight
                 }, { transaction: t })
-
                 if (data.valueEn || data.valueTh) {
                     let text_translation = await db.Text_Translation.findOne({
                         where: {
                             id: menu_item.text
                         }
                     })
-
                     await text_translation.update({
                         valueEn: data.valueEn,
                         valueTh: data.valueTh
                     }, { transaction: t })
                 }
             })
-
             resolve(resolveObj.UPDATE_SUCCEED())
         } catch (e) {
             reject(e);
@@ -346,7 +338,6 @@ let deleteMenuItemById = (id) => {
                     menuParentId: id
                 }
             })
-
             const result = await db.sequelize.transaction(async (t) => {
                 if (list_sub_menu.length > 0) {
                     resolve(resolveObj.EXIST_REF_KEY)
@@ -359,7 +350,6 @@ let deleteMenuItemById = (id) => {
                     },
                     transaction: t
                 })
-
                 // delete menu_item
                 await db.Menu_Item.destroy({
                     where: {
@@ -368,7 +358,6 @@ let deleteMenuItemById = (id) => {
                     transaction: t
                 })
             });
-
             resolve(resolveObj.DELETE_SUCCEED('Menu_Item'))
         } catch (e) {
             reject(e);
@@ -401,7 +390,6 @@ let createSubMenu = (data) => {
                     link: data.link
                 }, { transaction: t })
             })
-
             resolve(resolveObj.CREATE_SUCCEED())
         } catch (e) {
             reject(e);
@@ -416,14 +404,12 @@ let getAllSubMenuByMenuItemId = (menuParentId) => {
                 resolve(resolveObj.MISSING_PARAMETERS)
                 return
             }
-
             let subMenu = await db.Sub_Menu.findAll({
                 where: { menuParentId: menuParentId },
                 include: [
                     { model: db.Text_Translation, as: 'textDataSub_Menu' }
                 ]
             })
-
             resolve(resolveObj.GET(subMenu))
         } catch (e) {
             reject(e);
@@ -450,12 +436,10 @@ let updateSubMenu = (data) => {
                         resolve(resolveObj.NOT_FOUND('Menu Item'))
                         throw new Error()
                     }
-
                     await sub_menu.update({
                         order: data.order,
                         link: data.link
                     }, { transaction: t })
-
                     if (data.valueEn || data.valueTh) {
                         let text_translation = await db.Text_Translation.findOne({ where: { id: sub_menu.text } })
                         await text_translation.update({
@@ -464,7 +448,6 @@ let updateSubMenu = (data) => {
                         }, { transaction: t })
                     }
                 })
-
                 resolve(resolveObj.UPDATE_SUCCEED())
             }
         } catch (e) {
@@ -506,7 +489,6 @@ let deleteSubMenuById = (id) => {
                         }
                     }, { transaction: t })
                 })
-
                 resolve(resolveObj.DELETE_SUCCEED())
             }
         } catch (e) {

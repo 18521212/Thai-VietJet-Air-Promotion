@@ -31,7 +31,9 @@ let createCampaign = (data) => {
 let getAllCampaign = () => {
     return new Promise(async (resolve, reject) => {
         try {
-            let data = await db.Campaign.findAll();
+            let data = await db.Campaign.findAll({
+                order: [['createdAt', 'DESC']],
+            });
             resolve(resolveObj.GET(data))
         } catch (e) {
             reject(e);

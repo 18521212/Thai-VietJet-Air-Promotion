@@ -9,7 +9,7 @@ const cognitoExpress = new CognitoExpress({
     tokenExpiration: 3600000 // 1 hour
 })
 
-exports.validateAuth = async (req, res, next) => {
+const validateAuth = async (req, res, next) => {
     try {
         let accessToken = req.body.accessToken
         let accessTokenFromClient = accessToken
@@ -19,4 +19,8 @@ exports.validateAuth = async (req, res, next) => {
         console.log(e)
         return res.status(200).json(resolveObj.UNAUTHEN_ERROR)
     }
+}
+
+module.exports = {
+    validateAuth
 }

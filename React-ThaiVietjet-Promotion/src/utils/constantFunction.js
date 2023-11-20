@@ -46,6 +46,9 @@ export const func = {
             })
         }
     },
+    ONCHANGE_EDITOR: () => {
+
+    },
     MAP_STATE_UPDATE: (parent, data) => {
         if (data) {
             let stateCopy = { ...parent.state, ...data }

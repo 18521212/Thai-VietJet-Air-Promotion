@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import viewEngine from "./config/viewEngine";
-import initWebRoutes from "./route/web";
+import mergeRoute from './route/merge-route-app';
 import connectDB from "./config/connectDB";
 
 require('dotenv').config(); //goi duoc den ham config cua thu vien dotenv
@@ -36,7 +36,8 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
 
 viewEngine(app);
-initWebRoutes(app);
+
+mergeRoute(app)
 
 connectDB();
 
