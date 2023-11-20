@@ -14,6 +14,10 @@ export const api = {
     FOOTERS: '/api/footers'
 }
 
+export const route = {
+    IMAGE_BANNERS: '/image_banners'
+}
+
 export const text = {
     OK: 'Ok',
     MISSING_PARAMETERS: 'Missing required parameters',
@@ -120,6 +124,12 @@ export const services = {
 }
 
 export const controller = {
+    // usage
+    // controller.SWITCH_CONTROLLER(req, res, {
+    //     create: promotionService.createPromotion,
+    //     update: promotionService.updatePromotion,
+    //     delete: promotionService.deletePromotion,
+    // })
     SWITCH_CONTROLLER: (req, res, func) => {
         let method = req.method
         switch (method) {

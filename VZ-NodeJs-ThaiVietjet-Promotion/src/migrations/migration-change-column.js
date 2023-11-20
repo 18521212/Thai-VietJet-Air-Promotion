@@ -26,15 +26,15 @@ module.exports = {
         // )
 
         // add column
-        queryInterface.addColumn(
-            'Campaigns',
-            'promotionId',
-            {
-                type: Sequelize.INTEGER,
-                allowNull: false
-                // defaultValue: null,
-            }
-        );
+        // queryInterface.addColumn(
+        //     'Campaigns',
+        //     'promotionId',
+        //     {
+        //         type: Sequelize.INTEGER,
+        //         allowNull: false
+        //         // defaultValue: null,
+        //     }
+        // );
     },
     down: async (queryInterface, Sequelize) => {
         // await queryInterface.changeColumn(
@@ -52,9 +52,9 @@ module.exports = {
         //     'formSectionId',
         // )
 
-        queryInterface.removeColumn(
-            'Campaigns',
-            'promotionId',
-        );
+        // queryInterface.removeColumn(
+        //     'Campaigns',
+        //     'promotionId',
+        // );
     }
 };

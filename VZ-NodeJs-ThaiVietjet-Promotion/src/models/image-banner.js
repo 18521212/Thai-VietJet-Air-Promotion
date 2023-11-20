@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            
+            Image_Banner.belongsTo(models.Banner, { foreignKey: 'bannerId', as: 'image_banner' })
         }
     };
     Image_Banner.init({

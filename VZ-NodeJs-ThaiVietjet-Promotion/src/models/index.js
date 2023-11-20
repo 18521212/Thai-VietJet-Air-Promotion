@@ -2,7 +2,12 @@
 require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
+
+const cls = require('cls-hooked');
+const namespace = cls.createNamespace('promotion');
+
 const Sequelize = require('sequelize');
+Sequelize.useCLS(namespace);
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
