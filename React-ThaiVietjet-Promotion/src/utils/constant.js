@@ -1,5 +1,5 @@
 export const route = {
-
+    IMAGE_BANNERS: '/image_banners'
 };
 
 export const api = {

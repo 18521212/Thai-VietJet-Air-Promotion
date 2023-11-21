@@ -17,7 +17,7 @@ const updatePromotion = (data) => {
 }
 
 const deletePromotion = (data) => {
-    return deleteData(api.PROMOTIONS, data.id)
+    return deleteData(api.PROMOTIONS, data)
 }
 
 // pack
@@ -34,7 +34,7 @@ const updatePack = (data) => {
 }
 
 const deletePack = (data) => {
-    return deleteData(api.PACKS, data.id)
+    return deleteData(api.PACKS, data)
 }
 
 export {

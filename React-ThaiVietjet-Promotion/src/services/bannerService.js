@@ -1,4 +1,4 @@
-import { api } from "utils";
+import { api, route } from "utils";
 import { create, get, update, deleteData } from 'services/constantService'
 
 // banner
@@ -15,12 +15,23 @@ const updateBanner = (data) => {
 }
 
 const deleteBanner = (data) => {
-    return deleteData(api.BANNERS, data.id)
+    return deleteData(api.BANNERS, data)
+}
+
+const createImageBanner = (data) => {
+    return create(`${api.BANNERS}${route.IMAGE_BANNERS}`, data)
+}
+
+const deleteImageBanner = (data) => {
+    return deleteData(`${api.BANNERS}${route.IMAGE_BANNERS}`, data)
 }
 
 export {
     createBanner,
     getBanner,
     updateBanner,
-    deleteBanner
+    deleteBanner,
+
+    createImageBanner,
+    deleteImageBanner,
 }

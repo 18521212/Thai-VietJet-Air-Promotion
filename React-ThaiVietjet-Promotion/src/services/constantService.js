@@ -31,13 +31,23 @@ const update = (link, data) => {
     return axios.put(link, data)
 }
 
-const deleteData = (link, id) => {
-    let data = {
-        ['id']: id
+// const deleteData = (link, id) => {
+//     let data = {
+//         ['id']: id
+//     }
+//     attachToken(data)
+//     return axios.delete(link, {
+//         data: data
+//     })
+// }
+
+const deleteData = (link, data) => {
+    let dataSend = {
+        ['id']: data.id
     }
-    attachToken(data)
+    attachToken(dataSend)
     return axios.delete(link, {
-        data: data
+        data: dataSend
     })
 }
 

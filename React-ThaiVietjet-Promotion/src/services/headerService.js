@@ -15,7 +15,7 @@ const updateHeader = (data) => {
 }
 
 const deleteHeader = (data) => {
-    return deleteData(api.HEADERS, data.id)
+    return deleteData(api.HEADERS, data)
 }
 
 // menu
@@ -50,7 +50,7 @@ const updateMenuItem = (data) => {
 }
 
 const deleteMenuItem = (data) => {
-    return deleteData(api.MENU_ITEMS, data.id)
+    return deleteData(api.MENU_ITEMS, data)
 }
 
 // sub menu
@@ -69,7 +69,7 @@ const updateSubMenu = (data) => {
 }
 
 const deleteSubMenu = (data) => {
-    return deleteData(api.SUB_MENUS, data.id)
+    return deleteData(api.SUB_MENUS, data)
 }
 
 export {

@@ -11,6 +11,7 @@ import withRouter from "components/withRouter/withRouter";
     options='bannerOption'
     nameProps='banner' (optional)
     linkNav='../banner-form' (optional)
+    typeSelect='state' optional
     parent={this}
 /> */}
 

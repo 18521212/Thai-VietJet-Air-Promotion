@@ -64,7 +64,7 @@ export const func = {
     HANDLE_CREATE_UPDATE_V2: (parent, objectDefault, serviceCreate, serviceUpdate) => {
         // usage
         // func.HANDLE_CREATE_UPDATE_V2(this,
-        //     ['formId', { key: 'inputId', property: ['selectedInput', 'value', 'id'] }, 'order', 'widthMdScreen'],
+        //     ['formId', { key: 'inputId', property: ['selectedInput', 'value', 'id'] }, ['key1','name'], 'order', 'widthMdScreen'],
         //     {
         //         func: createFormDetail,
         //         callBack: () => { func.NAV(this, -1) }
@@ -76,8 +76,10 @@ export const func = {
         //     })
         const handleItem = (item) => {
             if (typeof (item) === 'object') {
-                if (item.property.length > 0) {
+                if (item.property?.length > 0) {
                     data[item?.key] = func.OBJECT(parent.state, item.property)
+                } else {
+                    data[item?.key] = parent.state.property
                 }
             } else if (Array.isArray(item)) {
                 data[item.at(-1)] = func.OBJECT(parent.state, item)
@@ -242,7 +244,9 @@ export const component = {
             text = 'Submit'
         }
         component = <>
-            <button className={`btn ${classButton} ` + className}
+            <button
+                type='button'
+                className={`btn ${classButton} ` + className}
                 onClick={onClick}
             >{text}</button>
         </>

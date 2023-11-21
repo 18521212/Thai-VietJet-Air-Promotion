@@ -16,7 +16,7 @@ const updateFooter = (data) => {
 }
 
 const deleteFooter = (data) => {
-    return deleteData(api.FOOTERS, data.id)
+    return deleteData(api.FOOTERS, data)
 }
 
 // footer text
@@ -35,7 +35,7 @@ const updateFooterText = (data) => {
 }
 
 const deleteFooterText = (data) => {
-    return deleteData(api.FOOTER_TEXTS, data.id)
+    return deleteData(api.FOOTER_TEXTS, data)
 }
 
 export {

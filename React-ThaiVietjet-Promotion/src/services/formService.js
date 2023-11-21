@@ -23,7 +23,7 @@ const updateForm = (data) => {
 }
 
 const deleteForm = (data) => {
-    return deleteData(api.FORMS, data.id)
+    return deleteData(api.FORMS, data)
 }
 
 // form detail
@@ -41,7 +41,7 @@ const updateFormDetail = (data) => {
 }
 
 const deleteFormDetail = (data) => {
-    return deleteData(api.FORM_DETAILS, data.id)
+    return deleteData(api.FORM_DETAILS, data)
 }
 // input
 const getInput = (id) => {
@@ -49,7 +49,7 @@ const getInput = (id) => {
 }
 
 const deleteInput = (data) => {
-    return deleteData(api.INPUTS, data.id)
+    return deleteData(api.INPUTS, data)
 }
 
 // text input
@@ -78,7 +78,7 @@ const createDataDropdown = (data) => {
 
 const deleteDataDropdown = (data) => {
     console.log('del')
-    return deleteData(api.DATA_DROPDOWNS, data.id)
+    return deleteData(api.DATA_DROPDOWNS, data)
 }
 
 export {

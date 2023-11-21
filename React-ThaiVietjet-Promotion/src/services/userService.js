@@ -18,7 +18,7 @@ const updateCampaign = (data) => {
 }
 
 const deleteCampaign = (data) => {
-    return deleteData(api.CAMPAIGNS, data.id)
+    return deleteData(api.CAMPAIGNS, data)
 }
 
 // pack

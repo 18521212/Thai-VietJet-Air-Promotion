@@ -10,6 +10,8 @@ import {
 } from "react-router-dom";
 import BannerSelect from "./Child/Banner Select/BannerSelect";
 import BannerForm from "./Child/BannerForm/BannerForm";
+import ImageBannerForm from "./Child/Image Banner Form/ImageBannerForm";
+import ImageBannerList from "./Child/Image Banner List/ImageBannerList";
 
 class BannerControl extends Component {
     constructor(props) {
@@ -36,6 +38,8 @@ class BannerControl extends Component {
                     <Routes>
                         <Route path="*" element={<BannerSelect />} />
                         <Route path="banner-form/:type?" element={<BannerForm />} />
+                        <Route path="image-banner-list" element={<ImageBannerList />} />
+                        <Route path="image-banner-form/:type?" element={<ImageBannerForm />} />
                     </Routes>
                 </div>
             </>

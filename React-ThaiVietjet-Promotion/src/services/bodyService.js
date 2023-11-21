@@ -16,7 +16,7 @@ const updateBody = (data) => {
 }
 
 const deleteBody = (data) => {
-    return deleteData(api.BODYS, data.id)
+    return deleteData(api.BODYS, data)
 }
 
 export {

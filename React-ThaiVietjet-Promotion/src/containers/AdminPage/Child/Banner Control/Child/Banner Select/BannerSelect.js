@@ -42,7 +42,7 @@ class BannerSelect extends Component {
         return (
             <>
                 <h3>Banners</h3>
-                <div className="row mb-3">
+                {/* <div className="row mb-3">
                     <div className="col-md-6">
                         <Select
                             value='selectedBanner'
@@ -52,7 +52,7 @@ class BannerSelect extends Component {
                             parent={this}
                         />
                     </div>
-                </div>
+                </div> */}
                 <div className="row mx-0">
                     <button type="button" className="btn btn-success mx-1 mb-1 ml-auto"
                         onClick={() => this.handleCreate()}>Create</button>
@@ -60,13 +60,22 @@ class BannerSelect extends Component {
                 <div className="row">
                     <div className="col-12">
                         <Table data={banners.data}
-                            thead={['Id', 'Name', 'Image Mobile', 'Image Desktop']}
+                            thead={['Id', 'Name']}
                             tbody={['id', 'name',
-                                { name: 'imageMobile', type: 'image' },
-                                { name: 'imageDesktop', type: 'image' }
+                                // { name: 'imageMobile', type: 'image' },
+                                // { name: 'imageDesktop', type: 'image' }
                             ]}
                             actions={(data) =>
                                 <>
+                                    {data?.image_banner && data?.image_banner?.length > 0 ?
+                                        <button type="button" className="btn btn-primary mx-1"
+                                            onClick={() => func.NAV(this, './image-banner-list', { banner: data })}
+                                        >View Image</button>
+                                        :
+                                        <button type="button" className="btn btn-success mx-1"
+                                            onClick={() => func.NAV(this, './image-banner-form', { banner: data })}
+                                        >Add Image</button>
+                                    }
                                     <button type="button" className="btn btn-warning mx-1"
                                         onClick={() => this.handleUpdate(data)}>Update</button>
                                     <button type="button" className="btn btn-danger mx-1"
