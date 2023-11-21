@@ -1,0 +1,16 @@
+@media screen and (max-width: 600px) {
+    .desktop-slide {
+        display: none !important;
+        z-index: 0;
+    }
+}
+
+@media screen and (min-width: 600px) {
+    .mobile-slide {
+        display: none !important;
+        z-index: 0;
+    }
+    .desktop-slide{
+        z-index: 100;
+    }
+}

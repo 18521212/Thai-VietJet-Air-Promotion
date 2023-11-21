@@ -105,6 +105,8 @@ export const func = {
         }
     },
     OBJECT: (object, property) => {
+        // usage
+        // func.OBJECT(parent.state, item)
         let res
         (property.length > 0) && property.map((item, index) => {
             if (!res) {
@@ -133,9 +135,9 @@ export const func = {
         }
         (property.length > 0) && property.map((item, index) => {
             if (!res) {
-                res = object[getProperty(item)]
+                res = object[getProperty(object, item)]
             } else {
-                res = res[getProperty(item)]
+                res = res[getProperty(object, item)]
             }
         })
         return res
