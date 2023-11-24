@@ -37,7 +37,6 @@ class Banner extends Component {
         let banner = this.props?.banner.data
         let imageMobiles = this.getImageByType('mobile', banner?.[association.BANNER_IMAGEBANNER])
         let imageDesktops = this.getImageByType('desktop', banner?.[association.BANNER_IMAGEBANNER])
-        console.log('i', imageMobiles)
         return (
             <>
                 {banner &&

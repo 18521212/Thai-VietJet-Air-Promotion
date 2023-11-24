@@ -75,6 +75,8 @@ const adminReducer = (state = initialState, action) => {
             return mapDataGET(state, action, 'promotion')
         case actionTypes.FETCH_PACK:
             return mapDataGET(state, action, 'pack')
+        case actionTypes.FETCH_MARKDOWN:
+            return mapDataGET(state, action, 'markdown')
         default:
             return state;
     }
@@ -101,7 +103,6 @@ const buildOption = (data, optionArr) => {
         data.map((item) => {
             let label = item.name ? item.name : 'id: ' + item.id + ''
             optionArr.map(itemArr => {
-                console.log('a', item[itemArr])
                 label = label + `; ${item?.[itemArr]}`
             })
             option.push({ value: item, label: label })

@@ -21,6 +21,7 @@ const actionTypes = Object.freeze({
     FETCH_INPUT: 'FETCH_INPUT',
     FETCH_PROMOTION: 'FETCH_PROMOTION',
     FETCH_PACK: 'FETCH_PACK',
+    FETCH_MARKDOWN: 'FETCH_MARKDOWN',
 })
 
 export default actionTypes;

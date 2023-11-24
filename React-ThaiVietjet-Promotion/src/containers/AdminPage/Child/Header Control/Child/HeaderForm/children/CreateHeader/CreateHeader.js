@@ -32,7 +32,6 @@ class CreateHeader extends Component {
     mapDataUpdate = () => {
         if (!this.props.isUpdate) return
         let { selectedHeader } = this.props
-        console.log('h', selectedHeader)
         if (selectedHeader) {
             this.setState({
                 id: selectedHeader.id,
@@ -96,7 +95,7 @@ class CreateHeader extends Component {
 
     render() {
         return (
-            <>
+            <div className="header-form">
                 <h3>Header Form</h3>
                 <form>
                     <div class="form-row">
@@ -158,7 +157,7 @@ class CreateHeader extends Component {
                         >Cancel</button>
                     </div>
                 </form>
-            </>
+            </div>
         )
     }
 }

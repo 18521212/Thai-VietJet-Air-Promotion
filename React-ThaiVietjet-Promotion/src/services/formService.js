@@ -77,7 +77,6 @@ const createDataDropdown = (data) => {
 }
 
 const deleteDataDropdown = (data) => {
-    console.log('del')
     return deleteData(api.DATA_DROPDOWNS, data)
 }
 

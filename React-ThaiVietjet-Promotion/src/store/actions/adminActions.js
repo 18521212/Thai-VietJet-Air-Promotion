@@ -13,7 +13,7 @@ import {
     getInput, getForm,
     getFormDetailByFormId,
 } from 'services/formService'
-import { getFooter, getFooterText } from 'services/footerService'
+import { getFooter, getFooterText, getMarkdown } from 'services/footerService'
 import { getPromotion, getPack } from 'services/promotionService'
 
 export const saveUser = (user) => {
@@ -234,6 +234,21 @@ export const fetchPack = (id) => {
             })
         } catch (e) {
             console.log('fetchPack error', e)
+        }
+    }
+}
+
+export const fetchMarkdown = (id) => {
+    return async (dispatch, getState) => {
+        try {
+            let res = await getMarkdown(id)
+            console.log('m',res)
+            dispatch({
+                type: actionTypes.FETCH_MARKDOWN,
+                data: res
+            })
+        } catch (e) {
+            console.log('fetchMarkdown error', e)
         }
     }
 }

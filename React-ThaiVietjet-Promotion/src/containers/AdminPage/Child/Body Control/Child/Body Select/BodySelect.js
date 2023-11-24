@@ -14,7 +14,7 @@ import { deleteBody } from "services/bodyService";
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 
 function handleEditorChange({ html, text }) {
-    console.log('handleEditorChange', html, text);
+    // console.log('handleEditorChange', html, text);
 }
 
 class BodySelect extends Component {

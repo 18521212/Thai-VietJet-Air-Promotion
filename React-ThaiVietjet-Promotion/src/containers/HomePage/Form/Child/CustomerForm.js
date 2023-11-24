@@ -85,11 +85,12 @@ class CustomerForm extends Component {
                                     >
                                         <label>{title}</label>
                                         <input
+                                            key={index}
                                             className="form-control"
                                             onChange={(event) => this.handleOnChangeText(event)}
                                             value={inputCustomerForm[stateName]}
                                             placeholder={placeHolder}
-                                            required
+                                            required={item.required ? 'required' : ''}
                                             name={stateName}
                                         />
                                     </div>

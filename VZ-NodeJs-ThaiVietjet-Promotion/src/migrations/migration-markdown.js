@@ -1,26 +1,31 @@
 'use strict';
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable('Footers', {
+        await queryInterface.createTable('Markdowns', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            name: {
-                type: Sequelize.STRING,
+            titleEn: {
+                type: Sequelize.TEXT,
                 allowNull: false,
-                defaultValue: 'footer'
             },
-            term_and_condition: {
-                type: Sequelize.INTEGER
+            titleTh: {
+                type: Sequelize.TEXT,
             },
-            faq: {
-                type: Sequelize.INTEGER
+            contentEn: {
+                type: Sequelize.TEXT
             },
-            how_to_use: {
-                type: Sequelize.INTEGER
+            contentTh: {
+                type: Sequelize.TEXT
+            },
+            markdownEn: {
+                type: Sequelize.TEXT,
+            },
+            markdownTh: {
+                type: Sequelize.TEXT,
             },
             createdAt: {
                 allowNull: false,
@@ -33,6 +38,6 @@ module.exports = {
         });
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('Footers');
+        await queryInterface.dropTable('Markdowns');
     }
 };

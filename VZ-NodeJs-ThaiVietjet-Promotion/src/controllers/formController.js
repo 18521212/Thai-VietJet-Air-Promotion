@@ -270,30 +270,30 @@ let fetchData = async (req, res) => {
 
 module.exports = {
     createUpdateDeleteForm,
-    getForm: getForm,
+    getForm,
 
-    getAllFormDetail: getAllFormDetail,
+    getAllFormDetail,
     getFormDetailByFormId,
-    addInputIntoForm: addInputIntoForm,
-    updateFormDetail: updateFormDetail,
-    deleteFormDetail: deleteFormDetail,
+    addInputIntoForm,
+    updateFormDetail,
+    deleteFormDetail,
 
     getInput,
-    deleteInputById: deleteInputById,
+    deleteInputById,
 
-    createTextInput: createTextInput,
-    getAllTextInput: getAllTextInput,
+    createTextInput,
+    getAllTextInput,
     updateTextInput,
 
     createUpdateDropdown,
-    getDropdownById: getDropdownById,
+    getDropdownById,
 
     addDataDropdown,
     createDeleteDataDropdown,
 
-    createPack: createPack,
-    getAllPack: getAllPack,
-    deletePackById: deletePackById,
+    createPack,
+    getAllPack,
+    deletePackById,
 
-    fetchData: fetchData,
+    fetchData,
 }

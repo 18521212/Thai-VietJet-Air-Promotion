@@ -139,12 +139,11 @@ class Form extends Component {
     }
 
     handleButtonSubmitOnClick = (event) => {
+        event.target.reportValidity()
         if (this.state.total === 0) {
-            alert('Please choose at least 1 promote package')
-            event.preventDefault();
+            // alert('Please choose at least 1 promote package')
+            // event.preventDefault();
         }
-        console.log('s', this.state)
-        // event.preventDefault();
     }
 
     render() {
@@ -156,7 +155,7 @@ class Form extends Component {
         return (
             <>
                 <div className="form-container">
-                    <form action="#">
+                    <form autoComplete="off" action="#">
                         <div className="row">
                             <div className="col-sm-12">
                                 <h4 className="title-contact">register and purchase</h4>
@@ -183,10 +182,8 @@ class Form extends Component {
                                             <FrameCard
                                                 packData={packData}
                                                 inputFrameCard={inputFrameCard}
-
                                                 handleOnChangeSelect={this.handleOnChangeSelect}
                                             />
-
                                             <div className="row">
                                                 <div className="col-md-6 col-xs-12">
                                                     <PurchaseBreakdown

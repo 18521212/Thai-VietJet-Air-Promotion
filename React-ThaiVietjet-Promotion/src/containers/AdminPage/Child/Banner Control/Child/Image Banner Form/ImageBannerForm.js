@@ -1,5 +1,5 @@
 import { Component } from "react";
-// import './ImageBannerForm.scss'
+import './ImageBannerForm.scss'
 import _ from 'lodash';
 import * as actions from 'store/actions';
 import withRouter from "components/withRouter/withRouter"
@@ -54,9 +54,8 @@ class ImageBannerForm extends Component {
 
     render() {
         let { type } = this.props.params
-        console.log('t', this.state.selectedType)
         return (
-            <>
+            <div className="image-banner-form">
                 <h3>Image Banner Form</h3>
                 <form className="row">
                     <div class="form-group col-md-2">
@@ -72,7 +71,7 @@ class ImageBannerForm extends Component {
                             />
                             <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
                         </div>
-                        <img src={this.state.image} />
+                        <img src={this.state.image} className="image-preview" />
                     </div>
                     <div className="form-group col-md-4">
                         <label>Type</label>
@@ -91,7 +90,7 @@ class ImageBannerForm extends Component {
                         >Cancel</button>
                     </div>
                 </form >
-            </>
+            </div>
         )
     }
 }

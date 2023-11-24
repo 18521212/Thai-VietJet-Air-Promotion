@@ -11,9 +11,7 @@ let createForm = (data) => {
             } else {
                 await db.Form.create({
                     name: data.name,
-                    css: data.css
                 })
-
                 resolve(resolveObj.CREATE_SUCCEED())
             }
         } catch (e) {
@@ -170,7 +168,8 @@ let addInputIntoForm = (data) => {
                     formId: data.formId,
                     inputId: data.inputId,
                     order: data.order ? data.order : undefined,
-                    widthMdScreen: data.widthMdScreen ? data.widthMdScreen : undefined
+                    widthMdScreen: data.widthMdScreen ? data.widthMdScreen : undefined,
+                    required: data.required
                 }, { transaction: t })
             })
             resolve(resolveObj.CREATE_SUCCEED())
@@ -202,7 +201,8 @@ let updateFormDetail = (data) => {
                 await formDetail.update({
                     inputId: data.inputId,
                     order: data.order && data.order,
-                    widthMdScreen: data.widthMdScreen && data.widthMdScreen
+                    widthMdScreen: data.widthMdScreen && data.widthMdScreen,
+                    required: data.required
                 }, { transaction: t })
 
                 await formDetail.save({ transaction: t })

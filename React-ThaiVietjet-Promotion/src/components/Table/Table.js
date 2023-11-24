@@ -100,6 +100,12 @@ class Table extends Component {
                                                                 {item?.[itemTbody.key1]?.[itemTbody.key2]}
                                                             </td>
                                                         )
+                                                    } else if (itemTbody.type === 'boolean') {
+                                                        return (
+                                                            <td>
+                                                                {item?.[itemTbody.key] ? 'Yes' : 'No'}
+                                                            </td>
+                                                        )
                                                     }
                                                 }
                                             }

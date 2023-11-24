@@ -48,7 +48,6 @@ class ImageBannerList extends Component {
 
     render() {
         let data = this.props?.banner.data?.[association.BANNER_IMAGEBANNER]
-        console.log('d', data)
         return (
             <>
                 <h3>Image Banner List</h3>

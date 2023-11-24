@@ -25,6 +25,7 @@ export const func = {
         parent?.props?.navigate(link, { state: data })
     },
     ONCHANGE_TEXT: (parent, name, e) => {
+        console.log('ct')
         parent.setState({ [name]: e.target.value })
     },
     ONCHANGE_SELECT: (parent, selectedValue, actions) => {
@@ -48,6 +49,11 @@ export const func = {
     },
     ONCHANGE_EDITOR: () => {
 
+    },
+    ONCHANGE_CHECKBOX: (parent, e, name) => {
+        parent.setState({
+            [name]: e.target.checked
+        })
     },
     MAP_STATE_UPDATE: (parent, data) => {
         if (data) {

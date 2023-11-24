@@ -63,10 +63,10 @@ class InputSelect extends Component {
                 </div>
                 <Table
                     data={inputData}
-                    thead={['Id', 'Input Id', 'Order', 'Width (Medium screen size)', 'Input Type', 'title']}
+                    thead={['Id', 'Input Id', 'Order', 'Width (Medium screen size)', 'Input Type', 'Title', 'Required']}
                     tbody={['id', 'inputId', 'order', 'widthMdScreen',
                         { key1: 'input', key2: 'typeInput', type: 'object' },
-                        'title'
+                        'title', { type: 'boolean', key: 'required' }
                     ]}
                     actions={(data) =>
                         <>

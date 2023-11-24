@@ -41,7 +41,6 @@ class MenuForm extends Component {
         // if (prevProps.listMenu !== this.props.listMenu) {
         //     this.buildDataAndMapState()
         // }
-        // console.log('update')
         if (prevProps.location !== this.props.location) {
             if (this.props.location.pathname === "/admin/header") {
                 this.setState({

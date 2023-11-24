@@ -20,6 +20,9 @@ export const api = {
     DATA_DROPDOWNS: '/api/data-dropdowns',
     PROMOTIONS: '/api/promotions',
     PACKS: '/api/packs',
+    FOOTERS: '/api/footers',
+    MARKDOWNS: '/api/markdowns',
+
 }
 
 export const LANGUAGES = {

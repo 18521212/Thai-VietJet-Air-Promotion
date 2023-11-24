@@ -126,17 +126,37 @@ class Header extends Component {
                                         </Link>
                                     </div>
                                 </li>
-                                <li className="nav-item">
-                                    <Link className="nav-link" to='/admin/footer'
-                                        data-toggle='pill'
+                                <li className="nav-item dropdown">
+                                    <a
+                                        className="nav-link dropdown-toggle"
+                                        data-toggle="dropdown"
+                                        role="button"
+                                        id="navbarDropdown"
                                     >
-                                        <div
-                                            data-toggle='collapse'
-                                            data-target=".navbar-collapse.show"
+                                        Footer
+                                    </a>
+                                    <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <Link className="dropdown-item" to='/admin/footer'
+                                            data-toggle='pill'
                                         >
-                                            Footer
-                                        </div>
-                                    </Link>
+                                            <div
+                                                data-toggle='collapse'
+                                                data-target=".navbar-collapse.show"
+                                            >
+                                                Footer
+                                            </div>
+                                        </Link>
+                                        <Link className="dropdown-item" to='/admin/markdown'
+                                            data-toggle='pill'
+                                        >
+                                            <div
+                                                data-toggle='collapse'
+                                                data-target=".navbar-collapse.show"
+                                            >
+                                                Markdown
+                                            </div>
+                                        </Link>
+                                    </div>
                                 </li>
                                 <li className="nav-item">
                                     <Link className="nav-link" to='/admin/promotion'

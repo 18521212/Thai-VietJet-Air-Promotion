@@ -17,6 +17,7 @@ class FormDetail extends Component {
             selectedInput: '',
             order: '',
             widthMdScreen: '',
+            required: true
         }
     }
 
@@ -28,7 +29,7 @@ class FormDetail extends Component {
     mapData = () => {
         func.MAP_STATE_ROUTE(this,
             { object: 'form', property: [{ key1: 'formId', key2: 'id' }] },
-            { object: 'formDetail', property: ['id', 'formId', 'order', 'widthMdScreen'] })
+            { object: 'formDetail', property: ['id', 'formId', 'order', 'widthMdScreen', 'required'] })
     }
 
     handleOnChangeSelect = (selectedValue, actions) => {
@@ -41,14 +42,14 @@ class FormDetail extends Component {
 
     handleCreate = () => {
         func.HANDLE_CREATE_UPDATE_V2(this,
-            ['formId', { key: 'inputId', property: ['selectedInput', 'value', 'id'] }, 'order', 'widthMdScreen'],
+            ['formId', { key: 'inputId', property: ['selectedInput', 'value', 'id'] }, 'order', 'widthMdScreen', 'required'],
             {
                 func: createFormDetail,
                 callBack: () => { func.NAV(this, -1) }
             },
             {
                 func: updateFormDetail,
-                property: ['id', 'order', 'widthMdScreen', 'inputId'],
+                property: ['id', 'inputId'],
                 callBack: () => { func.NAV(this, -1) }
             })
     }
@@ -104,6 +105,13 @@ class FormDetail extends Component {
                             <RenderInput data={this.state.selectedInput?.value} />
                         </div>
                     }
+                    <div class="form-group form-check ml-3">
+                        <input type="checkbox" class="form-check-input" id="exampleCheck1"
+                            checked={this.state.required}
+                            onChange={(event) => func.ONCHANGE_CHECKBOX(this, event, 'required')}
+                        />
+                        <label class="form-check-label" for="exampleCheck1">Is Required?</label>
+                    </div>
                 </div>
                 <div className="row">
                     <div className="col">
@@ -114,7 +122,7 @@ class FormDetail extends Component {
                         >
                             {type === 'update' ? 'Save' : 'Submit'}
                         </button>
-                        <button type="button" className="btn btn-secondary mx-1"
+                        <button type="button" className="btn btn-dark mx-1"
                             onClick={() => this.handleNav(-1)}>Cancel</button>
                     </div>
                 </div>

@@ -38,6 +38,24 @@ const deleteFooterText = (data) => {
     return deleteData(api.FOOTER_TEXTS, data)
 }
 
+// markdown
+
+const createMarkdown = (data) => {
+    return create(api.MARKDOWNS, data)
+}
+
+const getMarkdown = (id) => {
+    return get(api.MARKDOWNS, id)
+}
+
+const updateMarkdown = (data) => {
+    return update(api.MARKDOWNS, data)
+}
+
+const deleteMarkdown = (data) => {
+    return deleteData(api.MARKDOWNS, data)
+}
+
 export {
     createFooter,
     getFooter,
@@ -48,4 +66,9 @@ export {
     getFooterText,
     updateFooterText,
     deleteFooterText,
+
+    createMarkdown,
+    getMarkdown,
+    updateMarkdown,
+    deleteMarkdown,
 }

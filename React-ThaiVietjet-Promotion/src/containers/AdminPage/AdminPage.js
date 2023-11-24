@@ -11,6 +11,7 @@ import {
 import BannerControl from './Child/Banner Control/BannerControl';
 import BodyControl from './Child/Body Control/BodyControl';
 import FooterControl from './Child/Footer Control/FooterControl';
+import MarkdownControl from './Child/Markdown Control/MarkdownControl';
 import FormControl from './Child/Form Control/FormControl';
 import InputControl from './Child/Input Control/InputControl';
 import PromotionControl from './Child/Promotion Control/PromotionControl';
@@ -61,6 +62,7 @@ class AdminPage extends Component {
                     <Route path="/form*" element={<FormControl />} />
                     <Route path="/input*" element={<InputControl />} />
                     <Route path="/footer*" element={<FooterControl />} />
+                    <Route path="/markdown*" element={<MarkdownControl />} />
                     <Route path="/promotion*" element={<PromotionControl />} />
                 </Routes>
             </div>

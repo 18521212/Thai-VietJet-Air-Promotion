@@ -1,4 +1,5 @@
 'use strict';
+import { association } from '../utils'
 const {
     Model
 } = require('sequelize');
@@ -11,10 +12,15 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             Footer.hasMany(models.Footer_Text, { foreignKey: 'footerId', as: 'footer_text' })
+            Footer.belongsTo(models.Markdown, { foreignKey: 'term_and_condition', as: association.MARKDOWN_TERM_AND_CONDITION })
+            Footer.belongsTo(models.Markdown, { foreignKey: 'how_to_use', as: association.MARKDOWN_HOW_TO_USE })
         }
     };
     Footer.init({
         name: DataTypes.STRING,
+        term_and_condition: DataTypes.INTEGER,
+        faq: DataTypes.INTEGER,
+        how_to_use: DataTypes.INTEGER,
     }, {
         sequelize,
         modelName: 'Footer',

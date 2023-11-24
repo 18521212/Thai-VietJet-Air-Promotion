@@ -35,7 +35,6 @@ class Body extends Component {
     loadData = async () => {
         let bodyId = this.props.bodyId
         await this.props.loadBody(bodyId)
-        console.log(this.props.body)
     }
 
     getDataAndMapState = async () => {
@@ -67,7 +66,7 @@ class Body extends Component {
                     />
 
                     <span className="img-container">
-                        <img className="container-fluid p-0" src={top_cloud} alt="top-cloud" />
+                        <img className="p-0 w-100 h-auto" src={top_cloud} alt="top-cloud" />
                     </span>
                 </section>
             </div >

@@ -54,7 +54,6 @@ class SubMenuForm extends Component {
 
     handleSubmit = async () => {
         let { subMenu } = this.props.location.state
-        console.log(subMenu)
         let { type } = this.props.params
         let { menuParentId, order, valueEn, valueTh, link } = this.state
         let data = {}, res
@@ -82,7 +81,6 @@ class SubMenuForm extends Component {
     }
 
     render() {
-        // console.log(this.props.location.state.subMenu)
         let { type } = this.props.params
         return (
             <>

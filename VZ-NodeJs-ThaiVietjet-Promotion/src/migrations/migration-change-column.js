@@ -26,15 +26,27 @@ module.exports = {
         // )
 
         // add column
-        // queryInterface.addColumn(
-        //     'Campaigns',
-        //     'promotionId',
-        //     {
-        //         type: Sequelize.INTEGER,
-        //         allowNull: false
-        //         // defaultValue: null,
-        //     }
-        // );
+        queryInterface.addColumn(
+            'Footers',
+            'term_and_condition',
+            {
+                type: Sequelize.INTEGER
+            }
+        );
+        queryInterface.addColumn(
+            'Footers',
+            'faq',
+            {
+                type: Sequelize.INTEGER
+            }
+        );
+        queryInterface.addColumn(
+            'Footers',
+            'how_to_use',
+            {
+                type: Sequelize.INTEGER
+            }
+        );
     },
     down: async (queryInterface, Sequelize) => {
         // await queryInterface.changeColumn(
@@ -52,9 +64,17 @@ module.exports = {
         //     'formSectionId',
         // )
 
-        // queryInterface.removeColumn(
-        //     'Campaigns',
-        //     'promotionId',
-        // );
+        queryInterface.removeColumn(
+            'Footers',
+            'term_and_condition',
+        );
+        queryInterface.removeColumn(
+            'Footers',
+            'faq',
+        );
+        queryInterface.removeColumn(
+            'Footers',
+            'how_to_use',
+        );
     }
 };

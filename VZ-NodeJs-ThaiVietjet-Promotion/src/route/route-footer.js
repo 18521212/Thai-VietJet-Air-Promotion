@@ -18,6 +18,13 @@ let routeFooter = (app) => {
     router.put('/api/footer-texts', validateAuth, footerController.updateFooterText)
     router.delete('/api/footer-texts', validateAuth, footerController.deleteFooterText)
 
+
+    // markdown
+    router.post(api.MARKDOWNS, validateAuth, footerController.createUpdateDeleteMarkdown)
+    router.get(`${api.MARKDOWNS}/:id?`, footerController.getMarkdown)
+    router.put(api.MARKDOWNS, validateAuth, footerController.createUpdateDeleteMarkdown)
+    router.delete(api.MARKDOWNS, validateAuth, footerController.createUpdateDeleteMarkdown)
+
     return app.use('/', router)
 }
 

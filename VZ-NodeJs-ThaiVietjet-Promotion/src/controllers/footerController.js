@@ -100,14 +100,32 @@ let deleteFooterText = async (req, res) => {
     }
 }
 
-module.exports = {
-    createFooter: createFooter,
-    getFooter: getFooter,
-    updateFooter: updateFooter,
-    deleteFooter: deleteFooter,
+//
 
-    createFooterText: createFooterText,
-    getAllFooterText: getAllFooterText,
-    updateFooterText: updateFooterText,
+let createUpdateDeleteMarkdown = async (req, res) => {
+    controller.SWITCH_CONTROLLER(req, res, {
+        create: footerService.createMarkdown,
+        update: footerService.updateMarkdown,
+        delete: footerService.deleteMarkdown
+    })
+}
+
+let getMarkdown = async (req, res) => {
+    controller.CONTROLLER(req, res, footerService.getMarkdown, req?.params?.id)
+
+}
+
+module.exports = {
+    createFooter,
+    getFooter,
+    updateFooter,
+    deleteFooter,
+
+    createFooterText,
+    getAllFooterText,
+    updateFooterText,
     deleteFooterText,
+
+    createUpdateDeleteMarkdown,
+    getMarkdown
 }

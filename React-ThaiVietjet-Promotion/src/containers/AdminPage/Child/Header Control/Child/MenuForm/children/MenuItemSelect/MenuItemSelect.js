@@ -76,7 +76,6 @@ class MenuItemSelect extends Component {
                         </thead>
                         <tbody>
                             {menuItem.map((item, index) => {
-                                // console.log(item)
                                 return (
                                     <>
                                         <tr>

@@ -90,7 +90,6 @@ class DropdownForm extends Component {
             label: this.state.label,
             dropdownId: oldInput?.dropdown.id
         }
-        console.log('data', data)
         func.HANDLE_CREATE_UPDATE(data, createDataDropdown,
             async () => {
                 await this.props.loadInput(oldInput.id)

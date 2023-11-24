@@ -60,16 +60,11 @@ class BannerForm extends Component {
         let data = {}, res
         if (type === 'update') {
             let { banner } = this.props.location.state
-            console.log('b', name)
             data.id = banner.id
             data.name = name
-            // data.imageDesktop = imageDesktop
-            // data.imageMobile = imageMobile
             res = await updateBanner(data)
         } else {
             data.name = name
-            // data.imageDesktop = imageDesktop
-            // data.imageMobile = imageMobile
             res = await createBanner(data)
         }
         func.ALERT_RES(res) && this.handleNav(-1)
@@ -78,7 +73,7 @@ class BannerForm extends Component {
     render() {
         let { type } = this.props.params
         return (
-            <>
+            <div className="banner-form">
                 <h3>{component.CR_UP_TEXT(this)} Banner</h3>
                 <form className="row">
                     {type === 'update' &&
@@ -97,27 +92,6 @@ class BannerForm extends Component {
                             onChange={(e) => func.ONCHANGE_TEXT(this, 'name', e)} type='text' />
                     </div>
                     <div className="w-100"></div>
-                    {/* <div class="form-group col-md-6">
-                        <label for="inputEmail4">Image Mobile</label>
-                        <div class="custom-file">
-                            <input type="file" className="custom-file-input" id="validatedCustomFile"
-                                onChange={(event) => func.ONCHANGE_IMAGE(this, 'imageMobile', event)}
-                            />
-                            <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
-                        </div>
-                        <img src={this.state.imageMobile} />
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="inputEmail4">Image Desktop</label>
-                        <div class="custom-file">
-                            <input type="file" className="custom-file-input" id="validatedCustomFile"
-                                onChange={(event) => func.ONCHANGE_IMAGE(this, 'imageDesktop', event, 'imagePreview')}
-                            />
-                            <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
-                        </div>
-                        <img src={this.state.imageDesktop} />
-                    </div> */}
-                    <div className="w-100"></div>
                     <div class="form-group col-md-6">
                         <button type="button"
                             className={`btn ${type === 'update' ?
@@ -128,7 +102,7 @@ class BannerForm extends Component {
                             onClick={() => this.handleNav(-1)}>Cancel</button>
                     </div>
                 </form>
-            </>
+            </div>
         )
     }
 }

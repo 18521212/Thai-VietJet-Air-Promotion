@@ -20,7 +20,7 @@ class BodyControl extends Component {
     componentDidMount() {
         let a = { b: 1, c: 2 }
         let b = { c: 3, e: 4 }
-        console.log('a', { ...a, ...b })
+        // console.log('a', { ...a, ...b })
     }
 
     handleOnChangeSelect = (selectedValue, actions) => {

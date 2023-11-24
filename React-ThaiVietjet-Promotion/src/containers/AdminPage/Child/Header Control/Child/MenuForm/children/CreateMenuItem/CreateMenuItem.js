@@ -100,7 +100,6 @@ class CreateMenuItem extends Component {
             toast.error(res.errMessage)
         }
         res && res.errCode === 0 && this.props.navigate(-1)
-        // console.log('data', data)
         // this.validate(menuId, order)
     }
 
@@ -111,7 +110,6 @@ class CreateMenuItem extends Component {
     }
 
     render() {
-        // console.log(this.props.location.state)
         let { selectedHighlightStatus } = this.state
         let { type } = this.props.params;
         return (
