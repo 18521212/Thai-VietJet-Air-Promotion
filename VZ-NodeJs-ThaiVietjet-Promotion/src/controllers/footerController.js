@@ -17,7 +17,7 @@ let createFooter = async (req, res) => {
 }
 
 let getFooter = async (req, res) => {
-    controller.CONTROLLER(req, res, footerService.getFooter, req?.params?.id)
+    controller.CONTROLLER(req, res, footerService.getFooter, req?.params)
 }
 
 let updateFooter = async (req, res) => {
@@ -100,7 +100,7 @@ let deleteFooterText = async (req, res) => {
     }
 }
 
-//
+// markdown
 
 let createUpdateDeleteMarkdown = async (req, res) => {
     controller.SWITCH_CONTROLLER(req, res, {
@@ -112,6 +112,36 @@ let createUpdateDeleteMarkdown = async (req, res) => {
 
 let getMarkdown = async (req, res) => {
     controller.CONTROLLER(req, res, footerService.getMarkdown, req?.params?.id)
+
+}
+
+// FAQ
+
+let createUpdateDeleteFAQ = async (req, res) => {
+    controller.SWITCH_CONTROLLER(req, res, {
+        create: footerService.createFAQ,
+        update: footerService.updateFAQ,
+        delete: footerService.deleteFAQ
+    })
+}
+
+let getFAQ = async (req, res) => {
+    controller.CONTROLLER(req, res, footerService.getFAQ, req?.params?.id)
+
+}
+
+// FAQ Question
+
+let createUpdateDeleteFAQQuestion = async (req, res) => {
+    controller.SWITCH_CONTROLLER(req, res, {
+        create: footerService.createFAQQuestion,
+        update: footerService.updateFAQQuestion,
+        delete: footerService.deleteFAQQuestion
+    })
+}
+
+let getFAQQuestion = async (req, res) => {
+    controller.CONTROLLER(req, res, footerService.getFAQQuestion, req?.params?.id)
 
 }
 
@@ -127,5 +157,11 @@ module.exports = {
     deleteFooterText,
 
     createUpdateDeleteMarkdown,
-    getMarkdown
+    getMarkdown,
+
+    createUpdateDeleteFAQ,
+    getFAQ,
+
+    createUpdateDeleteFAQQuestion,
+    getFAQQuestion,
 }

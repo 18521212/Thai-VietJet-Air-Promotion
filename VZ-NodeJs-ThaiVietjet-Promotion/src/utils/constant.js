@@ -13,6 +13,8 @@ export const api = {
     PACKS: '/api/packs',
     FOOTERS: '/api/footers',
     MARKDOWNS: '/api/markdowns',
+    FAQS: '/api/faqs',
+    FAQ_QUESTIONS: '/api/faq-questions',
 }
 
 export const route = {

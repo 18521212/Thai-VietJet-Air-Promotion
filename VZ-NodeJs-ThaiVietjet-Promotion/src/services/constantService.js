@@ -59,13 +59,13 @@ let create = (config, data) => {
 //     query: '',
 // }, id)
 
-let get = (config, id) => {
+let get = (config, param) => {
     return new Promise(async (resolve, reject) => {
         try {
             let query = config?.query
             let data
-            if (id) {
-                data = await db[config.table].findOne({ where: { id: id }, ...query })
+            if (data?.id) {
+                data = await db[config.table].findOne({ where: { id: param.id }, ...query })
             } else {
                 data = await db[config.table].findAll(query)
             }

@@ -25,6 +25,20 @@ let routeFooter = (app) => {
     router.put(api.MARKDOWNS, validateAuth, footerController.createUpdateDeleteMarkdown)
     router.delete(api.MARKDOWNS, validateAuth, footerController.createUpdateDeleteMarkdown)
 
+    // FAQ
+
+    router.post(api.FAQS, validateAuth, footerController.createUpdateDeleteFAQ)
+    router.get(`${api.FAQS}/:id?`, footerController.getFAQ)
+    router.put(api.FAQS, validateAuth, footerController.createUpdateDeleteFAQ)
+    router.delete(api.FAQS, validateAuth, footerController.createUpdateDeleteFAQ)
+
+    // FAQ question
+
+    router.post(api.FAQ_QUESTIONS, validateAuth, footerController.createUpdateDeleteFAQQuestion)
+    router.get(`${api.FAQ_QUESTIONS}/:id?`, footerController.getFAQQuestion)
+    router.put(api.FAQ_QUESTIONS, validateAuth, footerController.createUpdateDeleteFAQQuestion)
+    router.delete(api.FAQ_QUESTIONS, validateAuth, footerController.createUpdateDeleteFAQQuestion)
+
     return app.use('/', router)
 }
 
