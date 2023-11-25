@@ -35,7 +35,7 @@ let updateFooter = async (req, res) => {
 
 let deleteFooter = async (req, res) => {
     try {
-        let data = await footerService.deleteFooter(req.body.id);
+        let data = await footerService.deleteFooter(req.body);
         return res.status(200).json(data)
     } catch (e) {
         console.log(e);

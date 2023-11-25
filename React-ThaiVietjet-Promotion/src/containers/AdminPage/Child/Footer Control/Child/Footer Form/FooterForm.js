@@ -6,17 +6,25 @@ import withRouter from "components/withRouter/withRouter"
 import { connect } from 'react-redux'
 import { createFooter, updateFooter } from "services/footerService";
 import { func, component } from 'utils'
+import Select from "components/Select/Select";
 
 class FooterForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
             name: '',
+            selectedTerm: '',
+            selectedHowToUse: '',
         }
     }
 
     componentDidMount() {
         this.mapStateUpdate()
+        this.loadData()
+    }
+
+    loadData = async () => {
+        await this.props.loadMarkdown()
     }
 
     mapStateUpdate = () => {
@@ -37,9 +45,11 @@ class FooterForm extends Component {
 
     handleCreate = async () => {
         let { type } = this.props.params
-        let { name } = this.state
+        let { name, selectedTerm, selectedHowToUse } = this.state
         let data = {}, res
         data.name = name
+        data.term_and_condition = selectedTerm?.value?.id
+        data.how_to_use = selectedHowToUse?.id
         if (type === 'update') {
             let { footer } = this.props.location.state
             data.id = footer.id
@@ -74,6 +84,22 @@ class FooterForm extends Component {
                         />
                         {/* <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> */}
                     </div>
+                    <div class="form-group col-md-3">
+                        <label for="id">Term And Condition</label>
+                        <Select
+                            value='selectedTerm'
+                            options='markdownOption'
+                            parent={this}
+                        />
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="id">How To Use</label>
+                        <Select
+                            value='selectedHowToUse'
+                            options='markdownOption'
+                            parent={this}
+                        />
+                    </div>
                 </div>
                 <div className="row">
                     <div className="col">
@@ -95,12 +121,14 @@ class FooterForm extends Component {
 
 const mapStateToProps = state => {
     return {
+        markdowns: state.admin.markdowns,
+        markdownOption: state.admin.markdownOption
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        // funcReact: () => dispatch(actions.funcRedux())
+        loadMarkdown: (id) => dispatch(actions.fetchMarkdown(id))
     };
 };
 

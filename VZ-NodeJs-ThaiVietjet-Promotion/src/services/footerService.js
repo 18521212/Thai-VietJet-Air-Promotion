@@ -1,103 +1,118 @@
 import { text, resolveObj, services } from '../utils/constant';
 import { association, func } from '../utils'
+import { create, get, update, deleteData } from './constantService'
 
 const db = require('../models');
 
 // footer
 
 let createFooter = (data) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            if (!data.name) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return;
-            }
-            await db.sequelize.transaction(async (t) => {
-                // await db.Footer.create({
-                //     name: data.name,
-                //     term_and_condition: data.term_and_condition,
-                //     faq: data.faq,
-                //     how_to_use: data.how_to_use
-                // }, { transaction: t })
-                await db.Footer.create(data)
-                resolve(resolveObj.CREATE_SUCCEED('footer'))
-            })
-        } catch (e) {
-            reject(e);
+    // return new Promise(async (resolve, reject) => {
+    //     try {
+    //         if (!data.name) {
+    //             resolve(resolveObj.MISSING_PARAMETERS)
+    //             return;
+    //         }
+    //         await db.sequelize.transaction(async (t) => {
+    //             await db['Footer'].create(data)
+    //             resolve(resolveObj.CREATE_SUCCEED('footer'))
+    //         })
+    //     } catch (e) {
+    //         reject(e);
+    //     }
+    // })
+    return create({
+        table: 'Footer',
+        required: {
+            and: ['name']
         }
-    })
+    }, data)
 }
 
 let getFooter = (id) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            let query = {
-                include: [
-                    { model: db.Footer_Text, as: 'footer_text' },
-                    { model: db.Markdown, as: association.MARKDOWN_TERM_AND_CONDITION },
-                    { model: db.Markdown, as: association.MARKDOWN_HOW_TO_USE },
-                ]
-            }
-            let data
-            if (id) {
-                data = await db.Footer.findOne({
-                    where: { id: id },
-                    ...query
-                })
-            } else {
-                data = await db.Footer.findAll(query)
-            }
-            resolve(resolveObj.GET(data))
-        } catch (e) {
-            reject(e);
+    // return new Promise(async (resolve, reject) => {
+    //     try {
+    //         let query = {
+    //             include: [
+    //                 { model: db.Footer_Text, as: 'footer_text' },
+    //                 { model: db.Markdown, as: association.MARKDOWN_TERM_AND_CONDITION },
+    //                 { model: db.Markdown, as: association.MARKDOWN_HOW_TO_USE },
+    //             ]
+    //         }
+    //         let data
+    //         if (id) {
+    //             data = await db.Footer.findOne({
+    //                 where: { id: id },
+    //                 ...query
+    //             })
+    //         } else {
+    //             data = await db.Footer.findAll(query)
+    //         }
+    //         resolve(resolveObj.GET(data))
+    //     } catch (e) {
+    //         reject(e);
+    //     }
+    // })
+    return get({
+        table: 'Footer',
+        query: {
+            include: [
+                { model: db.Footer_Text, as: 'footer_text' },
+                { model: db.Markdown, as: association.MARKDOWN_TERM_AND_CONDITION },
+                { model: db.Markdown, as: association.MARKDOWN_HOW_TO_USE },
+            ]
         }
-    })
+    }, id)
 }
 
 let updateFooter = (data) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            if (!func.CHECK_HAS_VALUE(data.id) || !func.CHECK_HAS_VALUE_OR(data.name, data.term_and_condition, data.faq, data.how_to_use)) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return;
-            }
+    // return new Promise(async (resolve, reject) => {
+    //     try {
+    //         if (!func.CHECK_HAS_VALUE(data.id) || !func.CHECK_HAS_VALUE_OR(data.name, data.term_and_condition, data.faq, data.how_to_use)) {
+    //             resolve(resolveObj.MISSING_PARAMETERS)
+    //             return;
+    //         }
 
-            await db.sequelize.transaction(async (t) => {
-                let footer = await db.Footer.findOne({ where: { id: data.id } })
-                // await footer.update({
-                //     name: data.name,
-                //     term_and_condition: data.term_and_condition,
-                //     faq: data.faq,
-                //     how_to_use: data.how_to_use
-                // }, { transaction: t })
-                await footer.update(data)
-                resolve(resolveObj.UPDATE_SUCCEED('Footer'))
-            })
-        } catch (e) {
-            reject(e);
+    //         await db.sequelize.transaction(async (t) => {
+    //             let footer = await db.Footer.findOne({ where: { id: data.id } })
+    //             await footer.update(data)
+    //         })
+    //         resolve(resolveObj.UPDATE_SUCCEED('Footer'))
+    //     } catch (e) {
+    //         reject(e);
+    //     }
+    // })
+    return update({
+        table: 'Footer',
+        required: {
+            and: ['id'],
+            or: ['name', 'term_and_condition', 'faq', 'how_to_use']
         }
-    })
+    }, data)
 }
 
-let deleteFooter = (id) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            if (!id) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return;
-            }
-            await db.sequelize.transaction(async (t) => {
-                await db.Footer_Text.destroy({ where: { footerId: id }, transaction: t })
-                let data = await db.Footer.destroy({ where: { id: id }, transaction: t })
-                if (data === 0) {
-                    resolve(resolveObj.DELETE_UNSUCCEED('Footer'))
-                }
-            })
-            resolve(resolveObj.DELETE_SUCCEED('Footer'))
-        } catch (e) {
-            reject(e);
-        }
-    })
+let deleteFooter = (data) => {
+    // return new Promise(async (resolve, reject) => {
+    //     try {
+    //         if (!id) {
+    //             resolve(resolveObj.MISSING_PARAMETERS)
+    //             return;
+    //         }
+    //         await db.sequelize.transaction(async (t) => {
+    //             await db.Footer_Text.destroy({ where: { footerId: id }, transaction: t })
+    //             let data = await db.Footer.destroy({ where: { id: id }, transaction: t })
+    //             if (data === 0) {
+    //                 resolve(resolveObj.DELETE_UNSUCCEED('Footer'))
+    //             }
+    //         })
+    //         resolve(resolveObj.DELETE_SUCCEED('Footer'))
+    //     } catch (e) {
+    //         reject(e);
+    //     }
+    // })
+    return deleteData({
+        table: 'Footer'
+    }, data)
 }
 
 // footer text
@@ -268,6 +283,92 @@ let deleteMarkdown = (data) => {
     })
 }
 
+// FAQ
+
+let createFAQ = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!func.CHECK_HAS_VALUE(data.name)) {
+                resolve(resolveObj.MISSING_PARAMETERS)
+                return
+            }
+            await db.sequelize.transaction(async (t) => {
+                await db.FAQ.create(data)
+            })
+            resolve(resolveObj.CREATE_SUCCEED())
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
+let getFAQ = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let query = {
+                include: [
+                    { model: db.FAQ_Question, as: association.FAQ_FAQID }
+                ]
+            }
+            let data
+            if (id) {
+                data = await db.FAQ.findOne({ where: { id: id }, ...query })
+            } else {
+                data = await db.FAQ.findAll(query)
+            }
+            resolve(resolveObj.GET(data))
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
+let updateFAQ = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!func.CHECK_HAS_VALUE(data.name)) {
+                resolve(resolveObj.MISSING_PARAMETERS)
+                return
+            }
+            await db.sequelize.transaction(async (t) => {
+                let FAQ = await db.FAQ.findOne({ where: { id: data.id } })
+                await FAQ.update(data)
+            })
+            resolve(resolveObj.UPDATE_SUCCEED())
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
+let deleteFAQ = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!func.CHECK_HAS_VALUE(data.id)) {
+                resolve(resolveObj.MISSING_PARAMETERS)
+                return
+            }
+            await db.sequelize.transaction(async (t) => {
+                await db.FAQ.destroy({ where: { id: data.id } })
+            })
+            resolve(resolveObj.DELETE_SUCCEED())
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
+// FAQ Question
+
+let createFAQQuestion = (data) => {
+    return create({
+        table: 'FAQQuestion',
+        required: {
+            and: ['FAQId', 'question', 'answer']
+        }
+    }, data)
+}
+
 module.exports = {
     createFooter,
     getFooter,
@@ -283,4 +384,11 @@ module.exports = {
     getMarkdown,
     updateMarkdown,
     deleteMarkdown,
+
+    createFAQ,
+    getFAQ,
+    updateFAQ,
+    deleteFAQ,
+
+    createFAQQuestion,
 }

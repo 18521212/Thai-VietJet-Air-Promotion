@@ -191,7 +191,7 @@ export const func = {
             array = array.sort((a, b) => b?.[property] - a?.[property]);
         }
     },
-    DECODE_IMAGE:(encodeImage)=>{
+    DECODE_IMAGE: (encodeImage) => {
         let decode = new Buffer(encodeImage, 'base64').toString('binary')
         return decode
     }

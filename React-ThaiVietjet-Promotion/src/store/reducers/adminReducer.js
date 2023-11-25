@@ -76,7 +76,7 @@ const adminReducer = (state = initialState, action) => {
         case actionTypes.FETCH_PACK:
             return mapDataGET(state, action, 'pack')
         case actionTypes.FETCH_MARKDOWN:
-            return mapDataGET(state, action, 'markdown')
+            return mapDataGET(state, action, 'markdown', ['titleEn'])
         default:
             return state;
     }
