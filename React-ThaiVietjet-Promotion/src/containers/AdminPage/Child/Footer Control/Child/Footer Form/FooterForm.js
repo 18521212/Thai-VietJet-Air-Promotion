@@ -15,6 +15,7 @@ class FooterForm extends Component {
             name: '',
             selectedTerm: '',
             selectedHowToUse: '',
+            selectedFAQ: '',
         }
     }
 
@@ -25,6 +26,10 @@ class FooterForm extends Component {
 
     loadData = async () => {
         await this.props.loadMarkdown()
+        await this.props.loadFAQ()
+        this.mapStateSelect('selectedTerm', this.props.markdownOption, 'id', this.props.location.state.footer.term_and_condition)
+        this.mapStateSelect('selectedHowToUse', this.props.markdownOption, 'id', this.props.location.state.footer.how_to_use)
+        this.mapStateSelect('selectedFAQ', this.props.faqOption, 'id', this.props.location.state.footer.faq)
     }
 
     mapStateUpdate = () => {
@@ -33,6 +38,12 @@ class FooterForm extends Component {
             property: ['id']
         })
         func.MAP_STATE_UPDATE(this, this.props.location.state?.footer)
+    }
+
+    mapStateSelect = (name, option, keyOption, value) => {
+        this.setState({
+            [name]: option.filter(item => item.value?.[keyOption] === value)[0]
+        })
     }
 
     handleOnChangeSelect = (selectedValue, actions) => {
@@ -45,11 +56,12 @@ class FooterForm extends Component {
 
     handleCreate = async () => {
         let { type } = this.props.params
-        let { name, selectedTerm, selectedHowToUse } = this.state
+        let { name, selectedTerm, selectedHowToUse, selectedFAQ } = this.state
         let data = {}, res
         data.name = name
-        data.term_and_condition = selectedTerm?.value?.id
-        data.how_to_use = selectedHowToUse?.id
+        data.term_and_condition = selectedTerm?.value?.id ? selectedTerm.value.id : null
+        data.how_to_use = selectedHowToUse?.value?.id ? selectedHowToUse.value.id : null
+        data.faq = selectedFAQ?.value?.id ? selectedFAQ.value.id : null
         if (type === 'update') {
             let { footer } = this.props.location.state
             data.id = footer.id
@@ -100,6 +112,14 @@ class FooterForm extends Component {
                             parent={this}
                         />
                     </div>
+                    <div class="form-group col-md-3">
+                        <label for="id">FAQ</label>
+                        <Select
+                            value='selectedFAQ'
+                            options='faqOption'
+                            parent={this}
+                        />
+                    </div>
                 </div>
                 <div className="row">
                     <div className="col">
@@ -122,13 +142,15 @@ class FooterForm extends Component {
 const mapStateToProps = state => {
     return {
         markdowns: state.admin.markdowns,
-        markdownOption: state.admin.markdownOption
+        markdownOption: state.admin.markdownOption,
+        faqOption: state.admin.faqOption,
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        loadMarkdown: (id) => dispatch(actions.fetchMarkdown(id))
+        loadMarkdown: (id) => dispatch(actions.fetchMarkdown(id)),
+        loadFAQ: (id) => dispatch(actions.fetchFAQ(id)),
     };
 };
 

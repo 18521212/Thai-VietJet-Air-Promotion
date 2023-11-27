@@ -26,7 +26,13 @@ class PowerPack extends Component {
                             }}
                         >
                             <div className="title-power-pack col-12">
-                                <h3>Power Pack</h3>
+                                <h3>
+                                    {this.props.campaign ?
+                                        this.props.campaign.data.name
+                                        :
+                                        this.props.campaigns.data[0].name
+                                    }
+                                </h3>
                             </div>
                             <div className="col-12">
                                 <div className="content-power-pack" dangerouslySetInnerHTML={{ __html: language === 'en' ? contentBodyData?.contentEn : contentBodyData?.contentTh }}>
@@ -53,7 +59,7 @@ class PowerPack extends Component {
                                                             </div>
 
                                                             <div
-                                                                className={`collapse ${index === 0 && "show"} `}
+                                                                className={`collapse ${index === 0 && "show"}`}
                                                                 id={'p' + item.id}
                                                                 data-parent="#accordion"
                                                             >
@@ -91,6 +97,8 @@ class PowerPack extends Component {
 const mapStateToProps = state => {
     return {
         language: state.app.language,
+        campaign: state.admin.campaign,
+        campaigns: state.admin.campaigns,
     };
 };
 

@@ -56,6 +56,42 @@ const deleteMarkdown = (data) => {
     return deleteData(api.MARKDOWNS, data)
 }
 
+// FAQ
+
+const createFAQ = (data) => {
+    return create(api.FAQS, data)
+}
+
+const getFAQ = (id) => {
+    return get(api.FAQS, id)
+}
+
+const updateFAQ = (data) => {
+    return update(api.FAQS, data)
+}
+
+const deleteFAQ = (data) => {
+    return deleteData(api.FAQS, data)
+}
+
+// FAQ question
+
+const createFAQQuestion = (data) => {
+    return create(api.FAQ_QUESTIONS, data)
+}
+
+const getFAQQuestion = (id) => {
+    return get(api.FAQ_QUESTIONS, id)
+}
+
+const updateFAQQuestion = (data) => {
+    return update(api.FAQ_QUESTIONS, data)
+}
+
+const deleteFAQQuestion = (data) => {
+    return deleteData(api.FAQ_QUESTIONS, data)
+}
+
 export {
     createFooter,
     getFooter,
@@ -71,4 +107,14 @@ export {
     getMarkdown,
     updateMarkdown,
     deleteMarkdown,
+
+    createFAQ,
+    getFAQ,
+    updateFAQ,
+    deleteFAQ,
+
+    createFAQQuestion,
+    getFAQQuestion,
+    updateFAQQuestion,
+    deleteFAQQuestion,
 }

@@ -28,7 +28,7 @@ class Header extends Component {
                 >
                     <nav className="navbar navbar-expand-lg navbar-dark bg-dark container-fluid sticky-top">
                         <Link className="navbar-brand" to='/admin'>
-                            <img src={logo} alt='logo' />
+                            <img className="logo" src={logo} alt='logo' />
                         </Link>
                         <button
                             className="navbar-toggler col-2"
@@ -154,6 +154,16 @@ class Header extends Component {
                                                 data-target=".navbar-collapse.show"
                                             >
                                                 Markdown
+                                            </div>
+                                        </Link>
+                                        <Link className="dropdown-item" to='/admin/faq'
+                                            data-toggle='pill'
+                                        >
+                                            <div
+                                                data-toggle='collapse'
+                                                data-target=".navbar-collapse.show"
+                                            >
+                                                FAQ
                                             </div>
                                         </Link>
                                     </div>

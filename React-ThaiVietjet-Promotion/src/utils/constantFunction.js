@@ -149,6 +149,8 @@ export const func = {
         return res
     },
     HANDLE_DELETE: (text, data, funcDelete, callBackFunc) => {
+        // usage
+        // func.HANDLE_DELETE('Delete this FAQ?', data, deleteFAQ, this.props.loadFAQ)
         func.ALERT_CONFIRM(text, async () => {
             let res = await funcDelete({ id: data.id })
             if (func.ALERT_RES(res)) return callBackFunc()

@@ -8,7 +8,7 @@ import FrameCard from "./Child/FrameCard";
 import PurchaseBreakdown from "./Child/PurchaseBreakdown";
 import Footer from "../Footer/Footer";
 import * as actions from 'store/actions';
-import { func } from 'utils'
+import { func, association } from 'utils'
 
 class Form extends Component {
     constructor(props) {
@@ -52,6 +52,7 @@ class Form extends Component {
     loadData = async () => {
         await this.props.loadFormDetail(this.props?.formId)
         this.mapState()
+        await this.props.loadFooter(this.props?.footerId)
     }
 
     mapState = async () => {
@@ -141,7 +142,7 @@ class Form extends Component {
     handleButtonSubmitOnClick = (event) => {
         event.target.reportValidity()
         if (this.state.total === 0) {
-            // alert('Please choose at least 1 promote package')
+            alert('Please choose at least 1 promote package')
             // event.preventDefault();
         }
     }
@@ -152,20 +153,20 @@ class Form extends Component {
             dataInputCustomerForm
         } = this.state;
         let { language } = this.props
+        let footer = this.props?.footer?.data
         return (
             <>
                 <div className="form-container">
                     <form autoComplete="off" action="#">
                         <div className="row">
                             <div className="col-sm-12">
-                                <h4 className="title-contact">register and purchase</h4>
+                                <h4 className="title-contact"> <FormattedMessage id="form.title" /> </h4>
                             </div>
 
                             <div className="col-sm-12">
                                 <div className="inner-form">
-                                    <strong>Before you fill up the
-                                        information of the person who you will want to send this gift to,
-                                        please fill your information in to below boxes:
+                                    <strong>
+                                        <FormattedMessage id="form.instruct" />
                                     </strong>
 
                                     <div className="main-form" style={{ marginTop: '15px' }}>
@@ -195,7 +196,7 @@ class Form extends Component {
                                                     <div className="col-12">
                                                         <input type="checkbox" className="checkbox-confirm" required></input>
                                                         <label htmlFor="form-check-label checkbox-confirm-label">
-                                                            <a href="#">I accept the terms & conditions*</a>
+                                                            <a href="#" data-toggle="modal" data-target="#exampleModal">I accept the terms & conditions*</a>
                                                         </label><br />
                                                     </div>
 
@@ -212,6 +213,37 @@ class Form extends Component {
                             </div>
                         </div>
                     </form>
+                    {footer && footer?.[association.MARKDOWN_TERM_AND_CONDITION] &&
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">
+                                            {footer?.[association.MARKDOWN_TERM_AND_CONDITION].titleEn}
+                                        </h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body"
+                                        dangerouslySetInnerHTML={
+                                            {
+                                                __html: language === 'en' ?
+                                                    footer?.[association.MARKDOWN_TERM_AND_CONDITION].contentEn
+                                                    :
+                                                    footer?.[association.MARKDOWN_TERM_AND_CONDITION].contentTh
+                                            }
+                                        }
+                                    >
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
                 </div>
             </>
         )
@@ -222,13 +254,15 @@ const mapStateToProps = state => {
     return {
         language: state.app.language,
         form_details: state.admin.form_details,
-        promotion: state.admin.promotion
+        promotion: state.admin.promotion,
+        footer: state.admin.footer
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        loadFormDetail: (id) => dispatch(actions.fetchFormDetailByFormId(id))
+        loadFormDetail: (id) => dispatch(actions.fetchFormDetailByFormId(id)),
+        loadFooter: (id) => dispatch(actions.fetchFooter(id))
     };
 };
 

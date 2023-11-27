@@ -51,8 +51,12 @@ class Table extends Component {
         return (
             <>
                 {data && data.length > 0 &&
-                    <table table className="table">
-                        <thead>
+                    <table
+                        className="table table-header"
+                    >
+                        <thead
+                            className="thead-light"
+                        >
                             <tr>
                                 {thead && thead.map((item, index) => {
                                     return (

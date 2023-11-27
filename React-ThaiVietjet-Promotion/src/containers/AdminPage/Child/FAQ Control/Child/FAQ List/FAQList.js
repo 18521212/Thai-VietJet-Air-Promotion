@@ -1,14 +1,14 @@
 import { Component } from "react";
-import './FooterSelect.scss'
+// import './FAQList.scss'
 import _ from 'lodash';
 import * as actions from 'store/actions';
 import withRouter from "components/withRouter/withRouter"
 import { connect } from 'react-redux'
 import Table from "components/Table/Table"
-import { func, api } from 'utils'
-import { deleteFooter } from "services/footerService";
+import { func, api, association } from 'utils'
+import { deleteFAQ } from "services/footerService";
 
-class FooterSelect extends Component {
+class FAQList extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -17,7 +17,11 @@ class FooterSelect extends Component {
     }
 
     componentDidMount() {
-        this.props.loadFooter()
+        this.loadData()
+    }
+
+    loadData = async () => {
+        await this.props.loadFAQ()
     }
 
     handleOnChangeSelect = (selectedValue, actions) => {
@@ -28,44 +32,40 @@ class FooterSelect extends Component {
         this.props.navigate(link, { state: data })
     }
 
-    handleCreate = () => {
-        func.NAV(this, '../footer-form')
-    }
-
-    handleUpdate = (data) => {
-        func.NAV(this, '../footer-form/update', { footer: data })
-    }
-
-    handleDelete = (data) => {
-        func.HANDLE_DELETE('Delete this Footer?', data, deleteFooter, this.props.loadFooter)
+    onDelete = (data) => {
+        func.HANDLE_DELETE('Delete this FAQ?', data, deleteFAQ, this.props.loadFAQ)
     }
 
     render() {
-        let { footers } = this.props
+        let { faqs } = this.props
         return (
             <>
-                <h3>Footers</h3>
+                <h3>FAQs</h3>
                 <div className="row my-1 px-3">
                     <button className="btn btn-success ml-auto"
-                        onClick={() => this.handleCreate()}>Create</button>
+                        onClick={() => func.NAV(this, '../faq-form')}>Create</button>
                 </div>
                 <Table
-                    data={footers.data}
-                    thead={['Id', 'Name', 'Term And Condition', 'How To Use', 'FAQ']}
-                    tbody={['id', 'name', 'term_and_condition', 'how_to_use', 'faq']}
+                    data={faqs?.data}
+                    thead={['Id', 'Name']}
+                    tbody={['id', 'name']}
                     actions={(data) =>
                         <>
-                            {data.footer_text.length > 0 ?
+                            {data[association.FAQ_FAQID].length > 0 ?
                                 <button type="button" className="btn btn-primary mx-1"
-                                    onClick={() => func.NAV(this, '../footer-text-select', { footer: data })}>View Text</button>
+                                    onClick={() => func.NAV(this, '../faqquestion-list', { faq: data })}
+                                >View Q&As</button>
                                 :
                                 <button type="button" className="btn btn-success mx-1"
-                                    onClick={() => func.NAV(this, '../footer-text-form', { footer: data })}>Add Text</button>
+                                    onClick={() => func.NAV(this, '../faqquestion-form', { faq: data })}
+                                >Add Q&As</button>
                             }
                             <button type="button" className="btn btn-warning mx-1"
-                                onClick={() => this.handleUpdate(data)}>Update</button>
+                                onClick={() => func.NAV(this, '../faq-form/update', { faq: data })}
+                            >Update</button>
                             <button type="button" className="btn btn-danger mx-1"
-                                onClick={() => this.handleDelete(data)}>Delete</button>
+                                onClick={() => this.onDelete(data)}
+                            >Delete</button>
                         </>
                     }
                 />
@@ -76,16 +76,15 @@ class FooterSelect extends Component {
 
 const mapStateToProps = state => {
     return {
-        footers: state.admin.footers,
-        footerOption: state.admin.footerOption
+        faqs: state.admin.faqs
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
         // loadFooterText: (footerId) => dispatch(actions.fetchFooterText(footerId))
-        loadFooter: () => dispatch(actions.fetchFooter())
+        loadFAQ: (id) => dispatch(actions.fetchFAQ(id))
     };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(FooterSelect));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(FAQList));

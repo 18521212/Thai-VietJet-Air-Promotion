@@ -37,7 +37,7 @@ export const text = {
     NOT_FOUND: (data_table) => {
         return `Data in table ${data_table} not found`
     },
-    EXIST_REF_KEY: 'Alter data unsucceed, exist reference key to this table from other table, please remove reference key on that tables first',
+    EXIST_REF_KEY: 'Alter data unsucceed, exist reference key from other table',
 
     CREATE_UNSUCCEED: (data_table = 'data') => {
         return `Create new ${data_table} unsucceed`

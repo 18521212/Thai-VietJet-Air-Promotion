@@ -10,14 +10,22 @@ module.exports = {
         //     }
         // )
 
-        // await queryInterface.changeColumn(
-        //     'Campaigns',
-        //     'promotionId',
-        //     {
-        //         type: Sequelize.INTEGER,
-        //         allowNull: true
-        //     }
-        // )
+        await queryInterface.changeColumn(
+            'Text_Translations',
+            'valueEn',
+            {
+                type: Sequelize.TEXT,
+                allowNull: false
+            }
+        )
+
+        await queryInterface.changeColumn(
+            'Text_Translations',
+            'valueTh',
+            {
+                type: Sequelize.TEXT,
+            }
+        )
 
         // await queryInterface.renameColumn(
         //     'Campaigns',
@@ -26,37 +34,31 @@ module.exports = {
         // )
 
         // add column
-        queryInterface.addColumn(
-            'Footers',
-            'term_and_condition',
-            {
-                type: Sequelize.INTEGER
-            }
-        );
-        queryInterface.addColumn(
-            'Footers',
-            'faq',
-            {
-                type: Sequelize.INTEGER
-            }
-        );
-        queryInterface.addColumn(
-            'Footers',
-            'how_to_use',
-            {
-                type: Sequelize.INTEGER
-            }
-        );
+        // queryInterface.addColumn(
+        //     'Footers',
+        //     'term_and_condition',
+        //     {
+        //         type: Sequelize.INTEGER
+        //     }
+        // );
     },
     down: async (queryInterface, Sequelize) => {
-        // await queryInterface.changeColumn(
-        //     'Campaigns',
-        //     'promotionId',
-        //     {
-        //         type: Sequelize.INTEGER,
-        //         allowNull: false
-        //     }
-        // )
+        await queryInterface.changeColumn(
+            'Text_Translations',
+            'valueEn',
+            {
+                type: Sequelize.STRING,
+                allowNull: false
+            }
+        )
+
+        await queryInterface.changeColumn(
+            'Text_Translations',
+            'valueTh',
+            {
+                type: Sequelize.STRING,
+            }
+        )
 
         // await queryInterface.renameColumn(
         //     'Campaigns',
@@ -64,17 +66,9 @@ module.exports = {
         //     'formSectionId',
         // )
 
-        queryInterface.removeColumn(
-            'Footers',
-            'term_and_condition',
-        );
-        queryInterface.removeColumn(
-            'Footers',
-            'faq',
-        );
-        queryInterface.removeColumn(
-            'Footers',
-            'how_to_use',
-        );
+        // queryInterface.removeColumn(
+        //     'Footers',
+        //     'term_and_condition',
+        // );
     }
 };

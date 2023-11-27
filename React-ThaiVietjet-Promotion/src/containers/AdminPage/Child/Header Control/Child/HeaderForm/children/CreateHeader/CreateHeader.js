@@ -32,12 +32,13 @@ class CreateHeader extends Component {
     mapDataUpdate = () => {
         if (!this.props.isUpdate) return
         let { selectedHeader } = this.props
+        console.log('s', this.props.menuOption.filter(item => item.value.id === this.props.selectedHeader.menuId))
         if (selectedHeader) {
             this.setState({
                 id: selectedHeader.id,
                 imageLogoInput: selectedHeader.imageLogo,
                 imageBackgroundInput: selectedHeader.imageBackground,
-                selectedMenu: this.props.menuOption.filter(item => item.value.id === this.props.selectedHeader.menuId)
+                selectedMenu: this.props.menuOption.filter(item => item.value.id === this.props.selectedHeader.menuId)//[0]
             })
         }
     }
@@ -59,7 +60,9 @@ class CreateHeader extends Component {
             imageLogo: imageLogoInput,
             imageBackground: imageBackgroundInput,
             menuId: selectedMenu && selectedMenu.value && selectedMenu.value.id
+            // menuId: selectedMenu?.value?.id ? selectedMenu.value.id : null
         }
+        console.log('data', null && true)
         switch (this.props.isUpdate) {
             case false:
                 res = await createHeader(data)

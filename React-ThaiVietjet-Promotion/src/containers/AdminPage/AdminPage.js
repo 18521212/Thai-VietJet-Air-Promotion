@@ -15,6 +15,7 @@ import MarkdownControl from './Child/Markdown Control/MarkdownControl';
 import FormControl from './Child/Form Control/FormControl';
 import InputControl from './Child/Input Control/InputControl';
 import PromotionControl from './Child/Promotion Control/PromotionControl';
+import FAQControl from './Child/FAQ Control/FAQControl';
 import withRouter from 'components/withRouter/withRouter';
 import { connect } from 'react-redux'
 import * as actions from 'store/actions';
@@ -63,6 +64,7 @@ class AdminPage extends Component {
                     <Route path="/input*" element={<InputControl />} />
                     <Route path="/footer*" element={<FooterControl />} />
                     <Route path="/markdown*" element={<MarkdownControl />} />
+                    <Route path="/faq*" element={<FAQControl />} />
                     <Route path="/promotion*" element={<PromotionControl />} />
                 </Routes>
             </div>

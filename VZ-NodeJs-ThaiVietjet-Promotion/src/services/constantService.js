@@ -43,6 +43,7 @@ let create = (config, data) => {
                 resolve(resolveObj.MISSING_PARAMETERS)
                 return;
             }
+            console.log('ta', config.table)
             await db.sequelize.transaction(async (t) => {
                 await db[config.table].create(data)
             })
@@ -64,7 +65,7 @@ let get = (config, param) => {
         try {
             let query = config?.query
             let data
-            if (data?.id) {
+            if (param?.id) {
                 data = await db[config.table].findOne({ where: { id: param.id }, ...query })
             } else {
                 data = await db[config.table].findAll(query)
@@ -116,7 +117,26 @@ let deleteData = (config, data) => {
                 return
             }
             await db.sequelize.transaction(async (t) => {
-                await db[config.table].destroy({ where: { id: data.id } })
+                let checkRef = true
+                if (config?.ref?.length > 0) {
+                    for (let i = 0; i < config.ref.length; i++) {
+                        let item = config.ref[i]
+                        let refItem = await db[item.table].findOne({ where: { [item.refKey]: data[item.priKey ? item.priKey : 'id'] } })
+                        if (refItem) {
+                            checkRef = false
+                            break
+                        }
+                    }
+                }
+                if (!checkRef) {
+                    resolve(resolveObj.EXIST_REF_KEY)
+                    throw new Error()
+                }
+                let deleted = await db[config.table].destroy({ where: { id: data.id } })
+                if (deleted === 0) {
+                    resolve(resolveObj.DELETE_UNSUCCEED())
+                    throw new Error()
+                }
             })
             resolve(resolveObj.DELETE_SUCCEED())
         } catch (e) {

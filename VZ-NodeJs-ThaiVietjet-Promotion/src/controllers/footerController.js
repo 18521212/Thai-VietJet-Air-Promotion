@@ -126,7 +126,7 @@ let createUpdateDeleteFAQ = async (req, res) => {
 }
 
 let getFAQ = async (req, res) => {
-    controller.CONTROLLER(req, res, footerService.getFAQ, req?.params?.id)
+    controller.CONTROLLER(req, res, footerService.getFAQ, req?.params)
 
 }
 
@@ -141,7 +141,7 @@ let createUpdateDeleteFAQQuestion = async (req, res) => {
 }
 
 let getFAQQuestion = async (req, res) => {
-    controller.CONTROLLER(req, res, footerService.getFAQQuestion, req?.params?.id)
+    controller.CONTROLLER(req, res, footerService.getFAQQuestion, req?.params)
 
 }
 

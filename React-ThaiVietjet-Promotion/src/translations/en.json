@@ -9,5 +9,9 @@
         "redeem": "Promo codes to redeem for round trip tickets.",
         "average": "Average",
         "round-trip": "THB/ round trip Exclude Tax and fees"
+    },
+    "form": {
+        "title": "REGISTER AND PURCHASE",
+        "instruct": "Before you fill up the information of the person who you will want to send this gift to, please fill your information in to  below boxes"
     }
 }

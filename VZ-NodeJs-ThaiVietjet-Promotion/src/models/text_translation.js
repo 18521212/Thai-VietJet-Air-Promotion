@@ -19,8 +19,8 @@ module.exports = (sequelize, DataTypes) => {
         }
     };
     Text_Translation.init({
-        valueTh: DataTypes.STRING,
-        valueEn: DataTypes.STRING,
+        valueTh: DataTypes.TEXT,
+        valueEn: DataTypes.TEXT,
     }, {
         sequelize,
         modelName: 'Text_Translation',

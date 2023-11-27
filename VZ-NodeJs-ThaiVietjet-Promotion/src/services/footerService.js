@@ -23,6 +23,12 @@ let getFooter = (data) => {
                 { model: db.Footer_Text, as: 'footer_text' },
                 { model: db.Markdown, as: association.MARKDOWN_TERM_AND_CONDITION },
                 { model: db.Markdown, as: association.MARKDOWN_HOW_TO_USE },
+                {
+                    model: db.FAQ, as: association.FAQ_FOOTER,
+                    include: [
+                        { model: db.FAQ_Question, as: association.FAQ_FAQID }
+                    ]
+                }
             ]
         }
     }, data)
@@ -218,7 +224,7 @@ let FAQ_Table = 'FAQ'
 
 let createFAQ = (data) => {
     return create({
-        table: FAQQ_Table,
+        table: FAQ_Table,
         required: {
             and: ['name']
         }
@@ -238,17 +244,21 @@ let getFAQ = (data) => {
 
 let updateFAQ = (data) => {
     return update({
-        table:FAQ_Table,
+        table: FAQ_Table,
         required: {
-            and: ['name']
+            and: ['id'],
+            or: ['name']
         }
-    },data)
+    }, data)
 }
 
 let deleteFAQ = (data) => {
     return deleteData({
-        table: FAQ_Table
-    },data)
+        table: FAQ_Table,
+        ref: [
+            { table: 'FAQ_Question', priKey: 'id', refKey: 'FAQId' }
+        ]
+    }, data)
 }
 
 // FAQ Question
@@ -260,7 +270,7 @@ let createFAQQuestion = (data) => {
         table: FAQQ_Table,
         required: {
             and: ['FAQId', 'question', 'answer']
-        }
+        },
     }, data)
 }
 
@@ -274,15 +284,15 @@ let updateFAQQuestion = (data) => {
     return update({
         table: FAQQ_Table,
         required: {
-            and: ['id'],
-            or: ['titleEn', 'titleTh', 'contentEn', 'contentTh', 'markdownEn', 'markdownTh']
+            and: ['FAQId'],
+            or: ['question', 'answer']
         }
     }, data)
 }
 
 let deleteFAQQuestion = (data) => {
     return deleteData({
-        table: FAQQ_Table
+        table: FAQQ_Table,
     }, data)
 }
 
