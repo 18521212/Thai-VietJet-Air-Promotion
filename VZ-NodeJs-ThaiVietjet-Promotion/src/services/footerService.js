@@ -201,21 +201,29 @@ let updateMarkdown = (data) => {
 }
 
 let deleteMarkdown = (data) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            if (!func.CHECK_HAS_VALUE(data.id)) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
-            }
-            await db.sequelize.transaction(async (t) => {
-                // check  onDelete Restrict
-                await db.Markdown.destroy({ where: { id: data.id } })
-            })
-            resolve(resolveObj.DELETE_SUCCEED())
-        } catch (e) {
-            reject(e);
-        }
-    })
+    // return new Promise(async (resolve, reject) => {
+    //     try {
+    //         if (!func.CHECK_HAS_VALUE(data.id)) {
+    //             resolve(resolveObj.MISSING_PARAMETERS)
+    //             return
+    //         }
+    //         await db.sequelize.transaction(async (t) => {
+    //             // check  onDelete Restrict
+    //             await db.Markdown.destroy({ where: { id: data.id } })
+    //         })
+    //         resolve(resolveObj.DELETE_SUCCEED())
+    //     } catch (e) {
+    //         reject(e);
+    //     }
+    // })
+    return deleteData({
+        table: 'Markdown',
+        ref: [
+            { table: 'Footer', priKey: 'id', refKey: 'how_to_use' },
+            { table: 'Footer', priKey: 'id', refKey: 'term_and_condition' },
+            { table: 'Pack', priKey: 'id', refKey: 'markdownId' },
+        ]
+    }, data)
 }
 
 // FAQ

@@ -26,7 +26,7 @@ class PowerPack extends Component {
                             }}
                         >
                             <div className="title-power-pack col-12">
-                                <h3>
+                                <h3 style={{ textTransform: 'uppercase' }}>
                                     {this.props.campaign ?
                                         this.props.campaign.data.name
                                         :
@@ -44,6 +44,7 @@ class PowerPack extends Component {
                                     <div id="accordion">
                                         {packData && packData.length > 0 &&
                                             packData.map((item, index) => {
+                                                console.log('i', item)
                                                 return (
                                                     <>
                                                         <div className="card" key={index}>
@@ -54,7 +55,7 @@ class PowerPack extends Component {
                                                                     className="btn btn-primary"
                                                                     type="button"
                                                                 >
-                                                                    {item.name}
+                                                                    {language === 'en' ? item?.markdown_pack?.titleEn : item?.markdown_pack?.titleTh}
                                                                 </button>
                                                             </div>
 
@@ -65,11 +66,10 @@ class PowerPack extends Component {
                                                             >
                                                                 <div className="card-body">
                                                                     <div className="row">
-                                                                        <div className="col-md-8">
-                                                                            <FormattedMessage id="body.selling-at" /> {item.price} <FormattedMessage id="body.exclude-vat" /><br />
-                                                                            <FormattedMessage id="body.get" /> {item.numberRedeem} <FormattedMessage id="body.redeem" /><br />
-                                                                            <FormattedMessage id="body.average" /> {item.price}  <FormattedMessage id="body.round-trip" /><br />
-                                                                            {/* check avg_price */}
+                                                                        <div className="col-md-8"
+                                                                            dangerouslySetInnerHTML={{ __html: language === 'en' ? item?.markdown_pack?.contentEn : item?.markdown_pack?.contentTh }}
+                                                                        >
+
                                                                         </div>
                                                                         <div className="col-md-4">
                                                                             <a className="buy-now" href="#register-purchase">BUY NOW</a>
@@ -77,7 +77,7 @@ class PowerPack extends Component {
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        </div >
                                                     </>
                                                 )
                                             })
@@ -88,7 +88,7 @@ class PowerPack extends Component {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div >
             </>
         )
     }

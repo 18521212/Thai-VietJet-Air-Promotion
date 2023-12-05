@@ -30,7 +30,6 @@ class Markdown extends Component {
 
     handleEditorChange = ({ html, text }, name) => {
         let parent = this.props?.parent
-        console.log('t2', text)
         parent.setState({
             ['content' + name]: html,
             ['markdown' + name]: text
@@ -40,7 +39,6 @@ class Markdown extends Component {
     render() {
         let name = this.props?.name
         let parent = this.props?.parent
-        console.log('pt', parent.state.titleTh)
         return (
             <>
                 {parent && name &&

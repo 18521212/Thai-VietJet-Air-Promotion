@@ -20,17 +20,25 @@ module.exports = {
                 type: Sequelize.INTEGER,
                 allowNull: false
             },
+            maxNumber: {
+                type: Sequelize.INTEGER,
+                allowNull: false
+            },
             price: {
                 type: Sequelize.FLOAT,
                 allowNull: false
             },
+            vat: {
+                type: Sequelize.FLOAT,
+                defaultValue: 0,
+                allowNull: false,
+            },
+            markdownId: {
+                type: Sequelize.INTEGER,
+            },
             currency: {
                 type: Sequelize.STRING,
                 defaultValue: 'THB'
-            },
-            numberRedeem: {
-                type: Sequelize.INTEGER,
-                allowNull: false
             },
             createdAt: {
                 allowNull: false,

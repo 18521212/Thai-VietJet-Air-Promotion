@@ -3,6 +3,7 @@ import Select from 'react-select';
 import './FrameCard.scss'
 import NumberFormat from 'react-number-format';
 import _ from 'lodash';
+import { func } from "utils";
 
 class FrameCard extends Component {
     constructor(props) {
@@ -24,7 +25,7 @@ class FrameCard extends Component {
                     {packData && packData.length > 0 &&
                         packData.map((item, index) => {
                             let price = item.price;
-                            let stateName = _.camelCase('selected' + item.name);
+                            let stateName = _.camelCase(item.name)+`-${item.id}`;
                             let optionStateName = _.camelCase('option' + item.name);// space
                             let name = {
                                 parentState: 'inputFrameCard',

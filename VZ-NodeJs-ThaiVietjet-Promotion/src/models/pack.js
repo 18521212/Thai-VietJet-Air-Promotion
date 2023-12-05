@@ -1,4 +1,5 @@
 'use strict';
+import { association } from '../utils'
 const {
     Model
 } = require('sequelize');
@@ -11,15 +12,17 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             Pack.belongsTo(models.Promotion, { foreignKey: 'promotionId', as: 'pack' })
+            Pack.belongsTo(models.Markdown, { foreignKey: 'markdownId', as: association.MARKDOWN_PACK })
         }
     };
     Pack.init({
         name: DataTypes.STRING,
         maxNumber: DataTypes.INTEGER,
         price: DataTypes.FLOAT,
+        vat: DataTypes.FLOAT,
         currency: DataTypes.STRING,
-        numberRedeem: DataTypes.INTEGER,
         promotionId: DataTypes.INTEGER,
+        markdownId: DataTypes.INTEGER,
     }, {
         sequelize,
         modelName: 'Pack',

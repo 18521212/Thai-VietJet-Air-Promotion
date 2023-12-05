@@ -51,7 +51,12 @@ const deleteData = (link, data) => {
     })
 }
 
+const postAPI = (link, data) => {
+    return axios.post(link, data)
+}
+
 export {
     create, get,
-    update, deleteData
+    update, deleteData,
+    postAPI,
 }

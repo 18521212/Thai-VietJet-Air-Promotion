@@ -12,7 +12,11 @@ let routeBanner = (app) => {
     router.put('', validateAuth, bannerController.createUpdateDeleteBanner);
     router.delete('', validateAuth, bannerController.createUpdateDeleteBanner);
 
-    router.post(route.IMAGE_BANNERS, validateAuth, bannerController.createUpdateDeleteImageBanner)
+    router.post(route.IMAGE_BANNERS,
+        validateAuth,
+        bannerController.validateImage,
+        bannerController.createUpdateDeleteImageBanner
+    )
     router.delete(route.IMAGE_BANNERS, validateAuth, bannerController.createUpdateDeleteImageBanner)
 
     return app.use(api.BANNERS, router)

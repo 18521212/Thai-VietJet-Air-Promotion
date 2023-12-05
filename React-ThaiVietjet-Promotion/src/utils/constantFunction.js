@@ -25,7 +25,6 @@ export const func = {
         parent?.props?.navigate(link, { state: data })
     },
     ONCHANGE_TEXT: (parent, name, e) => {
-        console.log('ct')
         parent.setState({ [name]: e.target.value })
     },
     ONCHANGE_SELECT: (parent, selectedValue, actions) => {
@@ -36,14 +35,23 @@ export const func = {
     ONCHANGE_IMAGE: async (parent, name, e, nameImagePreview) => {
         let data = e.target.files;
         let file = data[0];
-        e.target.nextElementSibling.innerText = file.name // show file name
+        e.target.nextElementSibling.innerText = file?.name // show file name
+        console.log('file', e)
         let objectUrl
         if (file) {
             let base64 = await CommonUtils.getBase64(file);
             objectUrl = URL.createObjectURL(file);
+            var i = new Image();
+            i.src = base64;
+            // console.log('i', i.width, i.height)
             parent.setState({
                 [nameImagePreview]: objectUrl,
                 [name]: base64
+            })
+        } else {
+            parent.setState({
+                [nameImagePreview]: null,
+                [name]: null
             })
         }
     },
@@ -65,7 +73,7 @@ export const func = {
     },
     HANDLE_CREATE_UPDATE: async (data, funcCreateUpdate, callBackFunc) => {
         let res = await funcCreateUpdate(data)
-        func.ALERT_RES(res) && callBackFunc(res)
+        func.ALERT_RES(res) && callBackFunc && callBackFunc(res)
     },
     HANDLE_CREATE_UPDATE_V2: (parent, objectDefault, serviceCreate, serviceUpdate) => {
         // usage
@@ -83,6 +91,7 @@ export const func = {
         const handleItem = (item) => {
             if (typeof (item) === 'object') {
                 if (item.property?.length > 0) {
+                    console.log('ob', func.OBJECT(parent.state, item.property))
                     data[item?.key] = func.OBJECT(parent.state, item.property)
                 } else {
                     data[item?.key] = parent.state.property
@@ -114,13 +123,18 @@ export const func = {
         // usage
         // func.OBJECT(parent.state, item)
         let res
-        (property.length > 0) && property.map((item, index) => {
+        for (let i = 0; i < property.length; i++) {
+            let item = property[i]
+            if (typeof (object[item]) === 'object' && _.isEmpty(object[item])) {
+                res = undefined
+                break
+            }
             if (!res) {
                 res = object[item]
             } else {
                 res = res[item]
             }
-        })
+        }
         return res
     },
     OBJECT_V2: (object, property) => {
@@ -227,16 +241,23 @@ export const func = {
                 break;
         }
     },
+    DEEP_COPY_OBJECT: (object) => {
+        return JSON.parse(JSON.stringify(object))
+    },
     STATENAME_INPUT: (item) => {
         let name
         let titleEn = item.input.text_input.titleDataText_Input.valueEn
-        name = _.camelCase(titleEn + item.input.id)
+        name = _.camelCase(`${titleEn}`)
+        name = name + `-${item.input.id}`
         return name
     },
     STATENAME_DROPDOWN: (item) => {
         let title = item.input.dropdown.title;
+        let selectedName, optionName
+        selectedName = _.camelCase(title) + `-${item.input.id}`
+        optionName = _.camelCase('option' + title)
         let name
-        name = [_.camelCase('selected' + title), _.camelCase('option' + title)]
+        name = [selectedName, optionName]
         return name
     }
 }

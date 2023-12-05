@@ -22,7 +22,7 @@ class PurchaseBreakdown extends Component {
                 </div>
                 {packData && packData.length > 0 &&
                     packData.map((item, index) => {
-                        let stateName = _.camelCase('selected' + item.name)
+                        let stateName = _.camelCase(item.name)+`-${item.id}`
                         return (
                             <div className="row mb-2" key={index}>
                                 <span className="col" style={{ textTransform: 'uppercase' }}>{item.name} X {inputFrameCard[stateName].value}</span>

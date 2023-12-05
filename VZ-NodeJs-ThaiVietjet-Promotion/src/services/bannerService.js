@@ -101,6 +101,8 @@ let deleteBanner = (data) => {
     })
 }
 
+// image banner
+
 let createImageBanner = (data) => {
     return new Promise(async (resolve, reject) => {
         try {

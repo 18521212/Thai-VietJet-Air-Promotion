@@ -6,6 +6,18 @@ import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { func } from 'utils'
 
+let typeText = (type) => {
+    let resultType
+    if (type === 'phone') {
+        resultType = 'tel'
+    } else if (type === 'email') {
+        resultType = 'email'
+    } else if (!type) {
+        resultType = 'text'
+    }
+    return resultType
+}
+
 class CustomerForm extends Component {
     constructor(props) {
         super(props);
@@ -30,11 +42,11 @@ class CustomerForm extends Component {
                     {dataInputCustomerForm && dataInputCustomerForm.length > 0 &&
                         dataInputCustomerForm.map((item, index) => {
                             if (item.input.typeInput === 'dropdown') {
-                                let stateName = _.camelCase('selected' + item.input.dropdown.title)
+                                let stateName = _.camelCase(item.input.dropdown.title) + `-${item.input.id}`
                                 let optionStateName = _.camelCase('option' + item.input.dropdown.title)
                                 let name = {
                                     parentState: 'inputCustomerForm',
-                                    name: _.camelCase('selected' + item.input.dropdown.title)
+                                    name: stateName
                                 }
                                 let title = language === 'en' ? item.input.dropdown.titleDataDropdown.valueEn :
                                     item.input.dropdown.titleDataDropdown.valueTh;
@@ -78,15 +90,17 @@ class CustomerForm extends Component {
                                     placeHolder = item.input.text_input.placeHolderDataText_Input.valueTh
                                 }
                                 let stateName = func.STATENAME_INPUT(item);
+                                let typeTextInput = typeText(item.input.text_input.typeText)
                                 return (
                                     <div
-                                        className={`form-group 
-                                        ${'col-md-' + item.widthMdScreen}`}
+                                        className={`form-group ${'col-md-' + item.widthMdScreen}`}
                                     >
                                         <label>{title}</label>
                                         <input
                                             key={index}
                                             className="form-control"
+                                            type={typeTextInput}
+                                            pattern={typeTextInput === 'tel' && "[0-9]{10}" || undefined}
                                             onChange={(event) => this.handleOnChangeText(event)}
                                             value={inputCustomerForm[stateName]}
                                             placeholder={placeHolder}

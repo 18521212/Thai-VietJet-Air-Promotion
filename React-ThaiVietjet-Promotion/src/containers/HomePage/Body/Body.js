@@ -18,7 +18,6 @@ class Body extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            packData: '',
             contentBodyData: ''
         }
     }
@@ -38,29 +37,21 @@ class Body extends Component {
     }
 
     getDataAndMapState = async () => {
-        // pack data
-        let packData = await getAllPack();
         // content body data
         let contentBodyData = await getBody(2);
 
         this.setState({
-            packData: packData.data,
             contentBodyData: contentBodyData.data
         })
     }
 
     render() {
-        let {
-            packData
-        } = this.state;
-
         return (
             <div className='body pt-10'>
                 <section className="main-content-container mt-20"
                     style={{ paddingBottom: '10%' }}
                 >
                     <PowerPack
-                        // packData={packData}
                         packData={this.props.promotion?.data.pack}
                         contentBodyData={this.props.body.data}
                     />

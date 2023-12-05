@@ -1,31 +1,16 @@
 'use strict';
 module.exports = {
     up: async (queryInterface, Sequelize) => {
+        // type: Sequelize.BLOB('long'),
+
         // await queryInterface.changeColumn(
-        //     'Headers',
-        //     'imageLogo',
+        //     'Text_Translations',
+        //     'valueEn',
         //     {
-        //         type: Sequelize.BLOB('long'),
+        //         type: Sequelize.TEXT,
         //         allowNull: false
         //     }
         // )
-
-        await queryInterface.changeColumn(
-            'Text_Translations',
-            'valueEn',
-            {
-                type: Sequelize.TEXT,
-                allowNull: false
-            }
-        )
-
-        await queryInterface.changeColumn(
-            'Text_Translations',
-            'valueTh',
-            {
-                type: Sequelize.TEXT,
-            }
-        )
 
         // await queryInterface.renameColumn(
         //     'Campaigns',
@@ -41,24 +26,21 @@ module.exports = {
         //         type: Sequelize.INTEGER
         //     }
         // );
+
+        // queryInterface.removeColumn(
+        //     'Packs',
+        //     'numberRedeem',
+        // );
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.changeColumn(
-            'Text_Translations',
-            'valueEn',
-            {
-                type: Sequelize.STRING,
-                allowNull: false
-            }
-        )
-
-        await queryInterface.changeColumn(
-            'Text_Translations',
-            'valueTh',
-            {
-                type: Sequelize.STRING,
-            }
-        )
+        // await queryInterface.changeColumn(
+        //     'Text_Translations',
+        //     'valueEn',
+        //     {
+        //         type: Sequelize.STRING,
+        //         allowNull: false
+        //     }
+        // )
 
         // await queryInterface.renameColumn(
         //     'Campaigns',
@@ -69,6 +51,15 @@ module.exports = {
         // queryInterface.removeColumn(
         //     'Footers',
         //     'term_and_condition',
+        // );
+
+        // add column
+        // queryInterface.addColumn(
+        //     'Packs',
+        //     'numberRedeem',
+        //     {
+        //         type: Sequelize.INTEGER
+        //     }
         // );
     }
 };

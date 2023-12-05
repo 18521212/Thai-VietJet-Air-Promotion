@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             Markdown.hasMany(models.Footer, { foreignKey: 'term_and_condition', as: association.MARKDOWN_TERM_AND_CONDITION, onDelete: 'restrict' })
             Markdown.hasMany(models.Footer, { foreignKey: 'how_to_use', as: association.MARKDOWN_HOW_TO_USE, onDelete: 'restrict' })
+            Markdown.hasMany(models.Pack, { foreignKey: 'markdownId', as: association.MARKDOWN_PACK })
         }
     };
     Markdown.init({

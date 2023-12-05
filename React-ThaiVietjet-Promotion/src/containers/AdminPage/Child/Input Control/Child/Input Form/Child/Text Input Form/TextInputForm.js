@@ -8,15 +8,18 @@ import { func, component } from 'utils'
 import Select from 'react-select';
 import { createTextInput, updateTextInput } from "services/formService";
 
+let optionType = [
+    { value: null, label: 'Text' },
+    { value: 'email', label: 'Email' },
+    { value: 'phone', label: 'Phone' },
+]
+
 class TextInputForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedType: { value: null, label: 'Text' },
-            optionType: [
-                { value: null, label: 'Text' },
-                { value: 'email', label: 'Email' },
-            ]
+            selectedType: optionType[0],
+            optionType: optionType
         }
     }
 

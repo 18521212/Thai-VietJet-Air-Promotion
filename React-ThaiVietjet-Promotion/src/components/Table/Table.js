@@ -24,6 +24,17 @@ import { func } from 'utils'
                 onClick={() => this.handleDelete(data)}>Delete</button>
         </>
     }
+    className={
+        table: '',
+        thead: {
+            thead: '',
+            tr: ''
+        }
+        tbody: {
+            tbody: '',
+            tr: '',
+        }
+    }
 /> */}
 
 class Table extends Component {
@@ -48,16 +59,17 @@ class Table extends Component {
 
     render() {
         let { data, thead, tbody, actions } = this.props
+        let className = this.props?.className
         return (
             <>
                 {data && data.length > 0 &&
                     <table
-                        className="table table-header"
+                        className={`table table-header ${className?.table || ''}`}
                     >
                         <thead
-                            className="thead-light"
+                            className={`thead-light ${className?.thead?.thead || ''}`}
                         >
-                            <tr>
+                            <tr className={className?.thead?.tr}>
                                 {thead && thead.map((item, index) => {
                                     return (
                                         <th scope="col" key={index}>{item}</th>
@@ -69,10 +81,12 @@ class Table extends Component {
                                 }
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody
+                            className={className?.tbody?.tbody}
+                        >
                             {tbody && data.map((item) => {
                                 return (
-                                    <tr>
+                                    <tr className={className?.tbody?.tr}>
                                         {tbody && tbody.map((itemTbody, index) => {
                                             if (index === 0) {
                                                 return (

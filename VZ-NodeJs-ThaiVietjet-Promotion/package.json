@@ -21,8 +21,11 @@
         "ejs": "^3.1.5",
         "express": "^4.17.1",
         "is-base64": "^1.1.0",
+        "lodash": "^4.17.21",
         "mysql2": "^2.2.5",
-        "sequelize": "^6.6.2"
+        "sequelize": "^6.6.2",
+        "sharp": "^0.33.0",
+        "validator": "^13.11.0"
     },
     "devDependencies": {
         "@babel/cli": "^7.22.15",

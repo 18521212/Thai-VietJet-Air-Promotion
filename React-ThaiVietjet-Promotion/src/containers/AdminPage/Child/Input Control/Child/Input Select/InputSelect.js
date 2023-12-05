@@ -59,8 +59,8 @@ class InputSelect extends Component {
             <>
                 <h3>Input Select</h3>
                 <div className="row px-3 mb-1">
-                    <button className="btn btn-primary mr-auto">Back</button>
-                    <div className="dropdown">
+                    {/* <button className="btn btn-primary mr-auto">Back</button> */}
+                    <div className="dropdown ml-auto">
                         <button className="btn btn-success ml-auto dropdown-toggle"
                             data-toggle="dropdown"
                             type="button"

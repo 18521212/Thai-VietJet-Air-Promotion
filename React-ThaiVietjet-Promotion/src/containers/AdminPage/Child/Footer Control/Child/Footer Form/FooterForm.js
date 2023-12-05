@@ -27,9 +27,11 @@ class FooterForm extends Component {
     loadData = async () => {
         await this.props.loadMarkdown()
         await this.props.loadFAQ()
-        this.mapStateSelect('selectedTerm', this.props.markdownOption, 'id', this.props.location.state.footer.term_and_condition)
-        this.mapStateSelect('selectedHowToUse', this.props.markdownOption, 'id', this.props.location.state.footer.how_to_use)
-        this.mapStateSelect('selectedFAQ', this.props.faqOption, 'id', this.props.location.state.footer.faq)
+        if (this.props.params.type === 'update') {
+            this.mapStateSelect('selectedTerm', this.props.markdownOption, 'id', this.props.location.state.footer.term_and_condition)
+            this.mapStateSelect('selectedHowToUse', this.props.markdownOption, 'id', this.props.location.state.footer.how_to_use)
+            this.mapStateSelect('selectedFAQ', this.props.faqOption, 'id', this.props.location.state.footer.faq)
+        }
     }
 
     mapStateUpdate = () => {

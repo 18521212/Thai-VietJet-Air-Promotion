@@ -32,7 +32,6 @@ class CreateHeader extends Component {
     mapDataUpdate = () => {
         if (!this.props.isUpdate) return
         let { selectedHeader } = this.props
-        console.log('s', this.props.menuOption.filter(item => item.value.id === this.props.selectedHeader.menuId))
         if (selectedHeader) {
             this.setState({
                 id: selectedHeader.id,
@@ -62,7 +61,6 @@ class CreateHeader extends Component {
             menuId: selectedMenu && selectedMenu.value && selectedMenu.value.id
             // menuId: selectedMenu?.value?.id ? selectedMenu.value.id : null
         }
-        console.log('data', null && true)
         switch (this.props.isUpdate) {
             case false:
                 res = await createHeader(data)

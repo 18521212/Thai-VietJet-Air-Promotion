@@ -3,12 +3,12 @@ import { Component } from "react";
 import Select from "components/Select/Select";
 import './CampaignSelect.scss'
 import _ from 'lodash';
-import CampaignForm from "../Campaign Form/CampaignForm";
 import { connect } from 'react-redux';
 import * as actions from 'store/actions';
 import withRouter from "components/withRouter/withRouter";
 import { func } from "utils";
 import { deleteCampaign } from "services/userService";
+import Table from "components/Table/Table";
 
 
 class CampaignSelect extends Component {
@@ -53,7 +53,7 @@ class CampaignSelect extends Component {
             <>
                 <h3>Campaigns</h3>
                 <div className="container-fluid">
-                    <div className="row">
+                    {/* <div className="row">
                         <div className="select-campaign col-md-5">
                             <label>Choose campaign</label>
                             <Select className="select-number"
@@ -64,52 +64,26 @@ class CampaignSelect extends Component {
                                 parent={this}
                             />
                         </div>
-                    </div>
+                    </div> */}
                     <div className="row">
                         <button className="btn btn-success ml-auto my-1"
                             onClick={() => this.handleCreate()}>Create</button>
                     </div>
                     <div className="row">
-                        {campaigns &&
-                            <table className="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Id</th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Header Id</th>
-                                        <th scope="col">Banner Id</th>
-                                        <th scope="col">Body Id</th>
-                                        <th scope="col">Form Id</th>
-                                        <th scope="col">Footer Id</th>
-                                        <th scope="col">Promotion Id</th>
-                                        <th scope="col">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {campaigns.map((item) => {
-                                        return (
-                                            <tr>
-                                                <th>{item?.['id']}</th>
-                                                <td>{item.name}</td>
-                                                <td>{item.headerId}</td>
-                                                <td>{item.bannerId}</td>
-                                                <td>{item.bodyId}</td>
-                                                <td>{item.formId}</td>
-                                                <td>{item.footerId}</td>
-                                                <td>{item.promotionId}</td>
-                                                <td>
-                                                    <button type="button" className="btn btn-warning mx-1"
-                                                        onClick={() => func.NAV(this, '../campaign-form/update', { campaign: item })}
-                                                    >Update</button>
-                                                    <button type="button" className="btn btn-danger mx-1"
-                                                        onClick={() => this.handleDelete(item.id)}>Delete</button>
-                                                </td>
-                                            </tr>
-                                        )
-                                    })}
-                                </tbody>
-                            </table>
-                        }
+                        <Table
+                            data={campaigns}
+                            thead={['Id', 'Name', 'Header Id', 'Banner Id', 'Body Id', 'Form Id', 'Footer Id', 'Promotion Id']}
+                            tbody={['id', 'name', 'headerId', 'bannerId', 'bodyId', 'formId', 'footerId', 'promotionId']}
+                            actions={(data) =>
+                                <>
+                                    <button type="button" className="btn btn-warning mx-1"
+                                        onClick={() => func.NAV(this, '../campaign-form/update', { campaign: data })}
+                                    >Update</button>
+                                    <button type="button" className="btn btn-danger mx-1"
+                                        onClick={() => this.handleDelete(data.id)}>Delete</button>
+                                </>
+                            }
+                        />
                     </div>
                 </div>
             </>

@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import * as actions from 'store/actions';
 import { deleteHeader } from "services/headerService";
 import { toast } from 'react-toastify'
+import Table from "components/Table/Table";
 
 class HeaderSelect extends Component {
     constructor(props) {
@@ -64,39 +65,21 @@ class HeaderSelect extends Component {
                         onClick={() => this.directCreateHeader()}
                     />
                 </div>
-                <table className="table table-header">
-                    <thead className="thead-light">
-                        <tr>
-                            <th scope="col">name</th>
-                            <th scope="col">id</th>
-                            <th scope="col">Logo Image</th>
-                            <th scope="col">Background Image</th>
-                            <th scope="col">Menu Id</th>
-                            <th scope="col">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {listHeader && listHeader.map((item, index) => {
-                            return (
-                                <tr key={index}>
-                                    <td>{item.name}</td>
-                                    <td>{item.id}</td>
-                                    <td><img src={item.imageLogo} /></td>
-                                    <td><img src={item.imageBackground} /></td>
-                                    <td>{item.menuId ? item.menuId : '*'}</td>
-                                    <td>
-                                        <input value='Update' type="button" className="btn btn-warning mx-1"
-                                            onClick={() => this.directCreateHeader('update', item)}
-                                        />
-                                        <input value='Delete' type="button" className="btn btn-danger mx-1"
-                                            onClick={() => this.handleDeleteHeader(item.id)}
-                                        />
-                                    </td>
-                                </tr>
-                            )
-                        })}
-                    </tbody>
-                </table>
+                <Table
+                    data={listHeader}
+                    thead={['Id', 'Logo Image', 'Background Image', 'Menu Id']}
+                    tbody={['id', { name: 'imageLogo', type: 'image' }, { name: 'imageBackground', type: 'image' }, 'menuId']}
+                    actions={(data) =>
+                        <>
+                            <input value='Update' type="button" className="btn btn-warning mx-1"
+                                onClick={() => this.directCreateHeader('update', data)}
+                            />
+                            <input value='Delete' type="button" className="btn btn-danger mx-1"
+                                onClick={() => this.handleDeleteHeader(data.id)}
+                            />
+                        </>
+                    }
+                />
             </>
         )
     }

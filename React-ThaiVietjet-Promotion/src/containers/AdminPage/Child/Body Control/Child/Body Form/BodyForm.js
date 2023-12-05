@@ -92,6 +92,7 @@ class BodyForm extends Component {
                             onChange={(e) => func.ONCHANGE_TEXT(this, 'name', e)} type='text' />
                     </div>
                 </div>
+                <h5>Content English</h5>
                 <MdEditor
                     style={{ height: '300px' }}
                     renderHTML={text => mdParser.render(text)}
@@ -99,7 +100,7 @@ class BodyForm extends Component {
                     onChange={({ html, text }) => this.handleEditorChange({ html, text }, 'En')}
                     value={this.state.markdownEn}
                 />
-                <h4>Content Thai</h4>
+                <h5>Content Thai</h5>
                 <MdEditor
                     style={{ height: '300px' }}
                     renderHTML={text => mdParser.render(text)}

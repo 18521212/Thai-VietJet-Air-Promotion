@@ -1,5 +1,11 @@
 const db = require('../models');
-const { resolveObj, func, type } = require('../utils');
+const { resolveObj, func, type, association } = require('../utils');
+
+let queryPack = {
+    include: [
+        { model: db.Markdown, as: association.MARKDOWN_PACK }
+    ]
+}
 
 // promotion
 let createPromotion = (data) => {
@@ -24,7 +30,7 @@ let getPromotion = (id) => {
         try {
             let objectQuery = {
                 include: [
-                    { model: db.Pack, as: 'pack' }
+                    { model: db.Pack, as: 'pack', ...queryPack }
                 ]
             }
             let data
@@ -85,25 +91,30 @@ let deletePromotion = (data) => {
     })
 }
 
+let validatePack = (data) => {
+    let validate = true
+    if (data.price <= 0 || data.vat < 0 || data.vat > 1 || data.maxNumber <= 0) {
+        validate = false
+    }
+    return validate
+}
+
 // pack
 let createPack = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!func.CHECK_HAS_VALUE(data.name, data.promotionId, data.maxNumber, data.price, data.numberRedeem)) {
+            if (!func.CHECK_HAS_VALUE(data.name, data.promotionId, data.maxNumber, data.price)) {
                 resolve(resolveObj.MISSING_PARAMETERS)
+                return
+            }
+            if (validatePack(data) === false) {
+                resolve({ errCode: 1, errMessage: 'invalid data' })
                 return
             }
             await db.sequelize.transaction(async (t) => {
                 let promotion = await db.Promotion.findOne({ where: { id: data.promotionId } })
                 if (!promotion) { resolve(resolveObj.NOT_FOUND('Promotion')); throw new Error() }
-                await db.Pack.create({
-                    name: data?.name,
-                    promotionId: data.promotionId,
-                    maxNumber: data?.maxNumber,
-                    price: data?.price,
-                    currency: data?.currency ? data.currency : undefined,
-                    numberRedeem: data?.numberRedeem
-                }, { transaction: t })
+                await db.Pack.create(data)
             })
             resolve(resolveObj.CREATE_SUCCEED('Pack'))
         } catch (e) {
@@ -117,9 +128,13 @@ let getPack = (id) => {
         try {
             let data
             if (id) {
-                data = await db.Pack.findOne({ where: { id: id } })
+                if (id.length > 0) {
+                    data = await db.Pack.findAll({ where: { id: id }, ...queryPack })
+                } else {
+                    data = await db.Pack.findOne({ where: { id: id }, ...queryPack })
+                }
             } else {
-                data = await db.Pack.findAll()
+                data = await db.Pack.findAll(queryPack)
             }
             resolve(resolveObj.GET(data))
         } catch (e) {
@@ -136,6 +151,10 @@ let updatePack = (data) => {
                 resolve(resolveObj.MISSING_PARAMETERS)
                 return
             }
+            if (validatePack(data) === false) {
+                resolve({ errCode: 1, errMessage: 'invalid data' })
+                return
+            }
             await db.sequelize.transaction(async (t) => {
                 let pack = await db.Pack.findOne({ where: { id: data.id } })
                 await pack.update({
@@ -143,7 +162,9 @@ let updatePack = (data) => {
                     maxNumber: data?.maxNumber,
                     price: data?.price,
                     currency: data?.currency,
-                    numberRedeem: data?.numberRedeem
+                    numberRedeem: data?.numberRedeem,
+                    vat: data.vat,
+                    markdownId: data.markdownId ? data.markdownId : null
                 }, { transaction: t })
             })
             resolve(resolveObj.UPDATE_SUCCEED('Pack'))

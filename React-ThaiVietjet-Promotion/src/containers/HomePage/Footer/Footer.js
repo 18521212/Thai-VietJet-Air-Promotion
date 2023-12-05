@@ -66,7 +66,6 @@ class Footer extends Component {
                                     <div className="accordion" id="accordionExample">
                                         {footer?.[association.FAQ_FOOTER] && footer?.[association.FAQ_FOOTER]?.[association.FAQ_FAQID].length > 0 &&
                                             footer[association.FAQ_FOOTER]?.[association.FAQ_FAQID].map((item, index) => {
-                                                console.log('i', item)
                                                 return (
                                                     <>
                                                         <div className="card">

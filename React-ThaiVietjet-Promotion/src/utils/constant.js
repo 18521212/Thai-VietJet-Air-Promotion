@@ -24,6 +24,7 @@ export const api = {
     MARKDOWNS: '/api/markdowns',
     FAQS: '/api/faqs',
     FAQ_QUESTIONS: '/api/faq-questions',
+    PAYMENTS: '/api/payments',
 }
 
 export const LANGUAGES = {

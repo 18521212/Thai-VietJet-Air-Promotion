@@ -16,12 +16,27 @@ class PackForm extends Component {
             currencyOption: [
                 { value: 'THB', label: 'THB' },
                 { value: 'USD', label: 'USD' }
-            ]
+            ],
+            selectedMarkdown: '',
         }
     }
 
     componentDidMount() {
         this.mapStateRoute()
+        this.loadData()
+    }
+
+    loadData = async () => {
+        await this.props.loadMarkdown()
+        if (this.props.params.type === 'update') {
+            this.mapStateSelect('selectedMarkdown', this.props.markdownOption, 'id', this.props.location.state.pack?.markdownId)
+        }
+    }
+
+    mapStateSelect = (name, option, keyOption, value) => {
+        this.setState({
+            [name]: option.filter(item => item.value?.[keyOption] === value)[0]
+        })
     }
 
     mapStateRoute = () => {
@@ -32,7 +47,7 @@ class PackForm extends Component {
             },
             {
                 object: 'pack',
-                property: ['promotionId', 'id', 'name', 'price', 'currency', 'maxNumber', 'numberRedeem']
+                property: ['promotionId', 'id', 'name', 'price', 'currency', 'maxNumber', 'vat']
             }
         )
     }
@@ -47,7 +62,9 @@ class PackForm extends Component {
 
     onCreate = () => {
         func.HANDLE_CREATE_UPDATE_V2(this,
-            ['promotionId', 'name', 'price', 'maxNumber', 'numberRedeem', 'currency'],
+            ['promotionId', 'name', 'price', 'maxNumber', 'currency', 'vat',
+                { key: 'markdownId', property: ['selectedMarkdown', 'value', 'id'] }
+            ],
             {
                 func: createPack,
                 callBack: () => { func.NAV(this, -1) }
@@ -62,6 +79,7 @@ class PackForm extends Component {
 
     render() {
         let type = this.props.params?.type
+        console.log('s', this.state.selectedMarkdown)
         return (
             <>
                 <h3>{component.CR_UP_TEXT(this)} Pack</h3>
@@ -97,17 +115,17 @@ class PackForm extends Component {
                         />
                     </div>
                     <div class="form-group col-md-2">
+                        <label for="id">VAT</label>
+                        <input type="number" class="form-control" id="id" aria-describedby="emailHelp"
+                            value={this.state.vat}
+                            onChange={(event) => func.ONCHANGE_TEXT(this, 'vat', event)}
+                        />
+                    </div>
+                    <div class="form-group col-md-2">
                         <label for="id">Max Number</label>
                         <input type="number" class="form-control" id="id" aria-describedby="emailHelp"
                             value={this.state.maxNumber}
                             onChange={(event) => func.ONCHANGE_TEXT(this, 'maxNumber', event)}
-                        />
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label for="id">Number Redeem</label>
-                        <input type="number" class="form-control" id="id" aria-describedby="emailHelp"
-                            value={this.state.numberRedeem}
-                            onChange={(event) => func.ONCHANGE_TEXT(this, 'numberRedeem', event)}
                         />
                     </div>
                     <div className="form-group col-md-3">
@@ -116,6 +134,14 @@ class PackForm extends Component {
                             value='selectedCurrency'
                             options='currencyOption'
                             typeSelect='state'
+                            parent={this}
+                        />
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="id">Markdown</label>
+                        <Select
+                            value='selectedMarkdown'
+                            options='markdownOption'
                             parent={this}
                         />
                     </div>
@@ -136,12 +162,14 @@ class PackForm extends Component {
 
 const mapStateToProps = state => {
     return {
+        markdowns: state.admin.markdowns,
+        markdownOption: state.admin.markdownOption,
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        // funcReact: () => dispatch(actions.funcRedux())
+        loadMarkdown: (id) => dispatch(actions.fetchMarkdown(id)),
     };
 };
 

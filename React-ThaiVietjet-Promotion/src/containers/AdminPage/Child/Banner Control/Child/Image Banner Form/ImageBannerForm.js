@@ -8,9 +8,14 @@ import { func, component } from 'utils'
 import { createImageBanner } from "services/bannerService";
 import Select from "components/Select/Select";
 
+let configImage = {
+    mobile: { width: 1040, height: 1040 },
+    desktop: { width: 1920, height: 520 },
+}
+
 let typeOption = [
-    { value: 'mobile', label: 'Mobile' },
-    { value: 'desktop', label: 'Desktop' },
+    { value: 'mobile', label: 'Mobile', image: configImage.mobile },
+    { value: 'desktop', label: 'Desktop', image: configImage.desktop },
 ]
 
 class ImageBannerForm extends Component {
@@ -42,7 +47,7 @@ class ImageBannerForm extends Component {
 
     onSubmit = () => {
         func.HANDLE_CREATE_UPDATE_V2(this,
-            [{ key: 'bannerId', property: ['id'] }, 'image', { key: 'type', property: ['selectedType', 'value']}],
+            [{ key: 'bannerId', property: ['id'] }, 'image', { key: 'type', property: ['selectedType', 'value'] }],
             {
                 func: createImageBanner,
                 callBack: () => { func.NAV(this, '../image-banner-list', { banner: this.props.location.state?.banner }) }
@@ -52,12 +57,26 @@ class ImageBannerForm extends Component {
             })
     }
 
+    validImage = () => {
+        let result = true
+        let image = this.state.image
+        let selectedType = this.state.selectedType
+        var i = new Image();
+        i.src = image;
+        if (i.width != selectedType.image.width || i.height != selectedType.image.height) {
+            result = false
+        }
+        return result
+    }
+
     render() {
         let { type } = this.props.params
+        // console.log('im',this.state.image.offsetHeight)
+        this.validImage()
         return (
             <div className="image-banner-form">
                 <h3>Image Banner Form</h3>
-                <form className="row">
+                <form className="row was-validated">
                     <div class="form-group col-md-2">
                         <label>Banner Id</label>
                         <input className="form-control" value={this.state?.id}
@@ -68,8 +87,22 @@ class ImageBannerForm extends Component {
                         <div class="custom-file">
                             <input type="file" className="custom-file-input" id="validatedCustomFile"
                                 onChange={(event) => func.ONCHANGE_IMAGE(this, 'image', event)}
+                                accept="image/png, image/jpeg"
+                                required
                             />
                             <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
+                            <div
+                                class={`invalid-feedback ${!this.validImage() ? 'd-block' : ''}`}
+                            >
+                                {!this.validImage() ?
+                                    `Invalid Image, 
+                                    ${this.state.selectedType.value} size required (width: ${this.state.selectedType.image.width}px, 
+                                    height: ${this.state.selectedType.image.height}px)`
+                                    :
+                                    'Image Type'
+                                }
+
+                            </div>
                         </div>
                         <img src={this.state.image} className="image-preview" />
                     </div>

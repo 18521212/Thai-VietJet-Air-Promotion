@@ -111,6 +111,7 @@ let getFormDetailByFormId = (formId) => {
             }
             let data = await db.Form_Detail.findAll({
                 where: { formId: formId },
+                order: [['order', 'asc']],
                 include: [
                     {
                         model: db.Input, as: 'input',
@@ -133,7 +134,7 @@ let getFormDetailByFormId = (formId) => {
                     }
                 ]
             })
-            func.ORDER(data, 'order', 'asc')
+            // func.ORDER(data, 'order', 'asc')
             resolve(resolveObj.GET(data))
         } catch (e) {
             reject(e)
@@ -237,6 +238,45 @@ let deleteFormDetail = (data) => {
 }
 
 // input
+
+let queryInput = {
+    include: [
+        {
+            model: db.Text_Input, as: 'text_input',
+            include: [
+                { model: db.Text_Translation, as: 'titleDataText_Input' },
+                { model: db.Text_Translation, as: 'placeHolderDataText_Input' }
+            ]
+        },
+        {
+            model: db.Dropdown, as: 'dropdown',
+            include: [
+                { model: db.Text_Translation, as: 'titleDataDropdown' },
+                { model: db.Row_Dataset_Dropdown, as: 'dataDropdown' },
+            ]
+        },
+    ]
+}
+
+let getInput = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data;
+            if (id) {
+                if (id.length > 0) {
+                    data = await db.Input.findAll({ where: { id: id }, ...queryInput })
+                } else {
+                    data = await db.Input.findOne({ where: { id: id }, ...queryInput })
+                }
+            } else {
+                data = await db.Input.findAll(queryInput)
+            }
+            resolve(resolveObj.GET(data))
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
 
 let getAllInput = () => {
     return new Promise(async (resolve, reject) => {
@@ -403,7 +443,7 @@ let checkTypeText = (type) => {
     if (!type) {
         return true
     }
-    let arrType = ['email']
+    let arrType = ['email', 'phone']
     return arrType.includes(type)
 }
 
@@ -784,6 +824,7 @@ module.exports = {
     updateFormDetail: updateFormDetail,
     deleteFormDetail: deleteFormDetail,
 
+    getInput,
     getAllInput: getAllInput,
     getInputById,
     deleteInputById: deleteInputById,

@@ -63,8 +63,8 @@ class PackSelect extends Component {
                         <div className="w-100"></div>
                         <Table
                             data={packs}
-                            thead={['Id', 'Name', 'Price', 'Max Number', 'Number Redeem', 'Currency']}
-                            tbody={['id', 'name', 'price', 'maxNumber', 'numberRedeem', 'currency']}
+                            thead={['Id', 'Name', 'Price', 'VAT', 'Max Number', 'Currency', 'Markdown Id']}
+                            tbody={['id', 'name', 'price', 'vat', 'maxNumber', 'currency', 'markdownId']}
                             actions={(data) =>
                                 <>
                                     <button className="btn btn-warning mr-2"

@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import * as actions from 'store/actions';
 import withRouter from "components/withRouter/withRouter";
 import { deleteMenu } from "services/headerService";
+import Table from "components/Table/Table";
 
 class MenuSelect extends Component {
     constructor(props) {
@@ -128,6 +129,16 @@ class MenuSelect extends Component {
                             })}
                         </tbody>
                     </table >
+                    {/* <Table
+                        data={menuData.data}
+                        thead={['Id', 'Name']}
+                        tbody={['id', 'name']}
+                        className={{
+                            thead: {
+                                thead: 'table-danger'
+                            }
+                        }}
+                    /> */}
                 </div >
             </>
         )

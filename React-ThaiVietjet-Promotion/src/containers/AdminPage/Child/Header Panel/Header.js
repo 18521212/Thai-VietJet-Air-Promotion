@@ -5,6 +5,7 @@ import logo from '../../../../assets/Logo/skyfun_logo.png';
 import { Link, NavLink } from 'react-router-dom';
 import { connect } from 'react-redux'
 import * as actions from 'store/actions';
+import withRouter from "components/withRouter/withRouter";
 
 class Header extends Component {
     constructor(props) {
@@ -14,12 +15,19 @@ class Header extends Component {
         }
     }
 
+    // componentDidUpdate(prevProps) {
+    //     if(prevProps.location.pathname!==this.props.location.pathname){
+    //         console.log('r',this.props.location.pathname)
+    //     }
+    // }
+
     signOut = () => {
         this.props.clearUser()
         this.props.signOut()
     }
 
     render() {
+        let route = this.props.location.pathname.split('/', 3)[2]
         return (
             <>
 
@@ -45,7 +53,7 @@ class Header extends Component {
                             <ul className="nav navbar-nav mr-auto nav-pills"
                             >
                                 <li className="nav-item">
-                                    <Link className="nav-link active" to='/admin/campaign'
+                                    <Link className={`nav-link ${(route === 'campaign' || !route) && 'active' || ''}`} to='/admin/campaign'
                                         data-toggle='pill'
                                     // data-toggle='collapse'
                                     // data-target=".navbar-collapse.show"
@@ -59,7 +67,7 @@ class Header extends Component {
                                     </Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link className="nav-link" to='/admin/header'
+                                    <Link className={`nav-link ${route === 'header' && 'active' || ''}`} to='/admin/header'
                                         data-toggle='pill'
                                     >
                                         <div
@@ -71,7 +79,7 @@ class Header extends Component {
                                     </Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link className="nav-link" to='/admin/banner'
+                                    <Link className={`nav-link ${route === 'banner' && 'active' || ''}`} to='/admin/banner'
                                         data-toggle='pill'
                                     >
                                         <div
@@ -83,7 +91,7 @@ class Header extends Component {
                                     </Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link className="nav-link" to='/admin/body'
+                                    <Link className={`nav-link ${route === 'body' && 'active' || ''}`} to='/admin/body'
                                         data-toggle='pill'
                                     >
                                         <div
@@ -96,7 +104,7 @@ class Header extends Component {
                                 </li>
                                 <li className="nav-item dropdown">
                                     <a
-                                        className="nav-link dropdown-toggle"
+                                        className={`nav-link dropdown-toggle ${(route === 'form' || route === 'input') && 'active' || ''}`}
                                         data-toggle="dropdown"
                                         role="button"
                                         id="navbarDropdown"
@@ -104,7 +112,7 @@ class Header extends Component {
                                         Form
                                     </a>
                                     <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <Link className="dropdown-item" to='/admin/form'
+                                        <Link className={`dropdown-item ${route === 'form' && 'active' || ''}`} to='/admin/form'
                                             data-toggle='pill'
                                         >
                                             <div
@@ -114,7 +122,7 @@ class Header extends Component {
                                                 Form
                                             </div>
                                         </Link>
-                                        <Link className="dropdown-item" to='/admin/input'
+                                        <Link className={`dropdown-item ${route === 'input' && 'active' || ''}`} to='/admin/input'
                                             data-toggle='pill'
                                         >
                                             <div
@@ -128,7 +136,8 @@ class Header extends Component {
                                 </li>
                                 <li className="nav-item dropdown">
                                     <a
-                                        className="nav-link dropdown-toggle"
+                                        className={`nav-link dropdown-toggle 
+                                        ${(route === 'footer' || route === 'faq') && 'active' || ''}`}
                                         data-toggle="dropdown"
                                         role="button"
                                         id="navbarDropdown"
@@ -136,7 +145,7 @@ class Header extends Component {
                                         Footer
                                     </a>
                                     <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <Link className="dropdown-item" to='/admin/footer'
+                                        <Link className={`dropdown-item ${route === 'footer' && 'active' || ''}`} to='/admin/footer'
                                             data-toggle='pill'
                                         >
                                             <div
@@ -146,17 +155,7 @@ class Header extends Component {
                                                 Footer
                                             </div>
                                         </Link>
-                                        <Link className="dropdown-item" to='/admin/markdown'
-                                            data-toggle='pill'
-                                        >
-                                            <div
-                                                data-toggle='collapse'
-                                                data-target=".navbar-collapse.show"
-                                            >
-                                                Markdown
-                                            </div>
-                                        </Link>
-                                        <Link className="dropdown-item" to='/admin/faq'
+                                        <Link className={`dropdown-item ${route === 'faq' && 'active' || ''}`} to='/admin/faq'
                                             data-toggle='pill'
                                         >
                                             <div
@@ -169,7 +168,7 @@ class Header extends Component {
                                     </div>
                                 </li>
                                 <li className="nav-item">
-                                    <Link className="nav-link" to='/admin/promotion'
+                                    <Link className={`nav-link ${route === 'promotion' && 'active' || ''}`} to='/admin/promotion'
                                         data-toggle='pill'
                                     >
                                         <div
@@ -179,6 +178,29 @@ class Header extends Component {
                                             Promotion
                                         </div>
                                     </Link>
+                                </li>
+                                <li className="nav-item dropdown">
+                                    <a
+                                        className={`nav-link dropdown-toggle 
+                                        ${(route === 'markdown') && 'active' || ''}`}
+                                        data-toggle="dropdown"
+                                        role="button"
+                                        id="navbarDropdown"
+                                    >
+                                        Global
+                                    </a>
+                                    <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <Link className={`dropdown-item ${route === 'markdown' && 'active' || ''}`} to='/admin/markdown'
+                                            data-toggle='pill'
+                                        >
+                                            <div
+                                                data-toggle='collapse'
+                                                data-target=".navbar-collapse.show"
+                                            >
+                                                Markdown
+                                            </div>
+                                        </Link>
+                                    </div>
                                 </li>
                             </ul>
                             <button className="btn btn-warning mr-1" onClick={() => this.signOut()}>Sign Out</button>
@@ -205,4 +227,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Header));

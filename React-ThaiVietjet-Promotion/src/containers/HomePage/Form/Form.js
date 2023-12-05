@@ -9,6 +9,7 @@ import PurchaseBreakdown from "./Child/PurchaseBreakdown";
 import Footer from "../Footer/Footer";
 import * as actions from 'store/actions';
 import { func, association } from 'utils'
+import { sentPayment } from "services/paymentService";
 
 class Form extends Component {
     constructor(props) {
@@ -22,29 +23,32 @@ class Form extends Component {
 
             packData: '',
             inputFrameCard: {},
-            // totalObj: {
-            //     total2: 0
-            // }
+            check_term: false,
         }
     }
 
     componentDidMount() {
-        // this.getDataAndMapState();
         this.loadData()
     }
 
     componentDidUpdate(prevProps, prevState) {
         if (JSON.stringify(prevState.inputFrameCard) !== JSON.stringify(this.state.inputFrameCard)) {//
-            let totalPrice = 0;
+            let totalPrice = 0, totalVat = 0;
             let { packData } = this.state;
             packData.map((item, index) => {
-                let numberPack = this.state.inputFrameCard[_.camelCase('selected' + item.name)].value;
-                let pricePack = item.price;
-                totalPrice = totalPrice + numberPack * pricePack;
+                let numberPack = this.state.inputFrameCard[_.camelCase(item.name) + `-${item.id}`].value;
+                let vat = item.vat
+                let priceExcludeVat = numberPack * item.price
+                let priceVat = priceExcludeVat * vat
+                let priceIncludeVat = priceExcludeVat + priceVat
+                totalPrice += priceIncludeVat;
+                totalVat += priceVat
+                //
+
             })
             this.setState({
                 total: totalPrice,
-                vat: totalPrice / 10
+                vat: totalVat
             })
         }
     }
@@ -57,11 +61,9 @@ class Form extends Component {
 
     mapState = async () => {
         let listInput = this.props.form_details.data;
-        listInput.sort((a, b) => a.order - b.order);
 
-        let { inputCustomerForm } = this.state;
         let stateCopy = {
-            ...inputCustomerForm,
+            ...this.state.inputCustomerForm,
         }
 
         // map state
@@ -93,7 +95,8 @@ class Form extends Component {
                 option.push({ value: i, label: i })
             }
             stateCopy2[_.camelCase('option' + item.name)] = option;
-            stateCopy2[_.camelCase('selected' + item.name)] = stateCopy2[_.camelCase('option' + item.name)][0];
+            // stateCopy2[_.camelCase('selected' + item.name)] = stateCopy2[_.camelCase('option' + item.name)][0];
+            stateCopy2[_.camelCase(item.name) + `-${item.id}`] = stateCopy2[_.camelCase('option' + item.name)][0];
         })
         this.setState({
             ...this.state,
@@ -107,8 +110,6 @@ class Form extends Component {
     handleOnChangeSelect = (selectedOption, action) => {
         this.setState({
             [action.name.parentState]: { ...this.state[action.name.parentState], [action.name.name]: selectedOption },
-            // totalObj: { ...this.state.totalObj, total2: this.state.totalObj.total2 + 1 }
-            // ['totalObj']: { ...this.state['totalObj'], ['total2']: this.state['totalObj']['total2'] + 1 }
         })
     }
 
@@ -139,12 +140,47 @@ class Form extends Component {
         // })
     }
 
-    handleButtonSubmitOnClick = (event) => {
-        event.target.reportValidity()
+    configPropertySentData = (data) => {
+        // console.log('bdac',data)
+        let properyArr = Object.getOwnPropertyNames(data)
+        for (let i = 0; i < properyArr.length; i++) {
+            if (properyArr[i].startsWith('option')) {
+                delete data[properyArr[i]]
+            }
+            if (typeof (data[properyArr[i]]) === 'object') { // conert select {value: '', label: ''} -> select: ''
+                data[properyArr[i]] = data[properyArr[i]].value
+            }
+        }
+        // console.log('adac',data)
+    }
+
+    handleButtonSubmitOnClick = async (event) => {
+        let dataCustomer = func.DEEP_COPY_OBJECT(this.state.inputCustomerForm), dataPack = func.DEEP_COPY_OBJECT(this.state.inputFrameCard)
+        this.configPropertySentData(dataCustomer)
+        this.configPropertySentData(dataPack)
+        console.log('after', dataCustomer, dataPack)
+        let data = {
+            payment: {
+                customer: dataCustomer,
+                pack: dataPack,
+                price: {
+                    total: this.state.total,
+                    vat: this.state.vat
+                }
+            }
+        }
         if (this.state.total === 0) {
             alert('Please choose at least 1 promote package')
-            // event.preventDefault();
+            event.preventDefault();
+            return
         }
+        if (this.state.check_term === false) {
+            return
+        }
+        event.preventDefault()
+        await func.HANDLE_CREATE_UPDATE(data, sentPayment)
+        // console.log('input', data, 'config', this.state.dataInputCustomerForm, 'pack', this.state.inputFrameCard)
+        // sent data: data
     }
 
     render() {
@@ -154,6 +190,8 @@ class Form extends Component {
         } = this.state;
         let { language } = this.props
         let footer = this.props?.footer?.data
+        // console.log('input c', inputCustomerForm)
+        // console.log('data c', dataInputCustomerForm)
         return (
             <>
                 <div className="form-container">
@@ -194,7 +232,10 @@ class Form extends Component {
                                                         total={total}
                                                     />
                                                     <div className="col-12">
-                                                        <input type="checkbox" className="checkbox-confirm" required></input>
+                                                        <input type="checkbox" className="checkbox-confirm" required
+                                                            checked={this.state.check_term}
+                                                            onChange={(event) => func.ONCHANGE_CHECKBOX(this, event, 'check_term')}
+                                                        ></input>
                                                         <label htmlFor="form-check-label checkbox-confirm-label">
                                                             <a href="#" data-toggle="modal" data-target="#exampleModal">I accept the terms & conditions*</a>
                                                         </label><br />

@@ -105,7 +105,7 @@ class CreateMenuItem extends Component {
 
     validate = (...args) => {
         args.map((item) => {
-            console.log(item)
+            // console.log(item)
         })
     }
 
