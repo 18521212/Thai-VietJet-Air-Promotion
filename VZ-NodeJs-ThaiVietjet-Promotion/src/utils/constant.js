@@ -107,6 +107,12 @@ export const resolveObj = {
             errMessage: errMessage
         }
     },
+    CREATE_UNSUCCEED: (data_table) => {
+        return {
+            errCode: 1,
+            errMessage: text.DELETE_UNSUCCEED(data_table)
+        }
+    },
     DELETE_UNSUCCEED: (data_table) => {
         return {
             errCode: 1,

@@ -13,6 +13,7 @@ import {
 import './App.scss';
 import HomePage from './HomePage/HomePage';
 import AdminPage from './AdminPage/AdminPage';
+import PaymentPage from './PaymentPage/PaymentPage';
 
 function App() {
     return (
@@ -20,6 +21,7 @@ function App() {
             <Routes>
                 <Route path="/:id?" element={<HomePage />} />
                 <Route path="/admin/*" element={<AdminPage />} />
+                <Route path="/payment/*" element={<PaymentPage />} />
             </Routes>
 
             <ToastContainer

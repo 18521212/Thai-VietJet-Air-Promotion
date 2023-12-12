@@ -73,7 +73,12 @@ export const func = {
     },
     HANDLE_CREATE_UPDATE: async (data, funcCreateUpdate, callBackFunc) => {
         let res = await funcCreateUpdate(data)
-        func.ALERT_RES(res) && callBackFunc && callBackFunc(res)
+        let valid = func.ALERT_RES(res)
+        valid && callBackFunc && callBackFunc(res)
+        return {
+            res: res,
+            valid: valid
+        }
     },
     HANDLE_CREATE_UPDATE_V2: (parent, objectDefault, serviceCreate, serviceUpdate) => {
         // usage
@@ -91,7 +96,7 @@ export const func = {
         const handleItem = (item) => {
             if (typeof (item) === 'object') {
                 if (item.property?.length > 0) {
-                    console.log('ob', func.OBJECT(parent.state, item.property))
+                // console.log('ob', func.OBJECT(parent.state, item.property))
                     data[item?.key] = func.OBJECT(parent.state, item.property)
                 } else {
                     data[item?.key] = parent.state.property

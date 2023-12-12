@@ -6,7 +6,11 @@ import { validateCustomerInput, validatePack } from "../middleware/paymentValida
 const router = express.Router()
 
 let routePayment = (app) => {
-    router.post('', validateCustomerInput, validatePack, paymentController.paymentPromotion)
+    router.post('',
+        validateCustomerInput,
+        validatePack,
+        paymentController.paymentPromotion
+    )
     // router.post('', validateCustomerInput)
 
     return app.use(api.PAYMENTS, router)

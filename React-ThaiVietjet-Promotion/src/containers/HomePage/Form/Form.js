@@ -10,6 +10,7 @@ import Footer from "../Footer/Footer";
 import * as actions from 'store/actions';
 import { func, association } from 'utils'
 import { sentPayment } from "services/paymentService";
+import withRouter from "components/withRouter/withRouter"
 
 class Form extends Component {
     constructor(props) {
@@ -155,7 +156,8 @@ class Form extends Component {
     }
 
     handleButtonSubmitOnClick = async (event) => {
-        let dataCustomer = func.DEEP_COPY_OBJECT(this.state.inputCustomerForm), dataPack = func.DEEP_COPY_OBJECT(this.state.inputFrameCard)
+        let dataCustomer = func.DEEP_COPY_OBJECT(this.state.inputCustomerForm),
+            dataPack = func.DEEP_COPY_OBJECT(this.state.inputFrameCard)
         this.configPropertySentData(dataCustomer)
         this.configPropertySentData(dataPack)
         console.log('after', dataCustomer, dataPack)
@@ -178,7 +180,9 @@ class Form extends Component {
             return
         }
         event.preventDefault()
-        await func.HANDLE_CREATE_UPDATE(data, sentPayment)
+        let resPayment = await func.HANDLE_CREATE_UPDATE(data, sentPayment)
+        console.log('respayment', resPayment)
+        resPayment.valid && this.props.navigate('/payment', { state: { resPayment: resPayment } })
         // console.log('input', data, 'config', this.state.dataInputCustomerForm, 'pack', this.state.inputFrameCard)
         // sent data: data
     }
@@ -195,7 +199,8 @@ class Form extends Component {
         return (
             <>
                 <div className="form-container">
-                    <form autoComplete="off" action="#">
+                    <form autoComplete="off"
+                    >
                         <div className="row">
                             <div className="col-sm-12">
                                 <h4 className="title-contact"> <FormattedMessage id="form.title" /> </h4>
@@ -307,4 +312,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Form);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Form));

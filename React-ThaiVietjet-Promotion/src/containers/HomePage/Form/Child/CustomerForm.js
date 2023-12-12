@@ -100,7 +100,7 @@ class CustomerForm extends Component {
                                             key={index}
                                             className="form-control"
                                             type={typeTextInput}
-                                            pattern={typeTextInput === 'tel' && "[0-9]{10}" || undefined}
+                                            // pattern={typeTextInput === 'tel' && "[0-9]" || undefined}
                                             onChange={(event) => this.handleOnChangeText(event)}
                                             value={inputCustomerForm[stateName]}
                                             placeholder={placeHolder}

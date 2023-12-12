@@ -2,7 +2,8 @@ const db = require('../models');
 const { resolveObj, func, type } = require('../utils');
 import { getInput } from '../services/formService';
 import { getPack } from '../services/promotionService';
-import { Pack } from '../class/Pack/Pack';
+import { Pack, PackArray } from '../class/Pack/Pack';
+var crypto = require('crypto');
 
 import _ from 'lodash';
 import validator from 'validator';
@@ -20,6 +21,7 @@ const validateCustomerInput = async (req, res, next) => {
     try {
         // console.log('payment infor:', req.body)
         let customer = req.body?.payment?.customer
+        console.log('cus', customer)
         if (!customer) { return res.status(200).json(resolveObj.MISSING_PARAMETERS) }
         let keyArr = Object.getOwnPropertyNames(customer)
         // console.log('keyrr', keyArr)
@@ -35,7 +37,7 @@ const validateCustomerInput = async (req, res, next) => {
             // console.log('val', valueText, _.upperCase(valueText))
             if (typeInput === 'text') {
                 let typeText = inputs.data[i].text_input.typeText
-                // console.log('type', typeText)
+                console.log('type', typeText)
                 if (typeText === 'email') {
                     // validate email
                     if (validator.isEmail(valueText) === false) {
@@ -76,11 +78,6 @@ const validateCustomerInput = async (req, res, next) => {
                 errMessage: errMessage
             })
         }
-
-        // return res.status(200).json({
-        //     errCode: 0,
-        //     errMessage: 'test'
-        // },)
         next()
     } catch (e) {
         console.log(e)
@@ -89,7 +86,19 @@ const validateCustomerInput = async (req, res, next) => {
 }
 
 let roundNumber = (number, round) => {
-    return parseFloat(number).toFixed(2);
+    return Number(parseFloat(number).toFixed(2));
+}
+
+let secureHash = (totalPriceInVat) => {
+    let MID = process.env.MID
+    let MREF = '0' // order id
+    let currencyCode = 764 // THB
+    let amount = totalPriceInVat // total price included vat
+    let paymentType = 'N' // normal
+    let secretKey = process.env.SECRET_KEY
+    let string = `${MID}|${MREF}|${currencyCode}|${amount}|${paymentType}|${secretKey}`
+    let encode = crypto.createHash('sha512').update(String(string)).digest('hex')
+    return encode
 }
 
 const validatePack = async (req, res, next) => {
@@ -98,55 +107,41 @@ const validatePack = async (req, res, next) => {
     let keyArr = Object.getOwnPropertyNames(pack)
     let idArr = getIdArr(keyArr)
     let packs = await getPack(idArr)
-    let validatePack = true
-    let errMessage = ''
-    let totalNumber = 0
     let packObjArr = []
     for (let i = 0; i < keyArr.length; i++) {
         let packObj = new Pack(packs.data[i])
         packObj.setSentNumber(pack[keyArr[i]])
         packObjArr.push(packObj)
-
-        totalNumber += packObj.sentNumber
-        let validatePackNum = packObj.checkNumberPack()
-        if (validatePackNum[0] === false) {
-            validatePack = false
-            errMessage = validatePackNum[1]
-            break
-        }
     }
-    if (totalNumber <= 0) {
-        validatePack = false
-        errMessage = 'invalid total number'
-    }
-    if (validatePack === false) {
+    let packArr = new PackArray(packObjArr)
+    let validatePackNum = packArr.checkNumberPack()
+    if (validatePackNum[0] === false) {
         return res.status(200).json({
             errCode: 1,
-            errMessage: errMessage
+            errMessage: validatePackNum[1]
         })
     }
+
     // re calculate
-    let totalIncludeVat = 0, totalVatFee = 0
-    for (let i = 0; i < keyArr.length; i++) {
-        totalVatFee += packObjArr[i].calcVatFee()
-        totalIncludeVat += packObjArr[i].calcPriceInVat()
-    }
-    let validatePayment = {
-        totalVAT: roundNumber(totalIncludeVat, 2),
-        vat: roundNumber(totalVatFee, 2)
-    }
     let price = req.body.payment.price
     price.total = roundNumber(price.total, 2)
     price.vat = roundNumber(price.vat, 2)
-    if (validatePayment.totalVAT !== price.total || validatePayment.vat !== price.vat) {
+    if (packArr.totalPriceInVat !== price.total || packArr.totalVatFee !== price.vat) {
         return res.status(200).json({
             errCode: 1,
             errMessage: 'total, vat incorrect'
         })
     }
+    let validatePayment = {
+        totalPriceInVat: packArr.totalPriceInVat,
+        totalVatFee: packArr.totalVatFee
+    }
+    res.productArr = packArr.packArr
     console.log('payment infor2:', req.body)
     res.validatePayment = validatePayment
     console.log('vapayment', validatePayment)
+    let encode = secureHash(validatePayment.totalPriceInVat)
+    res.secureHash = encode
     // return res.status(200).json({
     //     errCode: 0,
     //     errMessage: 'test' + JSON.stringify(validatePayment)
