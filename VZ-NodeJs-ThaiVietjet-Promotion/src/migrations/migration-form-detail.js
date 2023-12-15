@@ -28,6 +28,10 @@ module.exports = {
                 defaultValue: true,
                 allowNull: false
             },
+            nameApi: {
+                type: Sequelize.STRING,
+                allowNull: false
+            },
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE

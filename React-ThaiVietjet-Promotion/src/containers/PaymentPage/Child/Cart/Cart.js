@@ -24,7 +24,9 @@ class Cart extends Component {
         let data = resPayment?.res?.data?.productArr
         let totalPriceInVat = resPayment?.res?.data?.validatePayment?.totalPriceInVat
         let secureHash = resPayment?.res?.data?.secureHash
-        console.log('da cart', secureHash)
+        let prefixOrderId = resPayment?.res?.data?.prefixOrderId
+        let orderId = resPayment?.res?.data?.orderId
+        console.log('da cart', secureHash, prefixOrderId)
         return (
             <>
                 <h3>Cart</h3>
@@ -66,15 +68,15 @@ class Cart extends Component {
                                         </tr>
                                     </tbody>
                                 </table>
-                                <form name="payFormCcard" method="post" action=" https://psipay.bangkokbank.com/b2c/eng/payment/payForm.jsp"
+                                <form name="payFormCcard" method="post" action="https://psipay.bangkokbank.com/b2c/eng/payment/payForm.jsp"
                                 >
                                     <input type="hidden" name="merchantId" value="3082" />
                                     <input type="hidden" name="amount" value={totalPriceInVat} />
-                                    <input type="hidden" name="orderRef" value="0" />
+                                    <input type="hidden" name="orderRef" value={prefixOrderId} />
                                     <input type="hidden" name="currCode" value="764" />
-                                    <input type="hidden" name="successUrl" value="http://localhost:3000/payment/payment-status/Success.js" />
-                                    <input type="hidden" name="failUrl" value="http://localhost:3000/payment/payment-status/Fail.js" />
-                                    <input type="hidden" name="cancelUrl" value="http://localhost:3000/payment/payment-status/Cancel.js" />
+                                    <input type="hidden" name="successUrl" value={`http://localhost:3000/payment/payment-status/Success.js`} />
+                                    <input type="hidden" name="failUrl" value={`http://localhost:3000/payment/payment-status/Fail.js`} />
+                                    <input type="hidden" name="cancelUrl" value={`http://localhost:3000/payment/payment-status/Cancel.js`} />
                                     <input type="hidden" name="payType" value="N" />
                                     <input type="hidden" name="lang" value="E" />
                                     <input type="hidden" name="remark" value="-" />

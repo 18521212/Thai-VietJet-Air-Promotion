@@ -17,7 +17,8 @@ class FormDetail extends Component {
             selectedInput: '',
             order: '',
             widthMdScreen: '',
-            required: true
+            required: true,
+            nameApi: '',
         }
     }
 
@@ -29,7 +30,7 @@ class FormDetail extends Component {
     mapData = () => {
         func.MAP_STATE_ROUTE(this,
             { object: 'form', property: [{ key1: 'formId', key2: 'id' }] },
-            { object: 'formDetail', property: ['id', 'formId', 'order', 'widthMdScreen', 'required'] })
+            { object: 'formDetail', property: ['id', 'formId', 'order', 'widthMdScreen', 'required', 'nameApi'] })
     }
 
     handleOnChangeSelect = (selectedValue, actions) => {
@@ -42,7 +43,7 @@ class FormDetail extends Component {
 
     handleCreate = () => {
         func.HANDLE_CREATE_UPDATE_V2(this,
-            ['formId', { key: 'inputId', property: ['selectedInput', 'value', 'id'] }, 'order', 'widthMdScreen', 'required'],
+            ['formId', { key: 'inputId', property: ['selectedInput', 'value', 'id'] }, 'order', 'widthMdScreen', 'required', 'nameApi'],
             {
                 func: createFormDetail,
                 callBack: () => { func.NAV(this, -1) }
@@ -96,6 +97,13 @@ class FormDetail extends Component {
                             value='selectedInput'
                             options='inputOption'
                             parent={this}
+                        />
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="id">NameApi</label>
+                        <input type="text" class="form-control" id="id" aria-describedby="emailHelp"
+                            value={this.state.nameApi}
+                            onChange={(event) => func.ONCHANGE_TEXT(this, 'nameApi', event)}
                         />
                     </div>
                     <div className="w-100"></div>

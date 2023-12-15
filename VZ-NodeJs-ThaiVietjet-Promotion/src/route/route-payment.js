@@ -11,7 +11,10 @@ let routePayment = (app) => {
         validatePack,
         paymentController.paymentPromotion
     )
-    // router.post('', validateCustomerInput)
+    router.put('/orders',
+        paymentController.updateStatusOrder
+    )
+    // router.post('/datafeed', validateCustomerInput)
 
     return app.use(api.PAYMENTS, router)
 }

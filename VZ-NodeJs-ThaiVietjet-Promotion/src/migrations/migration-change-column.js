@@ -20,10 +20,11 @@ module.exports = {
 
         // add column
         // queryInterface.addColumn(
-        //     'Footers',
-        //     'term_and_condition',
+        //     'Form_Details',
+        //     'nameApi',
         //     {
-        //         type: Sequelize.INTEGER
+        //         type: Sequelize.STRING,
+        //         allowNull: false
         //     }
         // );
 
@@ -49,8 +50,8 @@ module.exports = {
         // )
 
         // queryInterface.removeColumn(
-        //     'Footers',
-        //     'term_and_condition',
+        //     'Form_Details',
+        //     'nameApi',
         // );
 
         // add column

@@ -1,15 +1,16 @@
 'use strict';
+
 module.exports = {
     up: async (queryInterface, Sequelize) => {
         await queryInterface.createTable('Orders', {
             id: {
                 allowNull: false,
-                autoIncrement: true,
+                defaultValue: Sequelize.UUIDV4,
                 primaryKey: true,
-                type: Sequelize.INTEGER
+                type: Sequelize.UUID
             },
             customerId: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.STRING,
                 allowNull: false
             },
             totalPriceInVat: {
@@ -24,6 +25,9 @@ module.exports = {
                 type: Sequelize.STRING,
                 allowNull: false,
                 // isIn: [['-1', '0']]
+            },
+            payRef: {
+                type: Sequelize.STRING,
             },
             createdAt: {
                 allowNull: false,

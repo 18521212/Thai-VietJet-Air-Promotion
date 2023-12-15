@@ -252,15 +252,16 @@ export const func = {
     STATENAME_INPUT: (item) => {
         let name
         let titleEn = item.input.text_input.titleDataText_Input.valueEn
-        name = _.camelCase(`${titleEn}`)
+        // name = _.camelCase(`${titleEn}`)
+        name = item.nameApi
         name = name + `-${item.input.id}`
         return name
     },
     STATENAME_DROPDOWN: (item) => {
-        let title = item.input.dropdown.title;
+        let nameApi = item.nameApi;
         let selectedName, optionName
-        selectedName = _.camelCase(title) + `-${item.input.id}`
-        optionName = _.camelCase('option' + title)
+        selectedName = nameApi + `-${item.input.id}`
+        optionName = _.camelCase('option' + nameApi)
         let name
         name = [selectedName, optionName]
         return name

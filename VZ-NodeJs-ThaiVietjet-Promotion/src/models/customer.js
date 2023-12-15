@@ -14,12 +14,12 @@ module.exports = (sequelize, DataTypes) => {
         }
     };
     Customer.init({
-       middleName: DataTypes.STRING,
-       familyName: DataTypes.STRING,
-       email: DataTypes.STRING,
-       phone: DataTypes.STRING,
-       passengerMiddleName: DataTypes.STRING,
-       passengerFamilyName: DataTypes.STRING,
+        middleGivenName: DataTypes.STRING,
+        familyName: DataTypes.STRING,
+        email: DataTypes.STRING,
+        phone: DataTypes.STRING,
+        passengerMiddleGivenName: DataTypes.STRING,
+        passengerFamilyName: DataTypes.STRING,
     }, {
         sequelize,
         modelName: 'Customer',

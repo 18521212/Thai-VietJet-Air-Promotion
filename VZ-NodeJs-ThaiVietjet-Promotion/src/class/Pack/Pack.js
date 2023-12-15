@@ -1,5 +1,6 @@
 class Pack {
     constructor(pack) {
+        this.id = pack?.id
         this.name = pack?.name
         this.price = pack?.price
         this.maxNumber = pack?.maxNumber

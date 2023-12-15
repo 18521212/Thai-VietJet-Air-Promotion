@@ -21,7 +21,7 @@ const validateCustomerInput = async (req, res, next) => {
     try {
         // console.log('payment infor:', req.body)
         let customer = req.body?.payment?.customer
-        console.log('cus', customer)
+        // console.log('cus', customer) //
         if (!customer) { return res.status(200).json(resolveObj.MISSING_PARAMETERS) }
         let keyArr = Object.getOwnPropertyNames(customer)
         // console.log('keyrr', keyArr)
@@ -89,17 +89,17 @@ let roundNumber = (number, round) => {
     return Number(parseFloat(number).toFixed(2));
 }
 
-let secureHash = (totalPriceInVat) => {
-    let MID = process.env.MID
-    let MREF = '0' // order id
-    let currencyCode = 764 // THB
-    let amount = totalPriceInVat // total price included vat
-    let paymentType = 'N' // normal
-    let secretKey = process.env.SECRET_KEY
-    let string = `${MID}|${MREF}|${currencyCode}|${amount}|${paymentType}|${secretKey}`
-    let encode = crypto.createHash('sha512').update(String(string)).digest('hex')
-    return encode
-}
+// let secureHash = (totalPriceInVat) => {
+//     let MID = process.env.MID
+//     let MREF = '0' // order id
+//     let currencyCode = 764 // THB
+//     let amount = totalPriceInVat // total price included vat
+//     let paymentType = 'N' // normal
+//     let secretKey = process.env.SECRET_KEY
+//     let string = `${MID}|${MREF}|${currencyCode}|${amount}|${paymentType}|${secretKey}`
+//     let encode = crypto.createHash('sha512').update(String(string)).digest('hex')
+//     return encode
+// }
 
 const validatePack = async (req, res, next) => {
     let pack = req.body.payment.pack
@@ -108,9 +108,11 @@ const validatePack = async (req, res, next) => {
     let idArr = getIdArr(keyArr)
     let packs = await getPack(idArr)
     let packObjArr = []
+    let unitPricesObj = {}
     for (let i = 0; i < keyArr.length; i++) {
         let packObj = new Pack(packs.data[i])
         packObj.setSentNumber(pack[keyArr[i]])
+        unitPricesObj[packObj.id] = packObj.price
         packObjArr.push(packObj)
     }
     let packArr = new PackArray(packObjArr)
@@ -137,11 +139,14 @@ const validatePack = async (req, res, next) => {
         totalVatFee: packArr.totalVatFee
     }
     res.productArr = packArr.packArr
-    console.log('payment infor2:', req.body)
+    req.body.payment.unitPricesPack = unitPricesObj
+    // console.log('payment infor2:', req.body)
     res.validatePayment = validatePayment
-    console.log('vapayment', validatePayment)
-    let encode = secureHash(validatePayment.totalPriceInVat)
-    res.secureHash = encode
+    // console.log('vapayment', validatePayment)
+
+    // let encode = secureHash(validatePayment.totalPriceInVat)
+    // res.secureHash = encode
+
     // return res.status(200).json({
     //     errCode: 0,
     //     errMessage: 'test' + JSON.stringify(validatePayment)

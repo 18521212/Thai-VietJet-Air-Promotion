@@ -14,6 +14,7 @@ import './App.scss';
 import HomePage from './HomePage/HomePage';
 import AdminPage from './AdminPage/AdminPage';
 import PaymentPage from './PaymentPage/PaymentPage';
+import DataFeed from './DataFeed/DataFeed';
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
                 <Route path="/:id?" element={<HomePage />} />
                 <Route path="/admin/*" element={<AdminPage />} />
                 <Route path="/payment/*" element={<PaymentPage />} />
+                <Route path="/datafeed/*" element={<DataFeed />} />
             </Routes>
 
             <ToastContainer

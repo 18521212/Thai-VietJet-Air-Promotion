@@ -20,7 +20,8 @@ module.exports = (sequelize, DataTypes) => {
         inputId: DataTypes.INTEGER,
         order: DataTypes.INTEGER,
         widthMdScreen: DataTypes.INTEGER,
-        required: DataTypes.BOOLEAN
+        required: DataTypes.BOOLEAN,
+        nameApi: DataTypes.STRING,
     }, {
         sequelize,
         modelName: 'Form_Detail',

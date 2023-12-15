@@ -72,7 +72,7 @@ class Form extends Component {
             if (item.input?.typeInput === 'text') {
                 stateCopy[func.STATENAME_INPUT(item)] = ''
             } else if (item.input.typeInput === 'dropdown') {
-                let title = item.input.dropdown.title;
+                // let title = item.input.dropdown.title;
                 let name = func.STATENAME_DROPDOWN(item)
                 let selectedName = name[0], optionName = name[1]
                 stateCopy[selectedName] = '';
@@ -84,27 +84,27 @@ class Form extends Component {
                 stateCopy[selectedName] = stateCopy[optionName][0];
             }
         })
+        // pack option
         let packData = this.props.promotion
-        let { inputFrameCard } = this.state
-        let stateCopy2 = {
-            ...inputFrameCard
+        let stateCopyFrameCard = {
+            ...this.state.inputFrameCard
         }
         packData?.data.pack.map((item, index) => {
-            stateCopy2[_.camelCase('option' + item.name)] = '';
+            stateCopyFrameCard[_.camelCase('option' + item.name)] = '';
             let option = []
             for (let i = 0; i <= item.maxNumber; i++) {
                 option.push({ value: i, label: i })
             }
-            stateCopy2[_.camelCase('option' + item.name)] = option;
+            stateCopyFrameCard[_.camelCase('option' + item.name)] = option;
             // stateCopy2[_.camelCase('selected' + item.name)] = stateCopy2[_.camelCase('option' + item.name)][0];
-            stateCopy2[_.camelCase(item.name) + `-${item.id}`] = stateCopy2[_.camelCase('option' + item.name)][0];
+            stateCopyFrameCard[_.camelCase(item.name) + `-${item.id}`] = stateCopyFrameCard[_.camelCase('option' + item.name)][0];
         })
         this.setState({
             ...this.state,
             inputCustomerForm: stateCopy,
             dataInputCustomerForm: listInput,
             packData: packData?.data.pack,
-            inputFrameCard: stateCopy2,
+            inputFrameCard: stateCopyFrameCard,
         })
     }
 

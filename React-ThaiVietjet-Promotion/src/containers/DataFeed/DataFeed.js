@@ -1,5 +1,5 @@
 import { Component } from 'react';
-// import './PaymentStatus.scss';
+// import './DataFeed.scss';
 import withRouter from 'components/withRouter/withRouter';
 import { connect } from 'react-redux';
 import * as actions from 'store/actions';
@@ -7,13 +7,9 @@ import {
     Routes,
     Route,
 } from "react-router-dom";
-import PaymentSuccess from './Child/Payment Success/PaymentSuccess';
-import PaymentFail from './Child/Payment Fail/PaymentFail';
-import PaymentCancel from './Child/Payment Cancel/PaymentCancel';
 import { updateOrderStatus } from 'services/paymentService';
-import DataFeed from './Child/DataFeed/DataFeed';
 
-class PaymentStatus extends Component {
+class DataFeed extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -26,22 +22,21 @@ class PaymentStatus extends Component {
     }
 
     updateOrdStatus = async () => {
-        let orderRef = this.props.searchParams.get('Ref')
+        let orderRef = 1
         let resUpdateOrdStatus = await updateOrderStatus({ orderRef: orderRef })
     }
 
     render() {
-        let type = this.props.params?.type
-        let orderId = this.props.params?.orderId
-        console.log('typ', type, 'ord id', this.props.searchParams.get('Ref'))
+        let successcode = this.props.params?.successcode
+        console.log('prop', this.props)
+
+        let queryString = window.location.params
+        console.log('qry str', queryString)
         return (
             <>
-                <h5>Payment Status</h5>
+                {successcode == 0 ? 'Ok' : undefined}
+                <h5>DataFeed</h5>
                 <br></br>
-                {type === 'Success.js' && <PaymentSuccess />}
-                {type === 'Fail.js' && <PaymentFail />}
-                {type === 'Cancel.js' && <PaymentCancel />}
-                {type === 'datafeed' && <DataFeed />}
             </>
         )
     }
@@ -59,4 +54,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PaymentStatus));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(DataFeed));

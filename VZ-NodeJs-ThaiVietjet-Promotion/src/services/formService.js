@@ -145,7 +145,7 @@ let getFormDetailByFormId = (formId) => {
 let addInputIntoForm = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.formId || !data.inputId) {
+            if (!data.formId || !data.inputId || !data.nameApi) {
                 resolve(resolveObj.MISSING_PARAMETERS)
                 return
             }
@@ -170,7 +170,8 @@ let addInputIntoForm = (data) => {
                     inputId: data.inputId,
                     order: data.order ? data.order : undefined,
                     widthMdScreen: data.widthMdScreen ? data.widthMdScreen : undefined,
-                    required: data.required
+                    required: data.required,
+                    nameApi: data.nameApi
                 }, { transaction: t })
             })
             resolve(resolveObj.CREATE_SUCCEED())
@@ -183,7 +184,7 @@ let addInputIntoForm = (data) => {
 let updateFormDetail = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.id || (!data.order && !data.widthMdScreen && !data.inputId)) {
+            if (!data.id || (!data.order && !data.widthMdScreen && !data.inputId && !data.nameApi)) {
                 resolve(resolveObj.MISSING_PARAMETERS)
                 return
             }
@@ -203,7 +204,8 @@ let updateFormDetail = (data) => {
                     inputId: data.inputId,
                     order: data.order && data.order,
                     widthMdScreen: data.widthMdScreen && data.widthMdScreen,
-                    required: data.required
+                    required: data.required,
+                    nameApi: data.nameApi
                 }, { transaction: t })
 
                 await formDetail.save({ transaction: t })

@@ -14,18 +14,24 @@ module.exports = (sequelize, DataTypes) => {
         }
     };
     Order.init({
+        id: {
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
+            primaryKey: true,
+            allowNull: false
+        },
         customerId: DataTypes.INTEGER,
         totalPriceInVat: DataTypes.FLOAT,
         totalVatFee: DataTypes.FLOAT,
-        status: DataTypes.STRING
+        status: DataTypes.STRING,
+        payRef: DataTypes.STRING
     }, {
         sequelize,
         modelName: 'Order',
         hooks: {
-            beforeCreate: (item, options) => {
-                if (item.id === 1) {
-                    item.id = 2
-                }
+            afterCreate: (item, options) => {
+                // Add your prefix here, for example, 'user-'
+                // uneditable primary key
             },
         },
     });

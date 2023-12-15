@@ -1,14 +1,16 @@
 'use strict';
+
 module.exports = {
     up: async (queryInterface, Sequelize) => {
         await queryInterface.createTable('Customers', {
             id: {
                 allowNull: false,
+                // defaultValue: Sequelize.UUIDV4,
                 autoIncrement: true,
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            middleName: {
+            middleGivenName: {
                 type: Sequelize.STRING,
             },
             familyName: {
@@ -16,12 +18,11 @@ module.exports = {
             },
             email: {
                 type: Sequelize.STRING,
-                unique: true
             },
             phone: {
                 type: Sequelize.STRING,
             },
-            passengerMiddleName: {
+            passengerMiddleGivenName: {
                 type: Sequelize.STRING,
             },
             passengerFamilyName: {

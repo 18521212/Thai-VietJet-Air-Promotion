@@ -42,8 +42,9 @@ class CustomerForm extends Component {
                     {dataInputCustomerForm && dataInputCustomerForm.length > 0 &&
                         dataInputCustomerForm.map((item, index) => {
                             if (item.input.typeInput === 'dropdown') {
-                                let stateName = _.camelCase(item.input.dropdown.title) + `-${item.input.id}`
-                                let optionStateName = _.camelCase('option' + item.input.dropdown.title)
+                                let nameConfig = func.STATENAME_DROPDOWN(item)
+                                let stateName = nameConfig[0]
+                                let optionStateName=nameConfig[1]
                                 let name = {
                                     parentState: 'inputCustomerForm',
                                     name: stateName

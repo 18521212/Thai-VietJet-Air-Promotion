@@ -55,8 +55,13 @@ const postAPI = (link, data) => {
     return axios.post(link, data)
 }
 
+const putAPI = (link, data) => {
+    return axios.put(link,data)
+}
+
 export {
     create, get,
     update, deleteData,
     postAPI,
+    putAPI,
 }
