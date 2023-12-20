@@ -7,6 +7,7 @@ import routeForm from './route-form'
 import routePromotion from './route-promotion'
 import routeFooter from './route-footer'
 import routePayment from './route-payment'
+import routeDatafeed from './route-datafeed'
 
 let mergeRoute = (app) => {
     initWebRoutes(app);
@@ -18,6 +19,7 @@ let mergeRoute = (app) => {
     routePromotion(app)
     routeFooter(app)
     routePayment(app)
+    routeDatafeed(app)
 }
 
 module.exports = mergeRoute;

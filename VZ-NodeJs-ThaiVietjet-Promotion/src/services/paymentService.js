@@ -160,9 +160,31 @@ let updateStatusOrder = (data) => {
     })
 }
 
+let dataFeed = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = await await axios.get('http://localhost:3000/datafeed', {
+                // params: {
+                //     merchantId: '3082',
+                //     loginId: 'VietjetApi',
+                //     password: 'Api1234',
+                //     actionType: 'Query',
+                //     orderRef: prefixOrderId,
+                // }
+            })
+            console.log('data datafeed', data)
+            resolve(resolveObj.UPDATE_SUCCEED())
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
 module.exports = {
     paymentPromotion,
 
     createOrder_OrderDetail_Customer,
-    updateStatusOrder
+    updateStatusOrder,
+
+    dataFeed,
 }

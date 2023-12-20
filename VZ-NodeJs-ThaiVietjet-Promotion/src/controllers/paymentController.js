@@ -86,7 +86,20 @@ let updateStatusOrder = async (req, res) => {
     }
 }
 
+let dataFeed = async (req, res) => {
+    try {
+        console.log('datafeed controller',req.body)
+        // let data = await paymentService.dataFeed(req.body)
+        return res.status(200).json({})
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json(resolveObj.ERROR_SERVER)
+    }
+}
+
 module.exports = {
     paymentPromotion,
     updateStatusOrder,
+    
+    dataFeed
 }

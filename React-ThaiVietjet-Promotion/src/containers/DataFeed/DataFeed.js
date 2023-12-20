@@ -7,7 +7,7 @@ import {
     Routes,
     Route,
 } from "react-router-dom";
-import { updateOrderStatus } from 'services/paymentService';
+import { updateOrderStatus, dataFeed } from 'services/paymentService';
 
 class DataFeed extends Component {
     constructor(props) {
@@ -17,26 +17,23 @@ class DataFeed extends Component {
         }
     }
 
-    componentDidMount() {
-        this.updateOrdStatus()
-    }
+    // componentDidMount() {
+    //     this.updateOrdStatus()
+    // }
 
     updateOrdStatus = async () => {
-        let orderRef = 1
-        let resUpdateOrdStatus = await updateOrderStatus({ orderRef: orderRef })
+        let orderRef = this.props.params?.Ref
+        // let resUpdateOrdStatus = await updateOrderStatus({ orderRef: orderRef })
+        // await dataFeed()
     }
 
     render() {
-        let successcode = this.props.params?.successcode
-        console.log('prop', this.props)
-
-        let queryString = window.location.params
-        console.log('qry str', queryString)
+        return null
         return (
             <>
-                {successcode == 0 ? 'Ok' : undefined}
+                {/* {successcode == 0 ? 'OK' : undefined}
                 <h5>DataFeed</h5>
-                <br></br>
+                <br></br> */}
             </>
         )
     }

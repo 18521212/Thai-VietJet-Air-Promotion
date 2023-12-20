@@ -22,7 +22,7 @@ class PaymentStatus extends Component {
     }
 
     componentDidMount() {
-        this.updateOrdStatus()
+        // this.updateOrdStatus()
     }
 
     updateOrdStatus = async () => {

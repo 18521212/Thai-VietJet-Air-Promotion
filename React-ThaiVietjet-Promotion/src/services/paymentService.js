@@ -5,11 +5,17 @@ const sentPayment = (data) => {
     return postAPI(api.PAYMENTS, data)
 }
 
-const updateOrderStatus = (data)=>{
-    return putAPI(`${api.PAYMENTS}/orders`, {orderRef: data.orderRef})
+const updateOrderStatus = (data) => {
+    return putAPI(`${api.PAYMENTS}/orders`, { orderRef: data.orderRef })
+}
+
+const dataFeed = (data) => {
+    return postAPI('/datafeed', {})
 }
 
 export {
     sentPayment,
-    updateOrderStatus
+    updateOrderStatus,
+
+    dataFeed
 }

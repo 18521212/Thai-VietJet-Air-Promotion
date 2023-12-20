@@ -15,6 +15,15 @@ import HomePage from './HomePage/HomePage';
 import AdminPage from './AdminPage/AdminPage';
 import PaymentPage from './PaymentPage/PaymentPage';
 import DataFeed from './DataFeed/DataFeed';
+import { json } from "react-router-dom";
+
+const jsonData = () => {
+    let data = {
+        "status": 200,
+        "message": "blabla.."
+    }
+    return JSON.parse(data)
+}
 
 function App() {
     return (
@@ -23,7 +32,8 @@ function App() {
                 <Route path="/:id?" element={<HomePage />} />
                 <Route path="/admin/*" element={<AdminPage />} />
                 <Route path="/payment/*" element={<PaymentPage />} />
-                <Route path="/datafeed/*" element={<DataFeed />} />
+                <Route path="/datafeed/*" element={<jsonData />} />
+                {/* <Route path="/datafeed/*" element={<DataFeed />} /> */}
             </Routes>
 
             <ToastContainer
