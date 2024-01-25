@@ -72,7 +72,11 @@ export const func = {
         }
     },
     HANDLE_CREATE_UPDATE: async (data, funcCreateUpdate, callBackFunc) => {
+        // let id = toast.loading('Sending form')
         let res = await funcCreateUpdate(data)
+        // if (res.errCode == 0) {
+        //     toast.update(id, { render: "All is good", type: "success", isLoading: false, closeOnClick: true, autoClose: 3000 })
+        // }
         let valid = func.ALERT_RES(res)
         valid && callBackFunc && callBackFunc(res)
         return {
@@ -96,7 +100,7 @@ export const func = {
         const handleItem = (item) => {
             if (typeof (item) === 'object') {
                 if (item.property?.length > 0) {
-                // console.log('ob', func.OBJECT(parent.state, item.property))
+                    // console.log('ob', func.OBJECT(parent.state, item.property))
                     data[item?.key] = func.OBJECT(parent.state, item.property)
                 } else {
                     data[item?.key] = parent.state.property

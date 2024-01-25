@@ -1,0 +1,35 @@
+.invoice {
+    height: 100vh;
+    background-image: url('https://s3.ap-southeast-1.amazonaws.com/th.vietjetair.com/uploads/dLj5L9s3REUPcEvihspVA5GYL31YuzohYqHEZkJA.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    .transaction-frame {
+        font-size: 1.4rem;
+        border-radius: 15px;
+        overflow: hidden;
+
+        .header {
+            padding: 1rem 1rem;
+            padding-top: 1.2rem;
+            font-size: 16px;
+            font-weight: 900;
+            background-color: #ffdd00;
+        }
+
+        .body-cart {
+            .infor-row {
+                position: relative;
+
+                .p-left {
+                    font-weight: 800;
+                }
+
+                .p-right {
+                    position: absolute;
+                    right: 0;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,71 @@
+.cart {
+    height: 100vh;
+    background-image: url('https://s3.ap-southeast-1.amazonaws.com/th.vietjetair.com/uploads/dLj5L9s3REUPcEvihspVA5GYL31YuzohYqHEZkJA.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    .customer-frame {
+        font-size: 1.4rem;
+        border-radius: 15px;
+        overflow: hidden;
+
+        .header {
+            padding: 1rem 1rem;
+            padding-top: 1.2rem;
+            font-size: 16px;
+            font-weight: 900;
+            background-color: #6ab72e;
+        }
+
+        .body-cart {
+            .infor-row {
+                position: relative;
+
+                .p-left {
+                    font-weight: 800;
+                }
+
+                .p-right {
+                    position: absolute;
+                    right: 0;
+                }
+            }
+        }
+    }
+
+    .purchase-frame {
+        font-size: 1.4rem;
+        border-radius: 15px;
+        overflow: hidden;
+        // border-top: 5px solid #6ab72e !important;
+
+        .header {
+            padding: 1rem 1rem;
+            padding-top: 1.2rem;
+            font-size: 16px;
+            font-weight: 900;
+            background-color: rgb(218, 33, 40);
+        }
+    }
+
+    .btn-paynow {
+        color: #000;
+        background: linear-gradient(26.73deg, #f9a51a 13.7%, #fbb612 29.8%, #fd0 66.81%);
+        font-family: JambonoMedium;
+        font-weight: 600;
+        font-size: 1.6rem;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        transition-duration: .4s;
+        text-transform: inherit;
+        overflow: hidden;
+        position: relative;
+        width: 140px;
+        height: 50px;
+        padding: 10px 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}

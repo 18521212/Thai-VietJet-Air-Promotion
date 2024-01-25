@@ -48,6 +48,8 @@ let reconfigKeyOrderDetail = (products, unitPrices) => {
 
 let paymentPromotion = async (req, res) => {
     try {
+        // const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+        // await delay(10000) /// waiting 1 second.
         let reconfigData = {}
         let payment = req.body.payment
         let reconfigCustomer = reconfigKeyCustomer(payment.customer)
@@ -68,6 +70,9 @@ let paymentPromotion = async (req, res) => {
         }
         console.log('res', dataCreate.data.order.id, 'len', dataCreate.data.order.id.length)
         let data = await paymentService.paymentPromotion(res);
+        // send email
+        // paymentService.sendEmail(dataCreate.data.order.id, reconfigData.customer.email) // plain ref
+        data.data.customer = reconfigCustomer
         return res.status(200).json(data)
     } catch (e) {
         console.log(e);
@@ -77,8 +82,17 @@ let paymentPromotion = async (req, res) => {
 
 let updateStatusOrder = async (req, res) => {
     try {
-        console.log('controller upd pay status')
         let data = await paymentService.updateStatusOrder({ orderRef: req.body.orderRef })
+        return res.status(200).json(data)
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json(resolveObj.ERROR_SERVER)
+    }
+}
+
+let updateProcessingOrder = async (req, res) => {
+    try {
+        let data = await paymentService.updateProcessingOrder(req.body)
         return res.status(200).json(data)
     } catch (e) {
         console.log(e);
@@ -88,9 +102,19 @@ let updateStatusOrder = async (req, res) => {
 
 let dataFeed = async (req, res) => {
     try {
-        console.log('datafeed controller',req.body)
-        // let data = await paymentService.dataFeed(req.body)
-        return res.status(200).json({})
+        console.log('datafeed controller', req.body)
+        let data = await paymentService.dataFeed(req.body)
+        return res.status(200).send('OK ' + JSON.stringify(data))
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json(resolveObj.ERROR_SERVER)
+    }
+}
+
+let getOrder = async (req, res) => {
+    try {
+        let data = await paymentService.getOrder(req.params)
+        res.status(200).json(data)
     } catch (e) {
         console.log(e);
         return res.status(200).json(resolveObj.ERROR_SERVER)
@@ -100,6 +124,8 @@ let dataFeed = async (req, res) => {
 module.exports = {
     paymentPromotion,
     updateStatusOrder,
-    
-    dataFeed
+    updateProcessingOrder,
+
+    dataFeed,
+    getOrder,
 }

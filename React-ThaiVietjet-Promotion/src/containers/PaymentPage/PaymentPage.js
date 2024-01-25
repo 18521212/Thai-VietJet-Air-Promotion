@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 import Cart from './Child/Cart/Cart';
 import PaymentStatus from './Child/Payment Status/PaymentStatus';
-// import DataFeed from './Child/DataFeed/DataFeed';
+import Invoice from './Child/Invoice/Invoice';
 
 class PaymentPage extends Component {
     constructor(props) {
@@ -22,10 +22,10 @@ class PaymentPage extends Component {
     render() {
         return (
             <>
-                <h5>Payment</h5>
                 <Routes>
                     <Route index element={<Cart />} />
                     <Route path="/payment-status/:type" element={<PaymentStatus />} ></Route>
+                    <Route path="/invoice/:ref" element={<Invoice />}></Route>
                     {/* <Route path="/datafeed" element={<DataFeed />} ></Route> */}
                 </Routes>
             </>

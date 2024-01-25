@@ -11,6 +11,7 @@ import * as actions from 'store/actions';
 import { func, association } from 'utils'
 import { sentPayment } from "services/paymentService";
 import withRouter from "components/withRouter/withRouter"
+import { toast } from 'react-toastify'
 
 class Form extends Component {
     constructor(props) {
@@ -183,8 +184,6 @@ class Form extends Component {
         let resPayment = await func.HANDLE_CREATE_UPDATE(data, sentPayment)
         console.log('respayment', resPayment)
         resPayment.valid && this.props.navigate('/payment', { state: { resPayment: resPayment } })
-        // console.log('input', data, 'config', this.state.dataInputCustomerForm, 'pack', this.state.inputFrameCard)
-        // sent data: data
     }
 
     render() {
@@ -281,7 +280,6 @@ class Form extends Component {
                                             }
                                         }
                                     >
-
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

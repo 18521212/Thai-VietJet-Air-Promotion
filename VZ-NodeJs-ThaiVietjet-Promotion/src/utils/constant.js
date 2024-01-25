@@ -113,6 +113,12 @@ export const resolveObj = {
             errMessage: text.DELETE_UNSUCCEED(data_table)
         }
     },
+    UPDATE_UNSUCCEED: (table)=>{
+        return {
+            errCode: 1,
+            errMessage: text.UPDATE_UNSUCCEED(table)
+        }
+    },
     DELETE_UNSUCCEED: (data_table) => {
         return {
             errCode: 1,

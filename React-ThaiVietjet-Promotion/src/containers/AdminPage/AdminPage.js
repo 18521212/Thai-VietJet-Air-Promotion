@@ -7,6 +7,7 @@ import HeaderControl from './Child/Header Control/HeaderControl';
 import {
     Routes,
     Route,
+    Navigate,
 } from "react-router-dom";
 import BannerControl from './Child/Banner Control/BannerControl';
 import BodyControl from './Child/Body Control/BodyControl';
@@ -55,7 +56,7 @@ class AdminPage extends Component {
                 />
                 <h1 className='title-admin'>Admin Page</h1> <hr></hr>
                 <Routes>
-                    <Route index element={<CampaignControl />} />
+                    <Route index element={<Navigate to='/admin/campaign' />} />
                     <Route path="/campaign*" element={<CampaignControl />} />
                     <Route path="/header*" element={<HeaderControl />} />
                     <Route path="/banner*" element={<BannerControl />} />

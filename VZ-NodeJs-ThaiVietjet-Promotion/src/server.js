@@ -12,6 +12,7 @@ app.use(function (req, res, next) {
 
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', process.env.URL_REACT);
+    // res.setHeader('Access-Control-Allow-Origin', '*');
 
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -41,6 +42,36 @@ mergeRoute(app)
 
 connectDB();
 
+// -- schedule
+
+// const schedule = require('node-schedule');
+
+// const job = schedule.scheduleJob('*/5 * * * * *', function () {
+//     console.log('Schedule!');
+// });
+
+// job.cancel()
+
+// --
+
+// -- event listener
+
+// const EventEmitter = require('node:events');
+// class MyEmitter extends EventEmitter {}
+// const myEmitter = new MyEmitter();
+// myEmitter.on('createOrder', () => {
+//   console.log('event order')
+// });
+
+// --
+
+// -- monitor Order
+
+import { monitorOrder } from "./services/paymentService";
+
+monitorOrder()
+
+// --
 let port = process.env.PORT || 3003;
 
 app.listen(port, () => {

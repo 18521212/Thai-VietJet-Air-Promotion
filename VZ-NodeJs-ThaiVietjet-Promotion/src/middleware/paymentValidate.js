@@ -20,12 +20,12 @@ let getIdArr = (object) => {
 const capitalizeString = (str) => {
     // Split the string into words using spaces as the delimiter
     const words = str.split(' ');
-  
+
     // Capitalize each word and join them back together with spaces
     const capitalizedWords = words.map(word => _.capitalize(word)).join(' ');
-  
+
     return capitalizedWords;
-  };
+};
 
 const validateCustomerInput = async (req, res, next) => {
     try {
@@ -68,8 +68,7 @@ const validateCustomerInput = async (req, res, next) => {
                     }
                 } else {
                     // validate text
-                    console.log('check text', validator.isAlpha(valueText, 'en-US', { ignore: ' ' }), valueText, capitalizeString(valueText))
-                    if (validator.isAlpha(valueText, 'en-US', { ignore: /\s/ }) === false || valueText !== capitalizeString(valueText)) {
+                    if (validator.isAlpha(valueText, 'en-US', { ignore: ' ' }) === false || valueText !== capitalizeString(valueText)) {
                         validateInput = false
                         errMessage = 'invalid text'
                         break

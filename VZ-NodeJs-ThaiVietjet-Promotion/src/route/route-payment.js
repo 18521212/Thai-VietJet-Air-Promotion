@@ -14,6 +14,10 @@ let routePayment = (app) => {
     router.put('/orders',
         paymentController.updateStatusOrder
     )
+    router.put('/orders/status/processing',
+        paymentController.updateProcessingOrder
+    )
+    router.get('/orders/:ref', paymentController.getOrder)
     // router.post('/datafeed', validateCustomerInput)
 
     return app.use(api.PAYMENTS, router)

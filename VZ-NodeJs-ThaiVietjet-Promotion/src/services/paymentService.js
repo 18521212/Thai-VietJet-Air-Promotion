@@ -1,13 +1,18 @@
+const { waitForDebugger } = require('inspector');
 const db = require('../models');
 const { resolveObj, func, type } = require('../utils');
 const axios = require('axios');
-
-var crypto = require('crypto');
 
 const { XMLParser, XMLValidator } = require('fast-xml-parser');
 const optionsXML = {
     ignoreAttributes: false
 };
+
+let sha512 = (string) => {
+    var crypto = require('crypto');
+    let encode = crypto.createHash('sha512').update(String(string)).digest('hex')
+    return encode
+}
 
 let secureHash = (totalPriceInVat, orderId) => {
     let MID = process.env.MID
@@ -17,11 +22,14 @@ let secureHash = (totalPriceInVat, orderId) => {
     let paymentType = 'N' // normal
     let secretKey = process.env.SECRET_KEY
     let string = `${MID}|${MREF}|${currencyCode}|${amount}|${paymentType}|${secretKey}`
-    let encode = crypto.createHash('sha512').update(String(string)).digest('hex')
+    let encode = sha512(string)
     return encode
 }
 
 let prefixOrdId = (orderId, prefix = '') => {
+    if (orderId.startsWith(prefix) && orderId.length == 35) {
+        return orderId
+    }
     let subStrOrderId = orderId.replace(/-/g, '') // remove " - " character
     let prefixOrderId = prefix + subStrOrderId// add prefix
     return prefixOrderId
@@ -52,10 +60,9 @@ let paymentPromotion = (data) => {
                 resolve(resolveObj.MISSING_PARAMETERS)
                 return
             }
-            console.log('pre ord', prefixOrderId, prefixOrderId.length)
-
             let encode = secureHash(data.validatePayment.totalPriceInVat, prefixOrderId)
             data.secureHash = encode
+            console.log('encode:', encode)
 
             resolve({
                 errCode: 0,
@@ -82,12 +89,6 @@ let createOrder_OrderDetail_Customer = (data) => {
                 // create customer
                 let customerSent = data.customer
                 let customer = await db.Customer.create({
-                    // middleName: customerSent.middleGivenName,
-                    // familyName: customerSent.familyName,
-                    // passengerMiddleName: customerSent.passengerMiddleGivenName,
-                    // passengerFamilyName: customerSent.passengerFamilyName,
-                    // email: customerSent.email,
-                    // phone: customerSent.phone
                     ...customerSent
                 })
                 // create order
@@ -97,8 +98,9 @@ let createOrder_OrderDetail_Customer = (data) => {
                     totalPriceInVat: orderSent.totalPriceInVat,
                     totalVatFee: orderSent.totalVatFee,
                     payRef: data.payRef,
-                    status: 'Pending' // fix status data init
+                    status: 'Draft' // fixed status data init
                 })
+                // monitorOrder()
                 // create order detail
                 let orderDetailSent = data.orderDetail
                 for (let i = 0; i < orderDetailSent.length; i++) {
@@ -129,6 +131,7 @@ let updateStatusOrder = (data) => {
                 resolve(resolveObj.MISSING_PARAMETERS)
                 return
             }
+            let orderUpdated = false
             await db.sequelize.transaction(async (t) => {
                 let link2 = `https://psipay.bangkokbank.com/b2c/eng/merchant/api/orderApi.jsp`
                 let linktest = `https://psipay.bangkokbank.com/b2c/eng/merchant/api/orderApi.jsp?merchantId=3082&loginId=VietjetApi&password=Api1234&actionType=Query&orderRef=1`
@@ -144,18 +147,84 @@ let updateStatusOrder = (data) => {
                 })
                 const parser = new XMLParser(optionsXML);
                 let jsonObj = parser.parse(data1.data);
-                let orderStatus = jsonObj.records.record.orderStatus
-                console.log('up sta', orderStatus)
+                // console.log('record', data1.data)
                 let orderId = delPrefixOrdId(orderRef, 'OT-')
                 let order = await db.Order.findOne({ where: { id: orderId } })
-                await order.update({
-                    status: orderStatus
-                })
+                if (jsonObj.records.record) {
+                    let orderStatus = jsonObj.records.record.orderStatus
+                    console.log('st', orderStatus)
+                    if (order) {
+                        if (['Accepted', 'Rejected', 'Cancelled'].includes(order.status)) {
+                            resolve({
+                                errCode: 0,
+                                errMessage: 'Order has been handled'
+                            })
+                            return
+                        }
+                        orderUpdated = await order.update({
+                            status: orderStatus
+                        })
+                        await order.reload()
+                        if (order && ['Accepted', 'Rejected', 'Cancelled'].includes(order.status)) {
+                            // send email
+                            let customer = await db.Customer.findOne({ where: { id: order.customerId } })
+                            console.log('email', customer.email)
+                            sendEmail_PaymentStatus(orderId, customer.email, order.status)
+                        }
+                    }
+                } else {
+                    if (order) {
+                        if (order.status == 'Draft' && order.createdAt < new Date(new Date() - 5 * 60 * 1000)) {
+                            orderUpdated = await order.update({
+                                status: 'Unpaid'
+                            })
+                        }
+                    }
+                }
             }
             )
-            resolve(resolveObj.UPDATE_SUCCEED())
+            if (orderUpdated) {
+                resolve(resolveObj.UPDATE_SUCCEED())
+            } else {
+                resolve(resolveObj.UPDATE_UNSUCCEED())
+            }
         } catch (e) {
             reject(e);
+        }
+    })
+}
+
+let updateProcessingOrder = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let orderRef = data?.orderRef
+            if (!orderRef || !data?.totalPriceInVat) {
+                resolve(resolveObj.MISSING_PARAMETERS)
+                return
+            }
+            let prefixOrderId = prefixOrdId(orderRef, 'OT-')
+            let token = data.secureHash
+            let encode = secureHash(data?.totalPriceInVat, prefixOrderId)
+            await db.sequelize.transaction(async (t) => {
+                if (encode != token) {
+                    resolve({ errCode: 1, errMessage: 'unmatch transaction' })
+                    throw new Error()
+                }
+                let order = await db.Order.findOne({ where: { id: orderRef } })
+                if (order.status != 'Draft' && order.status != 'Unpaid') {
+                    resolve({ errCode: 0, errMessage: 'Order already processing' })
+                    throw new Error()
+                }
+                if (order) {
+                    await order.update({ status: 'Processing' })
+                    resolve(resolveObj.UPDATE_SUCCEED())
+                } else {
+                    resolve(resolveObj.NOT_FOUND())
+                }
+                return
+            })
+        } catch (e) {
+            reject(e)
         }
     })
 }
@@ -163,21 +232,159 @@ let updateStatusOrder = (data) => {
 let dataFeed = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let data = await await axios.get('http://localhost:3000/datafeed', {
-                // params: {
-                //     merchantId: '3082',
-                //     loginId: 'VietjetApi',
-                //     password: 'Api1234',
-                //     actionType: 'Query',
-                //     orderRef: prefixOrderId,
-                // }
-            })
-            console.log('data datafeed', data)
-            resolve(resolveObj.UPDATE_SUCCEED())
+            let successcode = data.successcode
+            let updateResult
+            if (successcode == 0) {
+                // secure
+                let { src, prc, Ref, payRef, Cur, Amt, payerAuth, secureHash } = data
+                let secretKey = process.env.SECRET_KEY
+                let string = `${src}|${prc}|${successcode}|${Ref}|${payRef}|${Cur}|${Amt}|${payerAuth}|${secretKey}`
+                let encode = sha512(string)
+                console.log('ver', encode)
+                console.log('seHas', secureHash)
+                if (encode !== secureHash) {
+                    updateResult = await updateStatusOrder({ orderRef: Ref })
+                } else {
+                    // unmatch transaction
+                    resolve({ errCode: 1, errMessage: 'unmatch transaction' })
+                    return
+                }
+            } else {
+                // transaction reject
+                resolve({ errCode: 1, errMessage: 'transaction reject' })
+                return
+            }
+            if (updateResult && updateResult.errCode == 0) {
+                resolve(updateResult)
+            } else {
+                resolve(resolveObj.UPDATE_UNSUCCEED())
+            }
         } catch (e) {
             reject(e);
         }
     })
+}
+
+let getOrder = async (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let ref = data?.ref // prefixed
+            if (!ref) {
+                resolve(resolveObj.MISSING_PARAMETERS)
+                return
+            }
+            await updateStatusOrder({ orderRef: ref })
+            let order = await db.Order.findOne({
+                where: { id: delPrefixOrdId(ref, 'OT-') },
+                attributes: {
+                    exclude: ['customerId']
+                }
+            })
+            resolve(resolveObj.GET(order))
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+let emailAPIlink = (ref) => `
+Hello customer, the link below is using for query your order status
+<a href='http://localhost:3000/payment/invoice/${ref}'>checking your order status</a>
+
+Thanks
+`
+
+let emailPaymentStatus = (ref, status) => `
+    Thai Vietjet Promotion
+
+    <br/>
+    <br/>
+    Hello customer,
+    <br/>
+    Your Order Id: ${ref}
+    <br/>
+    Order Status: ${status}
+`
+
+let sendEmail_PaymentStatus = async (ref, email, status) => {
+    if (!ref || !email || !status) {
+        return false
+    }
+    // ref = prefixOrdId(ref, 'OT-')
+    const nodemailer = require("nodemailer");
+    const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: {
+            user: process.env.EMAIL_APP,
+            pass: process.env.EMAIL_APP_PASSWORD
+        },
+    });
+    const info = await transporter.sendMail({
+        from: '"Thai Vietjet Promotion" <tranxuannhonpublic@gmail.com>',
+        to: email,
+        subject: "Payment Result", // Subject line
+        html: emailPaymentStatus(ref, status), // html body
+    });
+}
+
+let sendEmail = async (ref, email) => {
+    if (!ref || !email) {
+        return false
+    }
+    ref = prefixOrdId(ref, 'OT-')
+    const nodemailer = require("nodemailer");
+    const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: {
+            user: process.env.EMAIL_APP,
+            pass: process.env.EMAIL_APP_PASSWORD
+        },
+    });
+    const info = await transporter.sendMail({
+        from: '"Thai Vietjet Promotion" <tranxuannhonpublic@gmail.com>',
+        to: email,
+        subject: "Checking your order status", // Subject line
+        html: emailAPIlink(ref), // html body
+    });
+
+    console.log("Message sent: %s", info.messageId);
+}
+
+let monitorOrder = () => {
+    const schedule = require('node-schedule');
+
+    let taskRunning = false
+
+    const job = schedule.scheduleJob('*/5 * * * *', async () => {
+        if (taskRunning) {
+            return
+        }
+        taskRunning = true
+        console.log('monitor at', new Date())
+        let orders = await db.Order.findAll({
+            where:
+            {
+                [db.Sequelize.Op.and]: {
+                    status: {
+                        [db.Sequelize.Op.notIn]: ['Accepted', 'Rejected', 'Cancelled', 'Unpaid']
+                    },
+                },
+            }
+        })
+        console.log(orders.length) // length
+        if (orders.length > 0) {
+            for (let i = 0; i < orders.length; i++) {
+                updateStatusOrder({ orderRef: prefixOrdId(orders[i].id, 'OT-') })
+            }
+        } else if (orders.length === 0) {
+            // job.cancel()
+        }
+        taskRunning = false
+    });
 }
 
 module.exports = {
@@ -185,6 +392,11 @@ module.exports = {
 
     createOrder_OrderDetail_Customer,
     updateStatusOrder,
+    updateProcessingOrder,
 
     dataFeed,
+    getOrder,
+    sendEmail,
+
+    monitorOrder,
 }
