@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
 
                 const { monitorOrder } = require('../services/paymentService')
 
-                monitorOrder()
+                // monitorOrder()
 
                 console.log('hook order')
             },
