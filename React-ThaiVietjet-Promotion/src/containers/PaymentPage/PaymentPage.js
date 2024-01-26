@@ -26,7 +26,6 @@ class PaymentPage extends Component {
                     <Route index element={<Cart />} />
                     <Route path="/payment-status/:type" element={<PaymentStatus />} ></Route>
                     <Route path="/invoice/:ref" element={<Invoice />}></Route>
-                    {/* <Route path="/datafeed" element={<DataFeed />} ></Route> */}
                 </Routes>
             </>
         )

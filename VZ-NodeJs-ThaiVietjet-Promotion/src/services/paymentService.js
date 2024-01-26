@@ -172,6 +172,9 @@ let updateStatusOrder = (data) => {
                             sendEmail_PaymentStatus(orderId, customer.email, order.status)
                         }
                     }
+                    if (!order.payRef) {
+                        await order.update({payRef: jsonObj.records.record.payRef})
+                    }
                 } else {
                     if (order) {
                         if (order.status == 'Draft' && order.createdAt < new Date(new Date() - 5 * 60 * 1000)) {

@@ -7,11 +7,8 @@ import {
     Routes,
     Route,
 } from "react-router-dom";
-import PaymentSuccess from './Child/Payment Success/PaymentSuccess';
-import PaymentFail from './Child/Payment Fail/PaymentFail';
-import PaymentCancel from './Child/Payment Cancel/PaymentCancel';
 import { updateOrderStatus } from 'services/paymentService';
-import DataFeed from './Child/DataFeed/DataFeed';
+import { Link } from 'react-router-dom';
 
 class PaymentStatus extends Component {
     constructor(props) {
@@ -22,7 +19,7 @@ class PaymentStatus extends Component {
     }
 
     componentDidMount() {
-        // this.updateOrdStatus()
+        this.updateOrdStatus()
     }
 
     updateOrdStatus = async () => {
@@ -30,18 +27,45 @@ class PaymentStatus extends Component {
         let resUpdateOrdStatus = await updateOrderStatus({ orderRef: orderRef })
     }
 
+    statusText = (type) => {
+        let objectText = {}
+        switch (type) {
+            case 'Success.js':
+                objectText.status = 'Succeed'
+                objectText.linkText = 'Go back to Homepage to pay more'
+                break
+            case 'Fail.js':
+                objectText.status = 'Failed'
+                objectText.linkText = 'Go back to Homepage to try again'
+                break
+            case 'Cancel.js':
+                objectText.status = 'Cancelled'
+                objectText.linkText = 'Go back to Homepage to pay again'
+                break
+            default:
+                break
+        }
+        return objectText
+    }
+
     render() {
         let type = this.props.params?.type
         let orderId = this.props.params?.orderId
         console.log('typ', type, 'ord id', this.props.searchParams.get('Ref'))
+        let objectText = this.statusText(type)
         return (
             <>
-                <h5>Payment Status</h5>
-                <br></br>
-                {type === 'Success.js' && <PaymentSuccess />}
-                {type === 'Fail.js' && <PaymentFail />}
-                {type === 'Cancel.js' && <PaymentCancel />}
-                {type === 'datafeed' && <DataFeed />}
+                <div className='d-flex justify-content-center pt-5'>
+                    <p>
+                        Dear Customers,
+                        <br></br>
+                        Thank you for payment, your payment process is <b>{objectText?.status}</b>.
+                        <br></br>
+                        Please check your email for more detail.
+                        <br></br>
+                        <Link to='/'>{objectText?.linkText}.</Link>
+                    </p>
+                </div>
             </>
         )
     }
