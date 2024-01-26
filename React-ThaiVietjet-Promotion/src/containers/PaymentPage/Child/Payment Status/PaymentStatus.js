@@ -50,7 +50,7 @@ class PaymentStatus extends Component {
 
     render() {
         let type = this.props.params?.type
-        let orderId = this.props.params?.orderId
+        let orderId = this.props.params?.Ref
         console.log('typ', type, 'ord id', this.props.searchParams.get('Ref'))
         let objectText = this.statusText(type)
         return (
@@ -59,9 +59,16 @@ class PaymentStatus extends Component {
                     <p>
                         Dear Customers,
                         <br></br>
-                        Thank you for payment, your payment process is <b>{objectText?.status}</b>.
+                        <br></br>
+                        Order Id: <b>{this.props.searchParams.get('Ref')}</b>
+                        <br></br>
+                        Transaction Status: <b>{objectText?.status}</b>
+                        <br></br>
+                        <br></br>
+                        Thanks for your purchasing
                         <br></br>
                         Please check your email for more detail.
+                        <br></br>
                         <br></br>
                         <Link to='/'>{objectText?.linkText}.</Link>
                     </p>

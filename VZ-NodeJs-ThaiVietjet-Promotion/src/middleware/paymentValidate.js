@@ -61,7 +61,8 @@ const validateCustomerInput = async (req, res, next) => {
                     //     errMessage = 'invalid phone'
                     //     break
                     // }
-                    if (validator.isMobilePhone(valueText, 'th-TH')) {
+                    console.log('phone', valueText.startsWith('+66'), valueText.length)
+                    if(!((valueText.startsWith('0')&&valueText.length == 10)||(valueText.startsWith('+66')&&valueText.length==12))){
                         validateInput = false
                         errMessage = 'invalid phone'
                         break

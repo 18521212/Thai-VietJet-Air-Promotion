@@ -108,8 +108,8 @@ class Cart extends Component {
                                     <input type="hidden" name="remark" value="-" />
                                     <input type="hidden" name="secureHash" value={secureHash} />
                                     <input type="submit" name="submit" value='Pay Now' className='ml-auto btn-paynow mt-3'
-                                        onClick={async () => {
-                                            await updateProcessingOrder({ orderRef: orderId, totalPriceInVat: totalPriceInVat, secureHash: secureHash })
+                                        onClick={() => {
+                                            updateProcessingOrder({ orderRef: orderId, totalPriceInVat: totalPriceInVat, secureHash: secureHash })
                                         }}
                                     />
                                 </form>

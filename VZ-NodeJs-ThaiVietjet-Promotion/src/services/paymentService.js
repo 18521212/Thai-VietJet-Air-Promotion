@@ -173,7 +173,7 @@ let updateStatusOrder = (data) => {
                         }
                     }
                     if (!order.payRef) {
-                        await order.update({payRef: jsonObj.records.record.payRef})
+                        await order.update({ payRef: jsonObj.records.record.payRef })
                     }
                 } else {
                     if (order) {
@@ -245,7 +245,7 @@ let dataFeed = (data) => {
                 let encode = sha512(string)
                 console.log('ver', encode)
                 console.log('seHas', secureHash)
-                if (encode !== secureHash) {
+                if (encode == secureHash) {
                     updateResult = await updateStatusOrder({ orderRef: Ref })
                 } else {
                     // unmatch transaction

@@ -45,8 +45,9 @@ class PowerPack extends Component {
                                         {packData && packData.length > 0 &&
                                             packData.map((item, index) => {
                                                 console.log('i', item)
-                                                return (
-                                                    <>
+                                                let htmlContent = <></>
+                                                if (item.markdownId) {
+                                                    htmlContent =
                                                         <div className="card" key={index}>
                                                             <div className="card-header">
                                                                 <button
@@ -78,6 +79,10 @@ class PowerPack extends Component {
                                                                 </div>
                                                             </div>
                                                         </div >
+                                                }
+                                                return (
+                                                    <>
+                                                        {htmlContent}
                                                     </>
                                                 )
                                             })
