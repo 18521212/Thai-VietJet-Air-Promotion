@@ -3,10 +3,11 @@ import { controller, resolveObj } from '../utils';
 
 // header
 
-let createHeader = async (req, res) => {
+let createHeader = async (req, res, next) => {
     try {
         let data = await headerService.createHeader(req.body);
-        return res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json({
@@ -16,14 +17,15 @@ let createHeader = async (req, res) => {
     }
 }
 
-let getHeader = async (req, res) => {
-    controller.CONTROLLER(req, res, headerService.getHeader, req?.params?.id)
+let getHeader = async (req, res, next) => {
+    controller.CONTROLLER(req, res, next, headerService.getHeader, req?.params?.id)
 }
 
-let updateHeader = async (req, res) => {
+let updateHeader = async (req, res, next) => {
     try {
         let data = await headerService.updateHeader(req.body);
-        return res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json({
@@ -33,10 +35,11 @@ let updateHeader = async (req, res) => {
     }
 }
 
-let deleteHeader = async (req, res) => {
+let deleteHeader = async (req, res, next) => {
     try {
         let data = await headerService.deleteHeader(req.body.id);
-        return res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json({
@@ -48,10 +51,11 @@ let deleteHeader = async (req, res) => {
 
 // menu
 
-let createMenu = async (req, res) => {
+let createMenu = async (req, res, next) => {
     try {
         let data = await headerService.createMenu(req.body);
-        return res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json({
@@ -61,14 +65,15 @@ let createMenu = async (req, res) => {
     }
 }
 
-let getMenu = async (req, res) => {
-    controller.CONTROLLER(req, res, headerService.getMenu, req?.params?.id)
+let getMenu = async (req, res, next) => {
+    controller.CONTROLLER(req, res, next, headerService.getMenu, req?.params?.id)
 }
 
-let updateMenu = async (req, res) => {
+let updateMenu = async (req, res, next) => {
     try {
         let data = await headerService.updateMenu(req.body);
-        return res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json({
@@ -78,10 +83,11 @@ let updateMenu = async (req, res) => {
     }
 }
 
-let deleteMenu = async (req, res) => {
+let deleteMenu = async (req, res, next) => {
     try {
         let data = await headerService.deleteMenu(req.body);
-        return res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json({
@@ -93,10 +99,11 @@ let deleteMenu = async (req, res) => {
 
 // menu item
 
-let createMenuItem = async (req, res) => {
+let createMenuItem = async (req, res, next) => {
     try {
         let data = await headerService.createMenuItem(req.body);
-        return res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json({
@@ -106,10 +113,11 @@ let createMenuItem = async (req, res) => {
     }
 }
 
-let getAllMenuItemByMenuId = async (req, res) => {
+let getAllMenuItemByMenuId = async (req, res, next) => {
     try {
         let data = await headerService.getAllMenuItemByMenuId(req.params.id);
-        return res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json({
@@ -119,10 +127,11 @@ let getAllMenuItemByMenuId = async (req, res) => {
     }
 }
 
-let updateMenuItemById = async (req, res) => {
+let updateMenuItemById = async (req, res, next) => {
     try {
         let data = await headerService.updateMenuItemById(req.body);
-        return res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json({
@@ -132,10 +141,11 @@ let updateMenuItemById = async (req, res) => {
     }
 }
 
-let deleteMenuItemById = async (req, res) => {
+let deleteMenuItemById = async (req, res, next) => {
     try {
         let data = await headerService.deleteMenuItemById(req.body.id);
-        return res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json({
@@ -147,10 +157,11 @@ let deleteMenuItemById = async (req, res) => {
 
 // sub menu
 
-let createSubMenu = async (req, res) => {
+let createSubMenu = async (req, res, next) => {
     try {
         let data = await headerService.createSubMenu(req.body);
-        return res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json({
@@ -160,10 +171,11 @@ let createSubMenu = async (req, res) => {
     }
 }
 
-let getAllSubMenuByMenuItemId = async (req, res) => {
+let getAllSubMenuByMenuItemId = async (req, res, next) => {
     try {
         let data = await headerService.getAllSubMenuByMenuItemId(req.params.id);
-        return res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json({
@@ -173,10 +185,11 @@ let getAllSubMenuByMenuItemId = async (req, res) => {
     }
 }
 
-let updateSubMenu = async (req, res) => {
+let updateSubMenu = async (req, res, next) => {
     try {
         let data = await headerService.updateSubMenu(req.body);
-        return res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json({

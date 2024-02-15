@@ -1,7 +1,7 @@
 import bodyService from '../services/bodyService';
 import { resolveObj, func } from '../utils';
 
-let createUpdateDeleteBody = async (req, res) => {
+let createUpdateDeleteBody = async (req, res, next) => {
     try {
         let method = req.method, data
         if (method === 'POST') {
@@ -11,14 +11,15 @@ let createUpdateDeleteBody = async (req, res) => {
         } else if (method === 'DELETE') {
             data = await bodyService.deleteBody(req.body.id)
         }
-        return res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
-let getBody = async (req, res) => {
+let getBody = async (req, res, next) => {
     try {
         let data
         if (req.params.id) {
@@ -26,7 +27,8 @@ let getBody = async (req, res) => {
         } else {
             data = await bodyService.getAllContentBody()
         }
-        return res.status(200).json(data)
+        res.data=data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json(resolveObj.ERROR_SERVER)

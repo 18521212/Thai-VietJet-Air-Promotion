@@ -63,11 +63,11 @@ export const resolveObj = {
             data: data
         }
     },
-    GET: (data) => {
+    GET: (_data) => {
         return {
             errCode: 0,
             errMessage: text.OK,
-            data
+            data: _data
         }
     },
     UPDATE_SUCCEED: (data_table) => {
@@ -110,10 +110,10 @@ export const resolveObj = {
     CREATE_UNSUCCEED: (data_table) => {
         return {
             errCode: 1,
-            errMessage: text.DELETE_UNSUCCEED(data_table)
+            errMessage: text.CREATE_UNSUCCEED(data_table)
         }
     },
-    UPDATE_UNSUCCEED: (table)=>{
+    UPDATE_UNSUCCEED: (table) => {
         return {
             errCode: 1,
             errMessage: text.UPDATE_UNSUCCEED(table)
@@ -141,28 +141,28 @@ export const services = {
 
 export const controller = {
     // usage
-    // controller.SWITCH_CONTROLLER(req, res, {
+    // controller.SWITCH_CONTROLLER(req, res, next, {
     //     create: promotionService.createPromotion,
     //     update: promotionService.updatePromotion,
     //     delete: promotionService.deletePromotion,
     // })
-    SWITCH_CONTROLLER: (req, res, func) => {
+    SWITCH_CONTROLLER: (req, res, next, func, option) => {
         let method = req.method
         switch (method) {
             case 'POST':
-                func?.create && controller.CONTROLLER(req, res, func.create, req.body)
+                func?.create && controller.CONTROLLER(req, res, next, func.create, req.body, option)
                 break;
             case 'PUT':
-                func?.update && controller.CONTROLLER(req, res, func.update, req.body)
+                func?.update && controller.CONTROLLER(req, res, next, func.update, req.body, option)
                 break;
             case 'DELETE':
-                func?.delete && controller.CONTROLLER(req, res, func.delete, req.body)
+                func?.delete && controller.CONTROLLER(req, res, next, func.delete, req.body, option)
                 break;
             default:
                 break;
         }
     },
-    CONTROLLER: async (req, res, func, dataFunc = undefined) => {
+    CONTROLLER: async (req, res, next, func, dataFunc = undefined, option={}) => {
         try {
             let data
             if (dataFunc) {
@@ -170,7 +170,12 @@ export const controller = {
             } else {
                 data = await func()
             }
-            return res.status(200).json(data)
+            if (option?.next == false) {
+                return res.status(200).json(data)
+            } else {
+                res.data = data
+                next()
+            }
         } catch (e) {
             console.log(e)
             return res.status(200).json(resolveObj.ERROR_SERVER)

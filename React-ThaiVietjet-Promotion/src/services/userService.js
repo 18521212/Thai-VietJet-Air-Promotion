@@ -24,6 +24,7 @@ const deleteCampaign = (data) => {
 // pack
 
 const getAllPack = () => {
+    return get('/api/packs')
     return axios.get('/api/packs')
 }
 

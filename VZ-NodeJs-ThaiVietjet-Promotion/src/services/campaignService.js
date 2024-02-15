@@ -34,7 +34,7 @@ let getAllCampaign = () => {
             let data = await db.Campaign.findAll({
                 order: [['createdAt', 'DESC']],
             });
-            resolve(resolveObj.GET(data))
+            return resolve(resolveObj.GET(data))
         } catch (e) {
             reject(e);
         }
@@ -87,7 +87,7 @@ let updateCampaign = (data) => {
                     throw new Error();
                 } // resolve specific error - does not effect rollback flow
 
-                let update = await dataApi.update({ // update dont insert if data doesn't exist
+                let dataUpdate = await dataApi.update({
                     name: data.name,
                     headerId: data.headerId ? data.headerId : null,
                     bannerId: data.bannerId ? data.bannerId : null,
@@ -138,35 +138,35 @@ let checkChildTableDataExist = async (data) => {
             table_name = 'Header'
         }
     }
-    if (data.bannerId) {
+    else if (data.bannerId) {
         let dataApi = await db.Banner.findOne({ where: { id: data.bannerId } })
         if (!dataApi) {
             result = false
             table_name = 'Banner'
         }
     }
-    if (data.bodyId) {
+    else if (data.bodyId) {
         let dataApi = await db.Content_Body.findOne({ where: { id: data.bodyId } })
         if (!dataApi) {
             result = false
             table_name = 'Body'
         }
     }
-    if (data.formId) {
+    else if (data.formId) {
         let dataApi = await db.Form.findOne({ where: { id: data.formId } })
         if (!dataApi) {
             result = false
             table_name = 'Form'
         }
     }
-    if (data.footerId) {
+    else if (data.footerId) {
         let dataApi = await db.Footer.findOne({ where: { id: data.footerId } })
         if (!dataApi) {
             result = false
             table_name = 'Footer'
         }
     }
-    if (data.promotionId) {
+    else if (data.promotionId) {
         let dataApi = await db.Promotion.findOne({ where: { id: data.promotionId } })
         if (!dataApi) {
             result = false

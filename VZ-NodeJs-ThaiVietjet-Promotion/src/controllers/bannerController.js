@@ -4,16 +4,16 @@ import { controller } from '../utils';
 const sharp = require('sharp');
 
 // banner
-let createUpdateDeleteBanner = async (req, res) => {
-    controller.SWITCH_CONTROLLER(req, res, {
+let createUpdateDeleteBanner = async (req, res, next) => {
+    controller.SWITCH_CONTROLLER(req, res, next, {
         create: bannerService.createBanner,
         update: bannerService.updateBanner,
         delete: bannerService.deleteBanner
     })
 }
 
-let getBanner = async (req, res) => {
-    controller.CONTROLLER(req, res, bannerService.getBanner, req?.params?.id)
+let getBanner = async (req, res, next) => {
+    controller.CONTROLLER(req, res, next, bannerService.getBanner, req?.params?.id)
 }
 
 // validate image
@@ -28,7 +28,7 @@ let validateImage = async (req, res, next) => {
         let valid = false
         let typeImage = req.body.type
         let base64String = req.body?.image
-        if (!base64String||!typeImage){
+        if (!base64String || !typeImage) {
             return res.status(200).json({
                 errCode: 1,
                 errMessage: 'missing image or image type'
@@ -63,8 +63,8 @@ let validateImage = async (req, res, next) => {
 
 // image banner
 
-let createUpdateDeleteImageBanner = async (req, res) => {
-    controller.SWITCH_CONTROLLER(req, res, {
+let createUpdateDeleteImageBanner = async (req, res, next) => {
+    controller.SWITCH_CONTROLLER(req, res, next, {
         create: bannerService.createImageBanner,
         delete: bannerService.deleteImageBanner
     })

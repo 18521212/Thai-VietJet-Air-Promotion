@@ -69,13 +69,14 @@ class Cart extends Component {
                                         </thead>
                                         <tbody>
                                             {data && data.length > 0 && data.map((item, index) => {
+                                                console.log('i2',item)
                                                 return (
                                                     <tr key={index}>
                                                         <td>
                                                             {item.name}
                                                         </td>
                                                         <td>
-                                                            {item.sentNumber}
+                                                            {item.sentQuantity}
                                                         </td>
                                                         <td>
                                                             {item.totalPriceInVat}

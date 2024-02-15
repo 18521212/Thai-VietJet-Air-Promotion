@@ -31,21 +31,11 @@ module.exports = (sequelize, DataTypes) => {
         modelName: 'Order',
         hooks: {
             afterCreate: (item, options) => {
-                // Add your prefix here, for example, 'user-'
-                // uneditable primary key
 
-                // const EventEmitter = require('node:events');
-                // class MyEmitter extends EventEmitter { }
-                // const myEmitter = new MyEmitter();
-
-                // myEmitter.emit('createOrder');
-
-                const { monitorOrder } = require('../services/paymentService')
-
-                // monitorOrder()
-
-                console.log('hook order')
             },
+            afterUpdate: (item, options) => {
+                
+            }
         },
     });
     return Order;

@@ -3,7 +3,6 @@ const { resolveObj, func, type } = require('../utils');
 import { getInput } from '../services/formService';
 import { getPack } from '../services/promotionService';
 import { Pack, PackArray } from '../class/Pack/Pack';
-var crypto = require('crypto');
 
 import _ from 'lodash';
 import validator from 'validator';
@@ -100,18 +99,6 @@ let roundNumber = (number, round) => {
     return Number(parseFloat(number).toFixed(2));
 }
 
-// let secureHash = (totalPriceInVat) => {
-//     let MID = process.env.MID
-//     let MREF = '0' // order id
-//     let currencyCode = 764 // THB
-//     let amount = totalPriceInVat // total price included vat
-//     let paymentType = 'N' // normal
-//     let secretKey = process.env.SECRET_KEY
-//     let string = `${MID}|${MREF}|${currencyCode}|${amount}|${paymentType}|${secretKey}`
-//     let encode = crypto.createHash('sha512').update(String(string)).digest('hex')
-//     return encode
-// }
-
 const validatePack = async (req, res, next) => {
     let pack = req.body.payment.pack
     if (!pack) { return res.status(200).json(resolveObj.MISSING_PARAMETERS) }
@@ -120,14 +107,16 @@ const validatePack = async (req, res, next) => {
     let packs = await getPack(idArr)
     let packObjArr = []
     let unitPricesObj = {}
+    let vatPack = {}
     for (let i = 0; i < keyArr.length; i++) {
         let packObj = new Pack(packs.data[i])
-        packObj.setSentNumber(pack[keyArr[i]])
+        packObj.setSentQuantity(pack[keyArr[i]])
         unitPricesObj[packObj.id] = packObj.price
+        vatPack[packObj.id] = packObj.vat
         packObjArr.push(packObj)
     }
     let packArr = new PackArray(packObjArr)
-    let validatePackNum = packArr.checkNumberPack()
+    let validatePackNum = packArr.checkQuantityPack()
     if (validatePackNum[0] === false) {
         return res.status(200).json({
             errCode: 1,
@@ -151,17 +140,8 @@ const validatePack = async (req, res, next) => {
     }
     res.productArr = packArr.packArr
     req.body.payment.unitPricesPack = unitPricesObj
-    // console.log('payment infor2:', req.body)
+    req.body.payment.vatPack = vatPack
     res.validatePayment = validatePayment
-    // console.log('vapayment', validatePayment)
-
-    // let encode = secureHash(validatePayment.totalPriceInVat)
-    // res.secureHash = encode
-
-    // return res.status(200).json({
-    //     errCode: 0,
-    //     errMessage: 'test' + JSON.stringify(validatePayment)
-    // },)
     next()
 }
 

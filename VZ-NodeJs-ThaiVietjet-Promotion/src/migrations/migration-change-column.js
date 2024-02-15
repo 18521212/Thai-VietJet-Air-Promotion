@@ -13,20 +13,22 @@ module.exports = {
         // )
 
         // await queryInterface.renameColumn(
-        //     'Campaigns',
-        //     'formSectionId',
-        //     'formId',
+        //     'Order_Details',
+        //     'number',
+        //     'quantity',
         // )
 
         // add column
-        // queryInterface.addColumn(
-        //     'Form_Details',
-        //     'nameApi',
-        //     {
-        //         type: Sequelize.STRING,
-        //         allowNull: false
-        //     }
-        // );
+        queryInterface.addColumn(
+            'Order_Details',
+            'vat',
+            {
+                type: Sequelize.FLOAT,
+                allowNull: false,
+                defaultValue: 0,
+                min: 0
+            }
+        );
 
         // queryInterface.removeColumn(
         //     'Packs',
@@ -44,15 +46,15 @@ module.exports = {
         // )
 
         // await queryInterface.renameColumn(
-        //     'Campaigns',
-        //     'formId',
-        //     'formSectionId',
+        //     'Order_Details',
+        //     'quantity',
+        //     'number',
         // )
 
-        // queryInterface.removeColumn(
-        //     'Form_Details',
-        //     'nameApi',
-        // );
+        queryInterface.removeColumn(
+            'Order_Details',
+            'vat',
+        );
 
         // add column
         // queryInterface.addColumn(

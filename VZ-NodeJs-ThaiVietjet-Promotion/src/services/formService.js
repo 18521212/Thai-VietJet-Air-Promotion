@@ -7,13 +7,18 @@ let createForm = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
             if (!data.name) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-            } else {
-                await db.Form.create({
-                    name: data.name,
-                })
-                resolve(resolveObj.CREATE_SUCCEED())
+                return resolve(resolveObj.MISSING_PARAMETERS)
             }
+            let createData = await db.Form.create({
+                name: data.name,
+            })
+            let responseData = ''
+            if (createData) {
+                responseData = resolveObj.CREATE_SUCCEED()
+            } else {
+                responseData = resolveObj.CREATE_UNSUCCEED()
+            }
+            resolve(responseData)
         } catch (e) {
             reject(e);
         }
@@ -30,12 +35,14 @@ let getForm = (id) => {
             }
             let data
             if (id) {
-                data = await db.Form.findOne({
-                    where: { id: id },
-                    ...query
-                })
+                data = await db.Form
+                    .findOne({
+                        where: { id: id },
+                        ...query
+                    })
             } else {
-                data = await db.Form.findAll(query)
+                data = await db.Form
+                    .findAll(query)
             }
             resolve(resolveObj.GET(data))
         } catch (e) {
@@ -51,13 +58,15 @@ let updateForm = data => {
                 resolve(resolveObj.MISSING_PARAMETERS)
                 return
             }
-            await db.sequelize.transaction(async (t) => {
-                let form = await db.Form.findOne({ where: { id: data.id } })
-                await form.update({
-                    name: data.name
-                })
-            })
-            resolve(resolveObj.UPDATE_SUCCEED())
+            let form = await db.Form.findOne({ where: { id: data.id } })
+            let dataUpdate = await form.update({ name: data.name })
+            let responseData = ''
+            if (form) {
+                responseData = resolveObj.UPDATE_SUCCEED()
+            } else {
+                responseData = resolveObj.UPDATE_UNSUCCEED()
+            }
+            return resolve(responseData)
         } catch (e) {
             reject(e);
         }
@@ -70,19 +79,22 @@ let deleteForm = (id) => {
             if (!id) {
                 resolve(resolveObj.MISSING_PARAMETERS)
             }
+            let responseData = ''
             await db.sequelize.transaction(async (t) => {
-                await db.Form_Detail.destroy({ where: { formId: id }, transaction: t })
+                let dataDelete_FD = await db.Form_Detail.destroy({ where: { formId: id }, transaction: t })
                 let formDetail = await db.Form_Detail.findAll({ where: { formId: id } })
                 if (formDetail.length > 0) {
                     resolve(resolveObj.EXIST_REF_KEY)
                     throw new Error()
                 }
-                let data = await db.Form.destroy({ where: { id: id }, transaction: t })
-                if (data === 0) {
-                    resolve(resolveObj.DELETE_UNSUCCEED())
+                let dataDelete = await db.Form.destroy({ where: { id: id }, transaction: t })
+                if (dataDelete != 0) {
+                    responseData = resolveObj.DELETE_SUCCEED()
+                } else {
+                    responseData = resolveObj.DELETE_UNSUCCEED()
                 }
             })
-            resolve(resolveObj.DELETE_SUCCEED())
+            resolve(responseData)
         } catch (e) {
             reject(e)
         }

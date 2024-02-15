@@ -1,4 +1,3 @@
-import initWebRoutes from './web'
 import routeBanner from './route-banner'
 import routeCampaign from './route-campaign'
 import routeHeader from './route-header'
@@ -8,9 +7,13 @@ import routePromotion from './route-promotion'
 import routeFooter from './route-footer'
 import routePayment from './route-payment'
 import routeDatafeed from './route-datafeed'
+import { validateFrontEndApp } from "../middleware/validateFrontEndApp";
+import { logFile } from '../middleware/logFile'
+import { response } from '../middleware/response'
 
 let mergeRoute = (app) => {
-    initWebRoutes(app);
+    // app.use('*', validateFrontEndApp);
+
     routeBanner(app)
     routeCampaign(app)
     routeHeader(app)
@@ -20,6 +23,8 @@ let mergeRoute = (app) => {
     routeFooter(app)
     routePayment(app)
     routeDatafeed(app)
+
+    app.use('*', logFile, response)
 }
 
 module.exports = mergeRoute;

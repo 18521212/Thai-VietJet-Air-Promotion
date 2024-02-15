@@ -13,6 +13,7 @@
         "axios": "^0.21.1",
         "bootstrap": "^4.6.2",
         "connected-react-router": "^6.9.3",
+        "crypto-js": "^4.2.0",
         "history": "^4.10.1",
         "jquery": "^3.7.0",
         "lodash": "^4.17.21",

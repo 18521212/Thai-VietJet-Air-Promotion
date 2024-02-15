@@ -18,7 +18,7 @@ module.exports = {
                 type: Sequelize.INTEGER,
                 allowNull: false
             },
-            number: {
+            quantity: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
                 min: 0
@@ -26,6 +26,12 @@ module.exports = {
             unitPrice: {
                 type: Sequelize.FLOAT,
                 allowNull: false,
+                min: 0
+            },
+            vat: {
+                type: Sequelize.FLOAT,
+                allowNull: false,
+                defaultValue: 0,
                 min: 0
             },
             createdAt: {

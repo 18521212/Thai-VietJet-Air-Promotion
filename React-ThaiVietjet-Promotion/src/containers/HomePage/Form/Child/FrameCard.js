@@ -56,7 +56,7 @@ class FrameCard extends Component {
 
                                             <div className="col-12">
                                                 <div className="row form-group">
-                                                    <label className="col-6">Number</label>
+                                                    <label className="col-6">Quantity</label>
                                                     <Select className="select-number col-6 p-0"
                                                         value={inputFrameCard[stateName]}
                                                         options={inputFrameCard[optionStateName]}

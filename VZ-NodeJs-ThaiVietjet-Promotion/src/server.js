@@ -4,7 +4,7 @@ import viewEngine from "./config/viewEngine";
 import mergeRoute from './route/merge-route-app';
 import connectDB from "./config/connectDB";
 
-require('dotenv').config(); //goi duoc den ham config cua thu vien dotenv
+require('dotenv').config();
 
 let app = express();
 
@@ -18,7 +18,7 @@ app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 
     // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,x-request-key');
 
     // Set to true if you need the website to include cookies in the requests sent
     // to the API (e.g. in case you use sessions)
@@ -41,31 +41,6 @@ viewEngine(app);
 mergeRoute(app)
 
 connectDB();
-
-// -- schedule
-
-// const schedule = require('node-schedule');
-
-// const job = schedule.scheduleJob('*/5 * * * * *', function () {
-//     console.log('Schedule!');
-// });
-
-// job.cancel()
-
-// --
-
-// -- event listener
-
-// const EventEmitter = require('node:events');
-// class MyEmitter extends EventEmitter {}
-// const myEmitter = new MyEmitter();
-// myEmitter.on('createOrder', () => {
-//   console.log('event order')
-// });
-
-// --
-
-// -- monitor Order
 
 import { monitorOrder } from "./services/paymentService";
 

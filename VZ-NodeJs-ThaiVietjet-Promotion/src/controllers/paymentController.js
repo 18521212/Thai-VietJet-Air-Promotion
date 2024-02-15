@@ -27,26 +27,26 @@ let reconfigKeyPrice = (price) => {
     return reconfigPrice
 }
 
-let reconfigKeyOrderDetail = (products, unitPrices) => {
+let reconfigKeyOrderDetail = (products, unitPrices, vats) => {
     // products: { 'pack4-1': 1, 't-2': 0 }
     let keyArr = Object.getOwnPropertyNames(products)
     let reconfigProducts = []
     for (let i = 0; i < keyArr.length; i++) {
         let product = {}
-        let number = products[keyArr[i]]
-        if (number > 0) {
+        let quantity = products[keyArr[i]]
+        if (quantity > 0) {
             let productId = getId(keyArr[i])
             product.productId = productId
-            product.number = number
+            product.quantity = quantity
             product.unitPrice = unitPrices[productId]
-
+            product.vat = vats[productId]
             reconfigProducts.push(product)
         }
     }
     return reconfigProducts
 }
 
-let paymentPromotion = async (req, res) => {
+let paymentPromotion = async (req, res, next) => {
     try {
         // const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
         // await delay(10000) /// waiting 1 second.
@@ -54,7 +54,7 @@ let paymentPromotion = async (req, res) => {
         let payment = req.body.payment
         let reconfigCustomer = reconfigKeyCustomer(payment.customer)
         let reconfigPrice = reconfigKeyPrice(payment.price)
-        let reconfigOrderDetail = reconfigKeyOrderDetail(payment.pack, payment.unitPricesPack)
+        let reconfigOrderDetail = reconfigKeyOrderDetail(payment.pack, payment.unitPricesPack, payment.vatPack)
         console.log('reconf pr', reconfigPrice)
         reconfigData = {
             customer: reconfigCustomer,
@@ -73,48 +73,54 @@ let paymentPromotion = async (req, res) => {
         // send email
         // paymentService.sendEmail(dataCreate.data.order.id, reconfigData.customer.email) // plain ref
         data.data.customer = reconfigCustomer
-        return res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
-let updateStatusOrder = async (req, res) => {
+let updateStatusOrder = async (req, res, next) => {
     try {
         let data = await paymentService.updateStatusOrder({ orderRef: req.body.orderRef })
-        return res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
-let updateProcessingOrder = async (req, res) => {
+let updateProcessingOrder = async (req, res, next) => {
     try {
         let data = await paymentService.updateProcessingOrder(req.body)
-        return res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
-let dataFeed = async (req, res) => {
+let dataFeed = async (req, res, next) => {
     try {
         console.log('datafeed controller', req.body)
         let data = await paymentService.dataFeed(req.body)
-        return res.status(200).send('OK ' + JSON.stringify(data))
+        let responseData = data.datafeedStatus == 0 ? 'OK' : ''
+        res.data=responseData
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
-let getOrder = async (req, res) => {
+let getOrder = async (req, res, next) => {
     try {
         let data = await paymentService.getOrder(req.params)
-        res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json(resolveObj.ERROR_SERVER)

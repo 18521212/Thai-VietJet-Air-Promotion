@@ -3,10 +3,10 @@ class Pack {
         this.id = pack?.id
         this.name = pack?.name
         this.price = pack?.price
-        this.maxNumber = pack?.maxNumber
+        this.maxQuantity = pack?.maxQuantity
         this.vat = pack?.vat
         this.currency = pack?.currency
-        this.sentNumber = 0
+        this.sentQuantity = 0
         this.totalPriceInVat = 0
     }
 
@@ -14,19 +14,19 @@ class Pack {
         this.totalPriceInVat = this.calcPriceInVat()
     }
 
-    setSentNumber(sentNumber) {
-        if (this.checkNumberPack(sentNumber)[0]) {
-            this.sentNumber = sentNumber
+    setSentQuantity(sentQuantity) {
+        if (this.checkQuantityPack(sentQuantity)[0]) {
+            this.sentQuantity = sentQuantity
             this.calcPrice()
         }
     }
 
-    checkNumberPack(numberPack = this.sentNumber) {
+    checkQuantityPack(quantityPack = this.sentQuantity) {
         let valid = true, errMessage = ''
-        if (numberPack < 0) {
+        if (quantityPack < 0) {
             valid = false
             errMessage = 'invalid number pack'
-        } else if (numberPack > this.maxNumber) {
+        } else if (quantityPack > this.maxQuantity) {
             valid = false
             errMessage = 'exceed max number allow'
         }
@@ -41,7 +41,7 @@ class Pack {
     }
 
     calcPriceExVat() {
-        let priceExVat = this.sentNumber * this.price
+        let priceExVat = this.sentQuantity * this.price
         return priceExVat
     }
 
@@ -72,22 +72,22 @@ class PackArray {
     }
 
 
-    checkNumberPack() {
+    checkQuantityPack() {
         let validatePack = true
         let errMessage = ''
-        let totalNumber = 0
+        let totalQuantity = 0
         let lpackArr = this.packArr?.length
         for (let i = 0; i < lpackArr; i++) {
             let packObj = this.packArr[i]
-            totalNumber += packObj?.sentNumber
-            let validatePackNum = packObj.checkNumberPack()
+            totalQuantity += packObj?.sentQuantity
+            let validatePackNum = packObj.checkQuantityPack()
             if (validatePackNum[0] === false) {
                 validatePack = false
                 errMessage = validatePackNum[1]
                 break
             }
         }
-        if (totalNumber <= 0) {
+        if (totalQuantity <= 0) {
             validatePack = false
             errMessage = 'invalid total number'
         }

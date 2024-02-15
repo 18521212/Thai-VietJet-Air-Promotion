@@ -3,10 +3,11 @@ import { controller } from '../utils';
 
 // footer
 
-let createFooter = async (req, res) => {
+let createFooter = async (req, res, next) => {
     try {
         let data = await footerService.createFooter(req.body);
-        return res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json({
@@ -16,14 +17,15 @@ let createFooter = async (req, res) => {
     }
 }
 
-let getFooter = async (req, res) => {
-    controller.CONTROLLER(req, res, footerService.getFooter, req?.params)
+let getFooter = async (req, res, next) => {
+    controller.CONTROLLER(req, res, next, footerService.getFooter, req?.params)
 }
 
-let updateFooter = async (req, res) => {
+let updateFooter = async (req, res, next) => {
     try {
         let data = await footerService.updateFooter(req.body);
-        return res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json({
@@ -33,10 +35,11 @@ let updateFooter = async (req, res) => {
     }
 }
 
-let deleteFooter = async (req, res) => {
+let deleteFooter = async (req, res, next) => {
     try {
         let data = await footerService.deleteFooter(req.body);
-        return res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json({
@@ -48,10 +51,11 @@ let deleteFooter = async (req, res) => {
 
 // footer text
 
-let createFooterText = async (req, res) => {
+let createFooterText = async (req, res, next) => {
     try {
         let data = await footerService.createFooterText(req.body);
-        return res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json({
@@ -61,10 +65,11 @@ let createFooterText = async (req, res) => {
     }
 }
 
-let getAllFooterText = async (req, res) => {
+let getAllFooterText = async (req, res, next) => {
     try {
         let data = await footerService.getAllFooterText(req.params.id);
-        return res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json({
@@ -74,10 +79,11 @@ let getAllFooterText = async (req, res) => {
     }
 }
 
-let updateFooterText = async (req, res) => {
+let updateFooterText = async (req, res, next) => {
     try {
         let data = await footerService.updateFooterText(req.body);
-        return res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json({
@@ -87,10 +93,11 @@ let updateFooterText = async (req, res) => {
     }
 }
 
-let deleteFooterText = async (req, res) => {
+let deleteFooterText = async (req, res, next) => {
     try {
         let data = await footerService.deleteFooterText(req.body.id);
-        return res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json({
@@ -102,46 +109,46 @@ let deleteFooterText = async (req, res) => {
 
 // markdown
 
-let createUpdateDeleteMarkdown = async (req, res) => {
-    controller.SWITCH_CONTROLLER(req, res, {
+let createUpdateDeleteMarkdown = async (req, res, next) => {
+    controller.SWITCH_CONTROLLER(req, res, next, {
         create: footerService.createMarkdown,
         update: footerService.updateMarkdown,
         delete: footerService.deleteMarkdown
     })
 }
 
-let getMarkdown = async (req, res) => {
-    controller.CONTROLLER(req, res, footerService.getMarkdown, req?.params?.id)
+let getMarkdown = async (req, res, next) => {
+    controller.CONTROLLER(req, res, next, footerService.getMarkdown, req?.params?.id)
 
 }
 
 // FAQ
 
-let createUpdateDeleteFAQ = async (req, res) => {
-    controller.SWITCH_CONTROLLER(req, res, {
+let createUpdateDeleteFAQ = async (req, res, next) => {
+    controller.SWITCH_CONTROLLER(req, res, next, {
         create: footerService.createFAQ,
         update: footerService.updateFAQ,
         delete: footerService.deleteFAQ
     })
 }
 
-let getFAQ = async (req, res) => {
-    controller.CONTROLLER(req, res, footerService.getFAQ, req?.params)
+let getFAQ = async (req, res, next) => {
+    controller.CONTROLLER(req, res, next, footerService.getFAQ, req?.params)
 
 }
 
 // FAQ Question
 
-let createUpdateDeleteFAQQuestion = async (req, res) => {
-    controller.SWITCH_CONTROLLER(req, res, {
+let createUpdateDeleteFAQQuestion = async (req, res, next) => {
+    controller.SWITCH_CONTROLLER(req, res, next, {
         create: footerService.createFAQQuestion,
         update: footerService.updateFAQQuestion,
         delete: footerService.deleteFAQQuestion
     })
 }
 
-let getFAQQuestion = async (req, res) => {
-    controller.CONTROLLER(req, res, footerService.getFAQQuestion, req?.params)
+let getFAQQuestion = async (req, res, next) => {
+    controller.CONTROLLER(req, res, next, footerService.getFAQQuestion, req?.params)
 
 }
 

@@ -22,6 +22,7 @@ const get = (link, id) => {
     if (id) {
         return axios.get(`${link}/${id}`)
     } else {
+        // return axios.get(`${link}`)
         return axios.get(`${link}`)
     }
 }
@@ -56,7 +57,7 @@ const postAPI = (link, data) => {
 }
 
 const putAPI = (link, data) => {
-    return axios.put(link,data)
+    return axios.put(link, data)
 }
 
 export {

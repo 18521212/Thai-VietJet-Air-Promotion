@@ -1,9 +1,10 @@
 import campaignService from '../services/campaignService';
 
-let createCampaign = async (req, res) => {
+let createCampaign = async (req, res, next) => {
     try {
         let data = await campaignService.createCampaign(req.body);
-        return res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json({
@@ -13,7 +14,7 @@ let createCampaign = async (req, res) => {
     }
 }
 
-let getCampaign = async (req, res) => {
+let getCampaign = async (req, res, next) => {
     try {
         let data
         if (!req.params.id) {
@@ -21,7 +22,8 @@ let getCampaign = async (req, res) => {
         } else {
             data = await campaignService.getCampaignById(req.params.id);
         }
-        return res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json({
@@ -31,10 +33,11 @@ let getCampaign = async (req, res) => {
     }
 }
 
-let updateCampaign = async (req, res) => {
+let updateCampaign = async (req, res, next) => {
     try {
         let data = await campaignService.updateCampaign(req.body);
-        return res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json({
@@ -44,10 +47,11 @@ let updateCampaign = async (req, res) => {
     }
 }
 
-let deleteCampaign = async (req, res) => {
+let deleteCampaign = async (req, res, next) => {
     try {
         let data = await campaignService.deleteCampaign(req.body.id);
-        return res.status(200).json(data)
+        res.data = data
+        next()
     } catch (e) {
         console.log(e);
         return res.status(200).json({
