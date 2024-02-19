@@ -42,16 +42,23 @@ let getHeader = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
             let data
+            let _response
+            // TODO: response too long for cache [decode image]
             if (id) {
-                data = await db.Header.findOne({ where: { id: id } })
+                data = await db.Header
+                    // .cache(id)
+                    .findOne({ where: { id: id } })
                 decodeImageOfHeader(data)
             } else {
-                data = await db.Header.findAll();
+                data = await db.Header
+                    .cache('all')
+                    .findAll();
                 if (data) data.map(item => {
                     decodeImageOfHeader(item)
                 })
             }
-            resolve(resolveObj.GET(data))
+            _response = resolveObj.GET(data)
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -61,29 +68,35 @@ let getHeader = (id) => {
 let updateHeader = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!data.id || !(data.imageLogo || data.imageBackground || data.menuId)) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return;
-            }
-
-            await db.sequelize.transaction(async (t) => { // menuId === '', if(menuId) === if(false)
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _valid_update = true
                 if (data.menuId) {
                     let menu = await db.Menu.findOne({ where: { id: data.menuId } })
-
                     if (!menu) {
-                        resolve(resolveObj.NOT_FOUND('Menu'))
-                        throw new Error()
+                        _valid_update = false
+                        _response = resolveObj.NOT_FOUND('Menu')
                     }
                 }
-                let header = await db.Header.findOne({ where: { id: data.id } })
-
-                await header.update({ // update only accept 2 argument
-                    imageLogo: data.imageLogo,
-                    imageBackground: data.imageBackground,
-                    menuId: data.menuId
-                }, { transaction: t }) // notice dont missing await
-            })
-            resolve(resolveObj.UPDATE_SUCCEED('Header'))
+                if (_valid_update) {
+                    let _get_h = await db.Header.findByPk(data.id)
+                    let _upd_h = await _get_h
+                        .cache()
+                        .update({
+                            imageLogo: data.imageLogo,
+                            imageBackground: data.imageBackground,
+                            menuId: data.menuId
+                        })
+                    if (_upd_h) {
+                        _response = resolveObj.UPDATE_SUCCEED()
+                    } else {
+                        _response = resolveObj.UPDATE_UNSUCCEED()
+                    }
+                }
+            }
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -93,14 +106,21 @@ let updateHeader = (data) => {
 let deleteHeader = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!id) { // check empty object
-                resolve(resolveObj.MISSING_PARAMETERS)
+                _response = resolveObj.MISSING_PARAMETERS
             } else {
-                await db.sequelize.transaction(async (t) => {
-                    await db.Header.destroy({ where: { id: id }, transaction: t })
-                })
-                resolve(resolveObj.DELETE_SUCCEED('Header'))
+                let _get_h = await db.Header.findByPk(id)
+                let _del_h = await _get_h
+                    .cache()
+                    .destroy()
+                if (_del_h) {
+                    _response = resolveObj.DELETE_SUCCEED()
+                } else {
+                    _response = resolveObj.DELETE_UNSUCCEED()
+                }
             }
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -112,13 +132,18 @@ let deleteHeader = (id) => {
 let createMenu = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!data.name) {
-                resolve(resolveObj.MISSING_PARAMETERS)
+                _response = resolveObj.MISSING_PARAMETERS
             } else {
-                await db.Menu.create({ name: data.name })
-
-                resolve(resolveObj.CREATE_SUCCEED('Menus'))
+                let _cre_m = await db.Menu.create({ name: data.name })
+                if (_cre_m) {
+                    _response = resolveObj.CREATE_SUCCEED()
+                } else {
+                    _response = resolveObj.CREATE_UNSUCCEED()
+                }
             }
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -129,35 +154,41 @@ let getMenu = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
             let data
+            let _response
             if (id) {
-                data = await db.Menu.findOne({
-                    where: { id: id },
-                    include: [
-                        {
-                            model: db.Menu_Item, as: 'menu_item',
-                            include: [
-                                { model: db.Text_Translation, as: 'textDataMenu_Item' },
-                                {
-                                    model: db.Sub_Menu, as: 'sub_menu',
-                                    attributes: ['menuParentId', 'order', 'text', 'link'],
-                                    include: [
-                                        { model: db.Text_Translation, as: 'textDataSub_Menu' }
-                                    ]
-                                }
-                            ]
-                        },
-                    ],
-                })
+                data = await db.Menu
+                    .cache(id)
+                    .findOne({
+                        where: { id: id },
+                        include: [
+                            {
+                                model: db.Menu_Item, as: 'menu_item',
+                                include: [
+                                    { model: db.Text_Translation, as: 'textDataMenu_Item' },
+                                    {
+                                        model: db.Sub_Menu, as: 'sub_menu',
+                                        attributes: ['menuParentId', 'order', 'text', 'link'],
+                                        include: [
+                                            { model: db.Text_Translation, as: 'textDataSub_Menu' }
+                                        ]
+                                    }
+                                ]
+                            },
+                        ],
+                    })
             } else {
-                data = await db.Menu.findAll({
-                    include: [
-                        {
-                            model: db.Menu_Item, as: 'menu_item', attributes: ['id']
-                        },
-                    ],
-                });
+                data = await db.Menu
+                    .cache('all')
+                    .findAll({
+                        include: [
+                            {
+                                model: db.Menu_Item, as: 'menu_item', attributes: ['id']
+                            },
+                        ],
+                    });
             }
-            resolve(resolveObj.GET(data))
+            _response = resolveObj.GET(data)
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -167,19 +198,23 @@ let getMenu = (id) => {
 let updateMenu = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!data.id || !data.name) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return;
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _get_m = await db.Menu.findByPk(data.id)
+                let _upd_m = await _get_m
+                    .cache()
+                    .update({
+                        name: data.name
+                    })
+                if (_upd_m) {
+                    _response = resolveObj.UPDATE_SUCCEED()
+                } else {
+                    _response = resolveObj.UPDATE_UNSUCCEED()
+                }
             }
-
-            await db.sequelize.transaction(async (t) => {
-                let menu = await db.Menu.findOne({ where: { id: data.id } })
-                await menu.update({
-                    name: data.name
-                }, { transaction: t })
-            })
-
-            resolve(resolveObj.UPDATE_SUCCEED('Menu'))
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -189,19 +224,26 @@ let updateMenu = (data) => {
 let deleteMenu = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!data.id) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
-            }
-            await db.sequelize.transaction(async (t) => {
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
                 let menuItem = await db.Menu_Item.findAll({ where: { menuId: data.id } })
                 if (menuItem.length > 0) {
-                    resolve(resolveObj.EXIST_REF_KEY)
-                    throw new Error()
+                    _response = resolveObj.EXIST_REF_KEY
+                } else {
+                    let _get_m = await db.Menu.findByPk(data.id)
+                    let _del_m = await _get_m
+                        .cache()
+                        .destroy()
+                    if (_del_m) {
+                        _response = resolveObj.DELETE_SUCCEED()
+                    } else {
+                        _response = resolveObj.DELETE_UNSUCCEED()
+                    }
                 }
-                await db.Menu.destroy({ where: { id: data.id }, transaction: t })
-                resolve(resolveObj.DELETE_SUCCEED('Menu'))
-            })
+            }
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -213,30 +255,37 @@ let deleteMenu = (data) => {
 let createMenuItem = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!data.menuId || !data.valueEn) {
-                resolve({
-                    errCode: 1,
-                    errMessage: 'Missing required parameters'
-                })
+                _response = resolveObj.MISSING_PARAMETERS
             } else {
-                await db.sequelize.transaction(async (t) => {
-                    let Text_Translation = await db.Text_Translation.create({
-                        valueEn: data.valueEn,
-                        valueTh: data.valueTh ? data.valueTh : data.valueEn
-                    }, { transaction: t })
-
-                    // create menu item
-                    await db.Menu_Item.create({
-                        order: data.order && data.order,
-                        menuId: data.menuId,
-                        text: Text_Translation.id,
-                        highlight: data.highlight,
-                        link: data.link
-                    }, { transaction: t })
-                })
-
-                resolve(resolveObj.CREATE_SUCCEED())
+                let _get_m = await db.Menu.findByPk(menuId)
+                if (!_get_m) {
+                    _response = resolveObj.NOT_FOUND()
+                } else {
+                    let _transaction_status = false
+                    await db.sequelize.transaction(async (t) => {
+                        let Text_Translation = await db.Text_Translation.create({
+                            valueEn: data.valueEn,
+                            valueTh: data.valueTh ? data.valueTh : data.valueEn
+                        })
+                        await db.Menu_Item.create({
+                            order: data.order && data.order,
+                            menuId: data.menuId,
+                            text: Text_Translation.id,
+                            highlight: data.highlight,
+                            link: data.link
+                        })
+                        _transaction_status = true
+                    })
+                    if (_transaction_status) {
+                        _response = resolveObj.CREATE_SUCCEED()
+                    } else {
+                        _response = resolveObj.CREATE_UNSUCCEED()
+                    }
+                }
             }
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -244,17 +293,15 @@ let createMenuItem = (data) => {
 }
 
 let bulkCreateMenuItem = () => {
-
+    // TODO: implement bulk create
 }
 
 let getAllMenuItemByMenuId = (menuId) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!menuId) {
-                resolve({
-                    errCode: 1,
-                    errMessage: 'Missing required parameters'
-                })
+                _response = resolveObj.MISSING_PARAMETERS
             } else {
                 let data = await db.Menu_Item.findAll({
                     where: {
@@ -271,12 +318,9 @@ let getAllMenuItemByMenuId = (menuId) => {
                         }
                     ]
                 })
-                resolve({
-                    errCode: 0,
-                    errMessage: `Ok`,
-                    data
-                })
+                _response = resolveObj.GET(data)
             }
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -286,37 +330,34 @@ let getAllMenuItemByMenuId = (menuId) => {
 let updateMenuItemById = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!data.id || (!data.order && !data.link && !data.valueEn && !data.valueTh && !data.highlight)) {
-                resolve({
-                    errCode: 1,
-                    errMessage: 'Missing required parameters'
-                })
-                return
-            }
-            await db.sequelize.transaction(async (t) => {
-                let menu_item = await db.Menu_Item.findOne({
-                    where: {
-                        id: data.id
-                    }
-                })
-                await menu_item.update({
-                    order: data.order,
-                    link: data.link,
-                    highlight: data.highlight
-                }, { transaction: t })
-                if (data.valueEn || data.valueTh) {
-                    let text_translation = await db.Text_Translation.findOne({
-                        where: {
-                            id: menu_item.text
-                        }
-                    })
-                    await text_translation.update({
-                        valueEn: data.valueEn,
-                        valueTh: data.valueTh
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _transaction_status = false
+                let _get_mi = await db.Menu_Item.findByPk(data.id)
+                await db.sequelize.transaction(async (t) => {
+                    await _get_mi.update({
+                        order: data.order,
+                        link: data.link,
+                        highlight: data.highlight
                     }, { transaction: t })
+                    if (data.valueEn || data.valueTh) {
+                        let _get_tt = await db.Text_Translation.findByPk(menu_item.text)
+                        await _get_tt.update({
+                            valueEn: data.valueEn,
+                            valueTh: data.valueTh
+                        }, { transaction: t })
+                    }
+                    _transaction_status = true
+                })
+                if (_transaction_status) {
+                    _response = resolveObj.UPDATE_SUCCEED()
+                } else {
+                    _response = resolveObj.UPDATE_UNSUCCEED()
                 }
-            })
-            resolve(resolveObj.UPDATE_SUCCEED())
+            }
+            resolve(_responses)
         } catch (e) {
             reject(e);
         }
@@ -326,41 +367,45 @@ let updateMenuItemById = (data) => {
 let deleteMenuItemById = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!id) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
-            }
-            let menu_item = await db.Menu_Item.findOne({
-                where: {
-                    id: id
-                }
-            })
-            let list_sub_menu = await db.Sub_Menu.findAll({
-                where: {
-                    menuParentId: id
-                }
-            })
-            const result = await db.sequelize.transaction(async (t) => {
-                if (list_sub_menu.length > 0) {
-                    resolve(resolveObj.EXIST_REF_KEY)
-                    throw new Error()
-                }
-                // delete text_translation menu_item
-                await db.Text_Translation.destroy({
-                    where: {
-                        id: [menu_item.text]
-                    },
-                    transaction: t
-                })
-                // delete menu_item
-                await db.Menu_Item.destroy({
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let menu_item = await db.Menu_Item.findOne({
                     where: {
                         id: id
-                    },
-                    transaction: t
+                    }
                 })
-            });
-            resolve(resolveObj.DELETE_SUCCEED('Menu_Item'))
+                let list_sub_menu = await db.Sub_Menu.findAll({
+                    where: {
+                        menuParentId: id
+                    }
+                })
+                if (list_sub_menu.length > 0) {
+                    _response = resolveObj.EXIST_REF_KEY
+                } else {
+                    let _transaction_status = false
+                    const result = await db.sequelize.transaction(async (t) => {
+                        // delete text_translation menu_item
+                        await db.Text_Translation.destroy({
+                            where: {
+                                id: [menu_item.text]
+                            },
+                            transaction: t
+                        })
+                        // delete menu_item
+                        await db.Menu_Item.destroy({
+                            where: {
+                                id: id
+                            },
+                            transaction: t
+                        })
+                        _transaction_status = true
+                    });
+                    _response = resolveObj.DELETE_SUCCEED()
+                }
+            }
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -372,27 +417,32 @@ let deleteMenuItemById = (id) => {
 let createSubMenu = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!data.menuParentId || !data.valueEn) {
-                resolve({
-                    errCode: 1,
-                    errMessage: 'Missing required parameters'
-                })
-                return
-            }
-            await db.sequelize.transaction(async (t) => {
-                let Text_Translation = await db.Text_Translation.create({
-                    valueEn: data.valueEn,
-                    valueTh: data.valueTh ? data.valueTh : data.valueEn
-                }, { transaction: t })
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _transaction_status = false
+                await db.sequelize.transaction(async (t) => {
+                    let Text_Translation = await db.Text_Translation.create({
+                        valueEn: data.valueEn,
+                        valueTh: data.valueTh ? data.valueTh : data.valueEn
+                    }, { transaction: t })
 
-                await db.Sub_Menu.create({
-                    menuParentId: data.menuParentId,
-                    order: data.order && data.order,
-                    text: Text_Translation.id,
-                    link: data.link
-                }, { transaction: t })
-            })
-            resolve(resolveObj.CREATE_SUCCEED())
+                    await db.Sub_Menu.create({
+                        menuParentId: data.menuParentId,
+                        order: data.order && data.order,
+                        text: Text_Translation.id,
+                        link: data.link
+                    }, { transaction: t })
+                    _transaction_status = true
+                })
+                if (_transaction_status) {
+                    _response = resolveObj.CREATE_SUCCEED()
+                } else {
+                    _response = resolveObj.CREATE_UNSUCCEED()
+                }
+            }
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -402,17 +452,19 @@ let createSubMenu = (data) => {
 let getAllSubMenuByMenuItemId = (menuParentId) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!menuParentId) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _get_sm = await db.Sub_Menu.findAll({
+                    where: { menuParentId: menuParentId },
+                    include: [
+                        { model: db.Text_Translation, as: 'textDataSub_Menu' }
+                    ]
+                })
+                _response = resolveObj.GET(_get_sm)
             }
-            let subMenu = await db.Sub_Menu.findAll({
-                where: { menuParentId: menuParentId },
-                include: [
-                    { model: db.Text_Translation, as: 'textDataSub_Menu' }
-                ]
-            })
-            resolve(resolveObj.GET(subMenu))
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -422,36 +474,37 @@ let getAllSubMenuByMenuItemId = (menuParentId) => {
 let updateSubMenu = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!data.id || (!data.order && !data.valueEn && !data.valueTh && !data.link)) {
-                resolve({
-                    errCode: 1,
-                    errMessage: 'Missing required parameters'
-                })
+                _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let sub_menu = await db.Sub_Menu.findOne({
-                    where: {
-                        id: data.id
-                    }
-                })
-                const result = await db.sequelize.transaction(async (t) => {
-                    if (!sub_menu) {
-                        resolve(resolveObj.NOT_FOUND('Menu Item'))
-                        throw new Error()
-                    }
-                    await sub_menu.update({
-                        order: data.order,
-                        link: data.link
-                    }, { transaction: t })
-                    if (data.valueEn || data.valueTh) {
-                        let text_translation = await db.Text_Translation.findOne({ where: { id: sub_menu.text } })
-                        await text_translation.update({
-                            valueEn: data.valueEn,
-                            valueTh: data.valueTh
+                let _get_sm = await db.Sub_Menu.findByPk(data.id)
+                if (!_get_sm) {
+                    _response = resolveObj.NOT_FOUND('Menu Item')
+                } else {
+                    let _transaction_status = false
+                    const result = await db.sequelize.transaction(async (t) => {
+                        await _get_sm.update({
+                            order: data.order,
+                            link: data.link
                         }, { transaction: t })
+                        if (data.valueEn || data.valueTh) {
+                            let _get_tt = await db.Text_Translation.findOne({ where: { id: sub_menu.text } })
+                            await _get_tt.update({
+                                valueEn: data.valueEn,
+                                valueTh: data.valueTh
+                            }, { transaction: t })
+                        }
+                        _transaction_status = true
+                    })
+                    if (_transaction_status) {
+                        _response = resolveObj.UPDATE_SUCCEED()
+                    } else {
+                        _response = resolveObj.UPDATE_UNSUCCEED()
                     }
-                })
-                resolve(resolveObj.UPDATE_SUCCEED())
+                }
             }
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -461,38 +514,41 @@ let updateSubMenu = (data) => {
 let deleteSubMenuById = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!id) {
-                resolve({
-                    errCode: 1,
-                    errMessage: 'Missing required parameters'
-                })
+                _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let sub_menu = await db.Sub_Menu.findOne({
-                    where: {
-                        id: id
-                    }
-                })
-                const result = await db.sequelize.transaction(async (t) => {
-                    if (!sub_menu) {
-                        resolve(resolveObj.NOT_FOUND('Menu Item'))
-                        throw new Error()
-                    }
-                    // remove text_translation sub_menu
-                    await db.Text_Translation.destroy({
-                        where: {
-                            id: sub_menu.text
-                        }
-                    }, { transaction: t })
+                let _get_sm = await db.Sub_Menu.findByPk(id)
+                if (!_get_sm) {
+                    _response = resolveObj.NOT_FOUND('Menu Item')
+                } else {
+                    let _transaction_status = false
+                    const result = await db.sequelize.transaction(async (t) => {
+                        // remove text_translation sub_menu
+                        await db.Text_Translation.destroy({
+                            where: {
+                                id: sub_menu.text
+                            },
+                            transaction: t
+                        })
 
-                    // remove sub_menu
-                    await db.Sub_Menu.destroy({
-                        where: {
-                            id: id
-                        }
-                    }, { transaction: t })
-                })
-                resolve(resolveObj.DELETE_SUCCEED())
+                        // remove sub_menu
+                        await db.Sub_Menu.destroy({
+                            where: {
+                                id: id
+                            },
+                            transaction: t
+                        })
+                        _transaction_status = true
+                    })
+                    if (_transaction_status) {
+                        _response = resolveObj.DELETE_SUCCEED()
+                    } else {
+                        _response = resolveObj.DELETE_UNSUCCEED()
+                    }
+                }
             }
+            resolve(_response)
         } catch (e) {
             reject(e);
         }

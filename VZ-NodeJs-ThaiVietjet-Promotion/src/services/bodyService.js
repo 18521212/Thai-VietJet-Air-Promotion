@@ -35,7 +35,7 @@ let getContentBody = (id) => {
             let _data
             if (id) {
                 _data = await db.Content_Body
-                    .cache(id)
+                    .cache()
                     .findByPk(id)
             } else {
                 _data = await db.Content_Body
@@ -57,9 +57,9 @@ let updateBody = (data) => {
             if (!func.CHECK_HAS_VALUE(data.id, data.name)) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let body = await db.Content_Body
+                let _get_b = await db.Content_Body
                     .findOne({ where: { id: data.id } })
-                let _upd_b = await body
+                let _upd_b = await _get_b
                     .cache()
                     .update({
                         name: data.name,

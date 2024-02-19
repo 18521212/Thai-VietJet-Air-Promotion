@@ -2,22 +2,6 @@
 
 import { association, delKey } from '../utils'
 
-let delKey_Redis = async (item) => {
-    // markdown table
-    let _has_ft = await item.hasFooter()
-    if (_has_ft) {
-        let _footers = await item.getFooter()
-        delKey(`model:Footer:${_footers.id}`)
-    } else {
-        // pack table
-        let _has_p = await item.hasPack()
-        if (_has_p) {
-            let _pack = await item.getPack()
-            delKey(`model:Pack:${_pack.id}`)
-        }
-    }
-}
-
 const {
     Model
 } = require('sequelize');
@@ -48,10 +32,10 @@ module.exports = (sequelize, DataTypes) => {
         hooks: {
             // TODO: trigger update cache redis ref model
             afterUpdate: async (item, options) => {
-                await delKey_Redis(item)
+                
             },
             afterDestroy: async (item, options) => {
-                await delKey_Redis(item)
+                
             }
             // TODO: check trigger ref model cache auto update [or not]
         }

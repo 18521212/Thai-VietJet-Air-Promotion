@@ -11,14 +11,18 @@ let queryPack = {
 let createPromotion = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!func.CHECK_HAS_VALUE(data.name)) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _cre_pr = await db.Promotion.create({ name: data.name })
+                if (_cre_pr) {
+                    _response = resolveObj.CREATE_SUCCEED()
+                } else {
+                    _response = resolveObj.CREATE_UNSUCCEED()
+                }
             }
-            await db.sequelize.transaction(async (t) => {
-                await db.Promotion.create({ name: data.name }, { transaction: t })
-            })
-            resolve(resolveObj.CREATE_SUCCEED('Promotion'))
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -33,16 +37,21 @@ let getPromotion = (id) => {
                     { model: db.Pack, as: 'pack', ...queryPack }
                 ]
             }
+            let _response
             let data
             if (id) {
-                data = await db.Promotion.findOne({
-                    where: { id: id },
-                    ...objectQuery
-                })
+                data = await db.Promotion
+                    .cache()
+                    .findByPk(id,
+                        objectQuery
+                    )
             } else {
-                data = await db.Promotion.findAll(objectQuery)
+                data = await db.Promotion
+                    .cache('all')
+                    .findAll(objectQuery)
             }
-            resolve(resolveObj.GET(data))
+            _response = resolveObj.GET(data)
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -52,16 +61,25 @@ let getPromotion = (id) => {
 let updatePromotion = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!func.CHECK_HAS_VALUE(data.id, data.name)) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _get_pr = await db.Promotion.findOne({ where: { id: data.id } })
+                if (!_get_pr) {
+                    _response = resolveObj.NOT_FOUND('Promotion')
+                } else {
+                    let _upd_pr = await _get_pr
+                        .cache()
+                        .update({ name: data.name })
+                    if (_upd_pr) {
+                        _response = resolveObj.UPDATE_SUCCEED()
+                    } else {
+                        _response = resolveObj.UPDATE_UNSUCCEED()
+                    }
+                }
             }
-            await db.sequelize.transaction(async (t) => {
-                let promotion = await db.Promotion.findOne({ where: { id: data.id } })
-                if (!promotion) { resolve(resolveObj.NOT_FOUND('Promotion')); throw new Error() }
-                await promotion.update({ name: data.name }, { transaction: t })
-            })
-            resolve(resolveObj.UPDATE_SUCCEED('Promotion'))
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -71,20 +89,25 @@ let updatePromotion = (data) => {
 let deletePromotion = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!func.CHECK_HAS_VALUE(data.id)) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
-            }
-            await db.sequelize.transaction(async (t) => {
-                let pack = await db.Pack.findAll({ where: { promotionId: data.id } })
-                if (pack.length > 0) {
-                    resolve(resolveObj.EXIST_REF_KEY)
-                    throw new Error()
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _get_p = await db.Pack.findAll({ where: { promotionId: data.id } })
+                if (_get_p.length > 0) {
+                    _response = resolveObj.EXIST_REF_KEY
+                } else {
+                    let _del_pr = await db.Promotion
+                        .cache()
+                        .destroy({ where: { id: data.id } })
+                    if (_del_pr >= 1) {
+                        _response = resolveObj.DELETE_SUCCEED()
+                    } else {
+                        _response = resolveObj.DELETE_UNSUCCEED()
+                    }
                 }
-                let deleted = await db.Promotion.destroy({ where: { id: data.id }, transaction: t })
-                if (deleted === 0) { resolve(resolveObj.DELETE_UNSUCCEED('Promotion')); throw new Error() }
-            })
-            resolve(resolveObj.DELETE_SUCCEED('Promotion'))
+            }
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -103,20 +126,27 @@ let validatePack = (data) => {
 let createPack = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!func.CHECK_HAS_VALUE(data.name, data.promotionId, data.maxNumber, data.price)) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                if (validatePack(data) === false) {
+                    _response = { errCode: 1, errMessage: 'invalid data' }
+                } else {
+                    let _get_pr = await db.Promotion.findByPk(data.promotionId)
+                    if (!_get_pr) {
+                        _response = resolveObj.NOT_FOUND('Promotion')
+                    } else {
+                        let _cre_p = await db.Pack.create(data)
+                        if (_cre_p) {
+                            _response = resolveObj.CREATE_SUCCEED()
+                        } else {
+                            _response = resolveObj.CREATE_UNSUCCEED()
+                        }
+                    }
+                }
             }
-            if (validatePack(data) === false) {
-                resolve({ errCode: 1, errMessage: 'invalid data' })
-                return
-            }
-            await db.sequelize.transaction(async (t) => {
-                let promotion = await db.Promotion.findOne({ where: { id: data.promotionId } })
-                if (!promotion) { resolve(resolveObj.NOT_FOUND('Promotion')); throw new Error() }
-                await db.Pack.create(data)
-            })
-            resolve(resolveObj.CREATE_SUCCEED('Pack'))
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -127,6 +157,7 @@ let getPack = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
             let data
+            let _response
             if (id) {
                 if (id.length > 0) {
                     data = await db.Pack.findAll({ where: { id: id }, ...queryPack })
@@ -136,7 +167,8 @@ let getPack = (id) => {
             } else {
                 data = await db.Pack.findAll(queryPack)
             }
-            resolve(resolveObj.GET(data))
+            _response = resolveObj.GET(data)
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -146,28 +178,32 @@ let getPack = (id) => {
 let updatePack = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!func.CHECK_HAS_VALUE(data.id) || !func.CHECK_HAS_VALUE_OR(data.name, data.maxNumber,
                 data.price, data.currency, data.numberRedeem)) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                if (validatePack(data) === false) {
+                    _response = { errCode: 1, errMessage: 'invalid data' }
+                } else {
+                    let _get_p = await db.Pack.findByPk(data.id)
+                    let _upd_p = await _get_p.update({
+                        name: data?.name,
+                        maxNumber: data?.maxNumber,
+                        price: data?.price,
+                        currency: data?.currency,
+                        numberRedeem: data?.numberRedeem,
+                        vat: data.vat,
+                        markdownId: data.markdownId ? data.markdownId : null
+                    })
+                    if (_upd_p) {
+                        _response = resolveObj.UPDATE_SUCCEED()
+                    } else {
+                        _response = resolveObj.UPDATE_UNSUCCEED()
+                    }
+                }
             }
-            if (validatePack(data) === false) {
-                resolve({ errCode: 1, errMessage: 'invalid data' })
-                return
-            }
-            await db.sequelize.transaction(async (t) => {
-                let pack = await db.Pack.findOne({ where: { id: data.id } })
-                await pack.update({
-                    name: data?.name,
-                    maxNumber: data?.maxNumber,
-                    price: data?.price,
-                    currency: data?.currency,
-                    numberRedeem: data?.numberRedeem,
-                    vat: data.vat,
-                    markdownId: data.markdownId ? data.markdownId : null
-                }, { transaction: t })
-            })
-            resolve(resolveObj.UPDATE_SUCCEED('Pack'))
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -177,19 +213,23 @@ let updatePack = (data) => {
 let deletePack = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!data.id) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
-            }
-            await db.sequelize.transaction(async (t) => {
-                await db.Pack.destroy({
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _get_p = await db.Pack.findByPk(data.id)
+                let _del_p = await _get_p.destroy({
                     where: {
                         id: data.id
                     },
-                    transaction: t
                 })
-            })
-            resolve(resolveObj.DELETE_SUCCEED())
+                if (_del_p) {
+                    _response = resolveObj.DELETE_SUCCEED()
+                } else {
+                    _response = resolveObj.DELETE_UNSUCCEED()
+                }
+            }
+            resolve(_response)
         } catch (e) {
             reject(e);
         }

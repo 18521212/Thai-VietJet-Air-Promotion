@@ -18,12 +18,11 @@ class Body extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            contentBodyData: ''
+            
         }
     }
 
     componentDidMount() {
-        this.getDataAndMapState();
         this.loadData()
     }
 
@@ -34,15 +33,6 @@ class Body extends Component {
     loadData = async () => {
         let bodyId = this.props.bodyId
         await this.props.loadBody(bodyId)
-    }
-
-    getDataAndMapState = async () => {
-        // content body data
-        let contentBodyData = await getBody(2);
-
-        this.setState({
-            contentBodyData: contentBodyData.data
-        })
     }
 
     render() {
