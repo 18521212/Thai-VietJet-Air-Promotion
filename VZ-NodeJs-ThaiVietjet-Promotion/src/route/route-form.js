@@ -7,12 +7,16 @@ const router = express.Router()
 
 let routeForm = (app) => {
     // form
-    router.post(api.FORMS, validateAuth, formController.createUpdateDeleteForm)
-    router.get(`${api.FORMS}/:id?`, formController.getForm)
-    router.put(api.FORMS, 
+    router.post(api.FORMS,
         // validateAuth, 
         formController.createUpdateDeleteForm)
-    router.delete(api.FORMS, validateAuth, formController.createUpdateDeleteForm)
+    router.get(`${api.FORMS}/:id?`, formController.getForm)
+    router.put(api.FORMS,
+        // validateAuth, 
+        formController.createUpdateDeleteForm)
+    router.delete(api.FORMS,
+        // validateAuth,
+        formController.createUpdateDeleteForm)
 
     // form detail
     router.get('/api/form-details', formController.getAllFormDetail)

@@ -6,19 +6,22 @@ const { resolveObj, func, type } = require('../utils');
 let createForm = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response = ''
             if (!data.name) {
-                return resolve(resolveObj.MISSING_PARAMETERS)
-            }
-            let createData = await db.Form.create({
-                name: data.name,
-            })
-            let responseData = ''
-            if (createData) {
-                responseData = resolveObj.CREATE_SUCCEED()
+                _response = resolveObj.MISSING_PARAMETERS
             } else {
-                responseData = resolveObj.CREATE_UNSUCCEED()
+                let createData = await db.Form
+                    .cache()
+                    .create({
+                        name: data.name,
+                    })
+                if (createData) {
+                    _response = resolveObj.CREATE_SUCCEED()
+                } else {
+                    _response = resolveObj.CREATE_UNSUCCEED()
+                }
             }
-            resolve(responseData)
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -36,12 +39,14 @@ let getForm = (id) => {
             let data
             if (id) {
                 data = await db.Form
+                    .cache(id)
                     .findOne({
                         where: { id: id },
                         ...query
                     })
             } else {
                 data = await db.Form
+                    .cache('all')
                     .findAll(query)
             }
             resolve(resolveObj.GET(data))
@@ -54,19 +59,24 @@ let getForm = (id) => {
 let updateForm = data => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response = ''
             if (!func.CHECK_HAS_VALUE(data.id, data.name)) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
-            }
-            let form = await db.Form.findOne({ where: { id: data.id } })
-            let dataUpdate = await form.update({ name: data.name })
-            let responseData = ''
-            if (form) {
-                responseData = resolveObj.UPDATE_SUCCEED()
+                _response = resolveObj.MISSING_PARAMETERS
             } else {
-                responseData = resolveObj.UPDATE_UNSUCCEED()
+                let form = await db.Form.findOne({ where: { id: data.id } })
+                let dataUpdate
+                if (form) {
+                    dataUpdate = await form
+                        .cache()
+                        .update({ name: data.name })
+                }
+                if (dataUpdate) {
+                    _response = resolveObj.UPDATE_SUCCEED()
+                } else {
+                    _response = resolveObj.UPDATE_UNSUCCEED()
+                }
             }
-            return resolve(responseData)
+            return resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -76,25 +86,36 @@ let updateForm = data => {
 let deleteForm = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response = ''
             if (!id) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-            }
-            let responseData = ''
-            await db.sequelize.transaction(async (t) => {
-                let dataDelete_FD = await db.Form_Detail.destroy({ where: { formId: id }, transaction: t })
-                let formDetail = await db.Form_Detail.findAll({ where: { formId: id } })
-                if (formDetail.length > 0) {
-                    resolve(resolveObj.EXIST_REF_KEY)
-                    throw new Error()
-                }
-                let dataDelete = await db.Form.destroy({ where: { id: id }, transaction: t })
-                if (dataDelete != 0) {
-                    responseData = resolveObj.DELETE_SUCCEED()
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _form = await db.Form.findByPk(id)
+                if (_form) {
+                    await db.sequelize.transaction(async (t) => {
+                        let dataDelete_FD = await db.Form_Detail.destroy({ where: { formId: id }, transaction: t })
+                        let formDetail = await db.Form_Detail.findAll({ where: { formId: id } })
+                        if (formDetail.length > 0) {
+                            _response = resolveObj.EXIST_REF_KEY
+                            throw new Error()
+                        }
+                        let dataDelete = await _form
+                            // cache() method  for instance destroy() method only
+                            .cache()
+                            // .destroy({ where: { id: id }, transaction: t })
+                            .destroy({ transaction: t })
+                        if (dataDelete >= 1) {
+                            _response = resolveObj.DELETE_SUCCEED()
+                        } else {
+                            _response = resolveObj.DELETE_UNSUCCEED()
+                            throw new Error()
+                        }
+                    })
                 } else {
-                    responseData = resolveObj.DELETE_UNSUCCEED()
+                    _response = resolveObj.NOT_FOUND()
                 }
-            })
-            resolve(responseData)
+            }
+            resolve(_response)
         } catch (e) {
             reject(e)
         }
@@ -106,8 +127,11 @@ let deleteForm = (id) => {
 let getAllFormDetail = () => {
     return new Promise(async (resolve, reject) => {
         try {
-            let data = await db.Form_Detail.findAll()
-            resolve(resolveObj.GET(data))
+            let data = await db.Form_Detail
+                .cache('all')
+                .findAll()
+            let _response = resolveObj.GET(data)
+            resolve(_response)
         } catch (e) {
             reject(e)
         }
@@ -117,37 +141,40 @@ let getAllFormDetail = () => {
 let getFormDetailByFormId = (formId) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!formId) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
-            }
-            let data = await db.Form_Detail.findAll({
-                where: { formId: formId },
-                order: [['order', 'asc']],
-                include: [
-                    {
-                        model: db.Input, as: 'input',
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let data = await db.Form_Detail
+                    .cache(`all/${db.Form.name}/${formId}`)
+                    .findAll({
+                        where: { formId: formId },
+                        order: [['order', 'asc']],
                         include: [
                             {
-                                model: db.Text_Input, as: 'text_input',
+                                model: db.Input, as: 'input',
                                 include: [
-                                    { model: db.Text_Translation, as: 'titleDataText_Input' },
-                                    { model: db.Text_Translation, as: 'placeHolderDataText_Input' }
+                                    {
+                                        model: db.Text_Input, as: 'text_input',
+                                        include: [
+                                            { model: db.Text_Translation, as: 'titleDataText_Input' },
+                                            { model: db.Text_Translation, as: 'placeHolderDataText_Input' }
+                                        ]
+                                    },
+                                    {
+                                        model: db.Dropdown, as: 'dropdown',
+                                        include: [
+                                            { model: db.Text_Translation, as: 'titleDataDropdown' },
+                                            { model: db.Row_Dataset_Dropdown, as: 'dataDropdown' },
+                                        ]
+                                    },
                                 ]
-                            },
-                            {
-                                model: db.Dropdown, as: 'dropdown',
-                                include: [
-                                    { model: db.Text_Translation, as: 'titleDataDropdown' },
-                                    { model: db.Row_Dataset_Dropdown, as: 'dataDropdown' },
-                                ]
-                            },
+                            }
                         ]
-                    }
-                ]
-            })
-            // func.ORDER(data, 'order', 'asc')
-            resolve(resolveObj.GET(data))
+                    })
+                _response = resolveObj.GET(data)
+            }
+            resolve(_response)
         } catch (e) {
             reject(e)
         }
@@ -157,11 +184,10 @@ let getFormDetailByFormId = (formId) => {
 let addInputIntoForm = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!data.formId || !data.inputId || !data.nameApi) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
-            }
-            await db.sequelize.transaction(async (t) => {
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
                 let form = await db.Form.findOne({
                     where: {
                         id: data.formId
@@ -173,20 +199,29 @@ let addInputIntoForm = (data) => {
                     },
                 })
                 if (!form || !input) {
-                    !form && resolve(resolveObj.NOT_FOUND('Form'))
-                    !input && resolve(resolveObj.NOT_FOUND('Input'))
-                    throw new Error()
+                    if (!form) {
+                        _response = resolveObj.NOT_FOUND('Form')
+                    } else if (!input) {
+                        _response = resolveObj.NOT_FOUND('Input')
+                    }
+                } else {
+                    let _form_detail_create = await db.Form_Detail
+                        .create({
+                            formId: data.formId,
+                            inputId: data.inputId,
+                            order: data.order ? data.order : undefined,
+                            widthMdScreen: data.widthMdScreen ? data.widthMdScreen : undefined,
+                            required: data.required,
+                            nameApi: data.nameApi
+                        })
+                    if (_form_detail_create) {
+                        _response = resolveObj.CREATE_SUCCEED()
+                    } else {
+                        _response = resolveObj.CREATE_UNSUCCEED()
+                    }
                 }
-                await db.Form_Detail.create({
-                    formId: data.formId,
-                    inputId: data.inputId,
-                    order: data.order ? data.order : undefined,
-                    widthMdScreen: data.widthMdScreen ? data.widthMdScreen : undefined,
-                    required: data.required,
-                    nameApi: data.nameApi
-                }, { transaction: t })
-            })
-            resolve(resolveObj.CREATE_SUCCEED())
+            }
+            resolve(_response)
         } catch (e) {
             reject(e)
         }
@@ -196,33 +231,41 @@ let addInputIntoForm = (data) => {
 let updateFormDetail = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!data.id || (!data.order && !data.widthMdScreen && !data.inputId && !data.nameApi)) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
-            }
-            await db.sequelize.transaction(async (t) => {
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
                 let formDetail = await db.Form_Detail.findOne({
                     where: { id: data.id },
                 })
-                if (!formDetail) { resolve(resolveObj.NOT_FOUND('Form Detail')); throw new Error() }
-                if (data.inputId) {
-                    let input = await db.findOne({ where: { id: data.inputId } })
-                    if (!input) {
-                        resolve(resolveObj.NOT_FOUND('Input'))
-                        throw new Error()
+                if (!formDetail) {
+                    _response = resolveObj.NOT_FOUND('Form Detail')
+                } else {
+                    let _validInput = true
+                    if (data.inputId) {
+                        let input = await db.findOne({ where: { id: data.inputId } })
+                        if (!input) {
+                            _validInput = false
+                            _response = resolveObj.NOT_FOUND('Input')
+                        }
+                    }
+                    if (_validInput) {
+                        let _form_detail_update = await formDetail.update({
+                            inputId: data.inputId,
+                            order: data.order && data.order,
+                            widthMdScreen: data.widthMdScreen && data.widthMdScreen,
+                            required: data.required,
+                            nameApi: data.nameApi
+                        })
+                        if (_form_detail_update) {
+                            _response = resolveObj.UPDATE_SUCCEED()
+                        } else {
+                            _response = resolveObj.UPDATE_UNSUCCEED()
+                        }
                     }
                 }
-                await formDetail.update({
-                    inputId: data.inputId,
-                    order: data.order && data.order,
-                    widthMdScreen: data.widthMdScreen && data.widthMdScreen,
-                    required: data.required,
-                    nameApi: data.nameApi
-                }, { transaction: t })
-
-                await formDetail.save({ transaction: t })
-            })
-            resolve(resolveObj.UPDATE_SUCCEED('Form Detail'))
+            }
+            resolve(_response)
         } catch (e) {
             reject(e)
         }
@@ -232,19 +275,22 @@ let updateFormDetail = (data) => {
 let deleteFormDetail = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!data.id) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
-            }
-            await db.sequelize.transaction(async (t) => {
-                await db.Form_Detail.destroy({
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _delete_form_detail = await db.Form_Detail.destroy({
                     where: {
                         id: data.id
-                    },
-                    transaction: t
+                    }
                 })
-            })
-            resolve(resolveObj.DELETE_SUCCEED())
+                if (_delete_form_detail >= 1) {
+                    _response = resolveObj.DELETE_SUCCEED()
+                } else {
+                    _response = resolveObj.DELETE_UNSUCCEED()
+                }
+            }
+            resolve(_response)
         } catch (e) {
             reject(e)
         }
@@ -253,7 +299,7 @@ let deleteFormDetail = (data) => {
 
 // input
 
-let queryInput = {
+let _queryInput = {
     include: [
         {
             model: db.Text_Input, as: 'text_input',
@@ -276,85 +322,24 @@ let getInput = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
             let data;
+            let _response
             if (id) {
                 if (id.length > 0) {
-                    data = await db.Input.findAll({ where: { id: id }, ...queryInput })
+                    data = await db.Input
+                        .cache('all/<Id><Array>')
+                        .findAll({ where: { id: id }, ..._queryInput })
                 } else {
-                    data = await db.Input.findOne({ where: { id: id }, ...queryInput })
+                    data = await db.Input
+                        .cache(id)
+                        .findOne({ where: { id: id }, ..._queryInput })
                 }
             } else {
-                data = await db.Input.findAll(queryInput)
+                data = await db.Input
+                    .cache('all')
+                    .findAll(_queryInput)
             }
-            resolve(resolveObj.GET(data))
-        } catch (e) {
-            reject(e)
-        }
-    })
-}
-
-let getAllInput = () => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            let data = await db.Input.findAll({
-                include: [
-                    {
-                        model: db.Text_Input, as: 'text_input',
-                        include: [
-                            { model: db.Text_Translation, as: 'titleDataText_Input' },
-                            { model: db.Text_Translation, as: 'placeHolderDataText_Input' }
-                        ]
-                    },
-                    {
-                        model: db.Dropdown, as: 'dropdown',
-                        include: [
-                            { model: db.Text_Translation, as: 'titleDataDropdown' },
-                            { model: db.Row_Dataset_Dropdown, as: 'dataDropdown' },
-                        ]
-                    },
-                ]
-            })
-            resolve({
-                errCode: 0,
-                errMessage: 'Ok',
-                data
-            })
-        } catch (e) {
-            reject(e)
-        }
-    })
-}
-
-let getInputById = (id) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            if (!id) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
-            }
-            let data = await db.Input.findOne({
-                where: { id: id },
-                include: [
-                    {
-                        model: db.Text_Input, as: 'text_input',
-                        include: [
-                            { model: db.Text_Translation, as: 'titleDataText_Input' },
-                            { model: db.Text_Translation, as: 'placeHolderDataText_Input' }
-                        ]
-                    },
-                    {
-                        model: db.Dropdown, as: 'dropdown',
-                        include: [
-                            { model: db.Text_Translation, as: 'titleDataDropdown' },
-                            { model: db.Row_Dataset_Dropdown, as: 'dataDropdown' },
-                        ]
-                    },
-                ]
-            })
-            resolve({
-                errCode: 0,
-                errMessage: 'Ok',
-                data: data
-            })
+            _response = resolveObj.GET(data)
+            resolve(_response)
         } catch (e) {
             reject(e)
         }
@@ -365,86 +350,94 @@ let deleteInputById = (inputId) => {
     return new Promise(async (resolve, reject) => {
         // !formDetail -> input -> text_translation /d -> || /d row_data_dropdown /d -> input /d
         try {
+            let _response
             if (!inputId) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
-            }
-            await db.sequelize.transaction(async (t) => {
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
                 let formDetail = await db.Form_Detail.findOne({
                     where: {
                         inputId: inputId
                     }
                 })
                 if (formDetail) {
-                    resolve(resolveObj.EXIST_REF_KEY)
-                    throw new Error()
-                }
-                let input = await db.Input.findOne({
-                    where: {
-                        id: inputId
-                    },
-                    include: [
-                        {
-                            model: db.Text_Input,
-                            as: 'text_input'
+                    _response = resolveObj.EXIST_REF_KEY
+                } else {
+                    let input = await db.Input.findOne({
+                        where: {
+                            id: inputId
                         },
-                        {
-                            model: db.Dropdown,
-                            as: 'dropdown'
+                        include: [
+                            {
+                                model: db.Text_Input,
+                                as: 'text_input'
+                            },
+                            {
+                                model: db.Dropdown,
+                                as: 'dropdown'
+                            }
+                        ]
+                    })
+                    if (!input) {
+                        _response = resolveObj.NOT_FOUND('Input')
+                    } else {
+                        let _transaction_status = false
+                        await db.sequelize.transaction(async (t) => {
+                            switch (input.typeInput) {
+                                case type.TEXT:
+                                    let _del_text_translation_ti = await db.Text_Translation.destroy({
+                                        where: {
+                                            id: [input.text_input.title, input.text_input.placeHolder]
+                                        },
+                                        transaction: t
+                                    })
+                                    let _del_text_input = await db.Text_Input.destroy({
+                                        where: {
+                                            inputId: inputId
+                                        },
+                                        transaction: t
+                                    })
+                                    break;
+                                case type.DROPDOWN:
+                                    let _del_text_translation_dd = await db.Text_Translation.destroy({
+                                        where: {
+                                            id: input.dropdown.title
+                                        },
+                                        transaction: t
+                                    })
+                                    let _del_rds_dd = await db.Row_Dataset_Dropdown.destroy({
+                                        where: {
+                                            dropdownId: input.dropdown.id
+                                        },
+                                        transaction: t
+                                    })
+                                    let _del_dropdown = await db.Dropdown.destroy({
+                                        where: {
+                                            inputId: inputId
+                                        },
+                                        transaction: t
+                                    })
+                                    break;
+                                default:
+                                    // invalid type input
+                                    throw new Error()
+                                    break;
+                            }
+                            let _del_input = await db.Input.destroy({
+                                where: {
+                                    id: inputId
+                                }
+                            }, { transaction: t })
+                            _transaction_status = true
+                        })
+                        if (_transaction_status) {
+                            _response = resolveObj.DELETE_SUCCEED()
+                        } else {
+                            _response = resolveObj.DELETE_UNSUCCEED()
                         }
-                    ]
-                })
-                if (!input) {
-                    resolve(resolveObj.NOT_FOUND('Input'))
-                    throw new Error()
-                }
-                switch (input.typeInput) {
-                    case type.TEXT:
-                        await db.Text_Translation.destroy({
-                            where: {
-                                id: [input.text_input.title, input.text_input.placeHolder]
-                            },
-                            transaction: t
-                        })
-                        await db.Text_Input.destroy({
-                            where: {
-                                inputId: inputId
-                            },
-                            transaction: t
-                        })
-                        break;
-                    case type.DROPDOWN:
-                        await db.Text_Translation.destroy({
-                            where: {
-                                id: input.dropdown.title
-                            },
-                            transaction: t
-                        })
-                        await db.Row_Dataset_Dropdown.destroy({
-                            where: {
-                                dropdownId: input.dropdown.id
-                            },
-                            transaction: t
-                        })
-                        await db.Dropdown.destroy({
-                            where: {
-                                inputId: inputId
-                            },
-                            transaction: t
-                        })
-                        break;
-                    default:
-                        resolve(resolveObj.ERROR(1, 'Invalid typeInput'))
-                        throw new Error()
-                        break;
-                }
-                await db.Input.destroy({
-                    where: {
-                        id: inputId
                     }
-                }, { transaction: t })
-            })
-            resolve(resolveObj.DELETE_SUCCEED())
+                }
+            }
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -465,33 +458,39 @@ let createTextInput = (data) => {
     return new Promise(async (resolve, reject) => {
         // data -> input -> text_input -> text_translation : titleEn || titleTh placeHolderEn placeHolderTh
         try {
+            let _response
             if (!func.CHECK_HAS_VALUE(data.titleEn) || !checkTypeText(data?.type)) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _transaction_status = false
+                await db.sequelize.transaction(async (t) => {
+                    let input = await db.Input.create({
+                        typeInput: 'text'
+                    }, { transaction: t });
+                    let titleText_Translation = await db.Text_Translation.create({
+                        valueEn: data.titleEn,
+                        valueTh: data.titleTh ? data.titleTh : data.titleEn
+                    }, { transaction: t })
+
+                    let placeHolderText_Translation = await db.Text_Translation.create({
+                        valueEn: data.placeHolderEn,
+                        valueTh: data.placeHolderTh ? data.placeHolderTh : data.placeHolderEn
+                    }, { transaction: t })
+                    let textInput = await db.Text_Input.create({
+                        title: titleText_Translation.id,
+                        placeHolder: placeHolderText_Translation.id,
+                        typeText: data.typeText,
+                        inputId: input.id
+                    }, { transaction: t })
+                    _transaction_status = true
+                })
+                if (_transaction_status) {
+                    _response = resolveObj.CREATE_SUCCEED()
+                } else {
+                    _response = resolveObj.CREATE_UNSUCCEED()
+                }
             }
-            await db.sequelize.transaction(async (t) => {
-                let input = await db.Input.create({
-                    typeInput: 'text'
-                }, { transaction: t });
-
-                let titleText_Translation = await db.Text_Translation.create({
-                    valueEn: data.titleEn,
-                    valueTh: data.titleTh ? data.titleTh : data.titleEn
-                }, { transaction: t })
-
-                let placeHolderText_Translation = await db.Text_Translation.create({
-                    valueEn: data.placeHolderEn,
-                    valueTh: data.placeHolderTh ? data.placeHolderTh : data.placeHolderEn
-                }, { transaction: t })
-
-                let textInput = await db.Text_Input.create({
-                    title: titleText_Translation.id,
-                    placeHolder: placeHolderText_Translation.id,
-                    typeText: data.typeText,
-                    inputId: input.id
-                }, { transaction: t })
-            })
-            resolve(resolveObj.CREATE_SUCCEED())
+            resolve(_response)
         } catch (e) {
             reject(e)
         }
@@ -502,12 +501,8 @@ let getAllTextInput = () => {
     return new Promise(async (resolve, reject) => {
         try {
             let data = await db.Text_Input.findAll()
-
-            resolve({
-                errCode: 0,
-                errMessage: 'Ok',
-                data
-            })
+            let _response = resolveObj.GET(data)
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -517,34 +512,42 @@ let getAllTextInput = () => {
 let updateTextInput = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!func.CHECK_HAS_VALUE(data.id) ||
                 !func.CHECK_HAS_VALUE_OR(data.titleEn, data.titleTh,
                     data.placeHolderEn, data.placeHolderTh, data.typeText) ||
                 !checkTypeText(data.typeText)) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _transaction_status = false
+                await db.sequelize.transaction(async (t) => {
+                    let textInput = await db.Text_Input.findOne({ where: { id: data.id } })
+                    await textInput.update({
+                        typeText: data.typeText
+                    }, { transaction: t })
+                    if (func.CHECK_HAS_VALUE_OR(data.titleEn, data.titleTh)) {
+                        let titleTextTranslation = await db.Text_Translation.findOne({ where: { id: textInput.title } })
+                        await titleTextTranslation.update({
+                            valueEn: data.titleEn,
+                            valueTh: data.titleTh ? data.titleTh : data.titleEn
+                        }, { transaction: t })
+                    }
+                    if (func.CHECK_HAS_VALUE_OR(data.placeHolderEn, data.placeHolderTh)) {
+                        let placeHolderTextTranslation = await db.Text_Translation.findOne({ where: { id: textInput.placeHolder } })
+                        await placeHolderTextTranslation.update({
+                            valueEn: data.placeHolderEn,
+                            valueTh: data.placeHolderTh ? data.placeHolderTh : data.placeHolderEn
+                        }, { transaction: t })
+                    }
+                    _transaction_status = true
+                })
+                if (_transaction_status) {
+                    _response = resolveObj.UPDATE_SUCCEED('Text_Input')
+                } else {
+                    _response = resolveObj.UPDATE_UNSUCCEED('Text_Input')
+                }
             }
-            await db.sequelize.transaction(async (t) => {
-                let textInput = await db.Text_Input.findOne({ where: { id: data.id } })
-                await textInput.update({
-                    typeText: data.typeText
-                }, { transaction: t })
-                if (func.CHECK_HAS_VALUE_OR(data.titleEn, data.titleTh)) {
-                    let titleTextTranslation = await db.Text_Translation.findOne({ where: { id: textInput.title } })
-                    await titleTextTranslation.update({
-                        valueEn: data.titleEn,
-                        valueTh: data.titleTh ? data.titleTh : data.titleEn
-                    }, { transaction: t })
-                }
-                if (func.CHECK_HAS_VALUE_OR(data.placeHolderEn, data.placeHolderTh)) {
-                    let placeHolderTextTranslation = await db.Text_Translation.findOne({ where: { id: textInput.placeHolder } })
-                    await placeHolderTextTranslation.update({
-                        valueEn: data.placeHolderEn,
-                        valueTh: data.placeHolderTh ? data.placeHolderTh : data.placeHolderEn
-                    }, { transaction: t })
-                }
-            })
-            resolve(resolveObj.UPDATE_SUCCEED('Text_Input'))
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -557,26 +560,32 @@ let createDropdown = (data) => {
     return new Promise(async (resolve, reject) => {
         // title dataDropdown ->  input -> title text_translation -> dropdown -> data dropdown
         try {
+            let _response
             if (!data.titleEn) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _transaction_status = false
+                await db.sequelize.transaction(async (t) => {
+                    let input = await db.Input.create({
+                        typeInput: type.DROPDOWN
+                    }, { transaction: t });
+                    let titleText_Translation = await db.Text_Translation.create({
+                        valueEn: data.titleEn,
+                        valueTh: data.titleTh ? data.titleTh : data.titleEn
+                    }, { transaction: t })
+                    await db.Dropdown.create({
+                        title: titleText_Translation.id,
+                        inputId: input.id
+                    }, { transaction: t })
+                    _transaction_status = true
+                })
+                if (_transaction_status) {
+                    _response = resolveObj.CREATE_SUCCEED()
+                } else {
+                    _response = resolveObj.CREATE_UNSUCCEED()
+                }
             }
-            let id
-            await db.sequelize.transaction(async (t) => {
-                let input = await db.Input.create({
-                    typeInput: type.DROPDOWN
-                }, { transaction: t });
-                let titleText_Translation = await db.Text_Translation.create({
-                    valueEn: data.titleEn,
-                    valueTh: data.titleTh ? data.titleTh : data.titleEn
-                }, { transaction: t })
-                await db.Dropdown.create({
-                    title: titleText_Translation.id,
-                    inputId: input.id
-                }, { transaction: t })
-                id = input.id
-            })
-            resolve(resolveObj.CREATE_SUCCEED('', { id: id }))
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -586,11 +595,9 @@ let createDropdown = (data) => {
 let getDropdownById = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!id) {
-                resolve({
-                    errCode: 1,
-                    errMessage: 'Missing required parameters'
-                })
+                _response = resolveObj.MISSING_PARAMETERS
             } else {
                 let data = await db.Dropdown.findOne({
                     where: {
@@ -602,13 +609,9 @@ let getDropdownById = (id) => {
                         }
                     ]
                 })
-
-                resolve({
-                    errCode: 0,
-                    errMessage: 'Ok',
-                    data
-                })
+                _response = resolveObj.GET(data)
             }
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -618,19 +621,23 @@ let getDropdownById = (id) => {
 let updateDropdown = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!func.CHECK_HAS_VALUE(data.id) || !func.CHECK_HAS_VALUE_OR(data.titleEn, data.titleTh)) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
-            }
-            await db.sequelize.transaction(async (t) => {
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
                 let dropdown = await db.Dropdown.findOne({ where: { id: data.id } })
                 let titleTranslation = await db.Text_Translation.findOne({ where: { id: dropdown.title } })
-                await titleTranslation.update({
+                let _update_ttr = await titleTranslation.update({
                     valueEn: data.titleEn,
                     valueTh: data.titleTh,
-                }, { transaction: t })
-            })
-            resolve(resolveObj.UPDATE_SUCCEED())
+                })
+                if (_update_ttr) {
+                    _response = resolveObj.UPDATE_SUCCEED()
+                } else {
+                    _response = resolveObj.UPDATE_UNSUCCEED()
+                }
+            }
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -642,27 +649,31 @@ let updateDropdown = (data) => {
 let addDataDropdown = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!data.dropdownId || !data.value || !data.label) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
-            }
-            await db.sequelize.transaction(async (t) => {
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
                 let dropdown = await db.Dropdown.findOne({
                     where: {
                         id: data.dropdownId
                     }
                 })
-                if (!dropdown) {
-                    resolve(resolveObj.NOT_FOUND('Dropdown'))
-                    throw new Error()
+                if (dropdown) {
+                    let _rdd = await db.Row_Dataset_Dropdown.create({
+                        value: data.value,
+                        label: data.label,
+                        dropdownId: data.dropdownId
+                    })
+                    if (_rdd) {
+                        _response = resolveObj.CREATE_SUCCEED()
+                    } else {
+                        _response = resolveObj.CREATE_UNSUCCEED()
+                    }
+                } else {
+                    _response = resolveObj.NOT_FOUND('Dropdown')
                 }
-                await db.Row_Dataset_Dropdown.create({
-                    value: data.value,
-                    label: data.label,
-                    dropdownId: data.dropdownId
-                }, { transaction: t })
-            })
-            resolve(resolveObj.CREATE_SUCCEED())
+            }
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -672,92 +683,18 @@ let addDataDropdown = (data) => {
 let deleteDataDropdown = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!data.id) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
-            }
-            await db.sequelize.transaction(async (t) => {
-                let deleted = await db.Row_Dataset_Dropdown.destroy({ where: { id: data.id }, transaction: t })
-                if (deleted === 0) {
-                    resolve(resolveObj.DELETE_UNSUCCEED)
-                    throw new Error()
-                }
-            })
-            resolve(resolveObj.DELETE_SUCCEED())
-        } catch (e) {
-            reject(e);
-        }
-    })
-}
-
-// pack
-
-let createPack = (data) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            if (!data.name || !data.maxNumber || !data.price
-                || !data.numberRedeem) {
-                resolve({
-                    errCode: 1,
-                    errMessage: 'Missing required parameters'
-                })
+                _response = resolveObj.MISSING_PARAMETERS
             } else {
-                // create pack
-                await db.Pack.create({
-                    name: data.name,
-                    maxNumber: data.maxNumber,
-                    price: data.price,
-                    currency: data.currency,
-                    numberRedeem: data.numberRedeem
-                })
-
-                resolve({
-                    errCode: 0,
-                    errMessage: 'Create pack succeed'
-                })
-            }
-        } catch (e) {
-            reject(e);
-        }
-    })
-}
-
-let getAllPack = () => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            let data = await db.Pack.findAll()
-
-            resolve({
-                errCode: 0,
-                errMessage: 'Ok',
-                data
-            })
-        } catch (e) {
-            reject(e);
-        }
-    })
-}
-
-let deletePackById = (id) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            if (!id) {
-                resolve({
-                    errCode: 0,
-                    errMessage: 'Missing required parameters',
-                })
-                return;
-            }
-            await db.Pack.destroy({
-                where: {
-                    id: id
+                let _del_rdd = await db.Row_Dataset_Dropdown.destroy({ where: { id: data.id } })
+                if (_del_rdd >= 1) {
+                    _response = resolveObj.DELETE_SUCCEED()
+                } else {
+                    _response = resolveObj.DELETE_UNSUCCEED()
                 }
-            })
-
-            resolve({
-                errCode: 0,
-                errMessage: `Remove pack with id: ${id} succeed`,
-            })
+            }
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -839,8 +776,6 @@ module.exports = {
     deleteFormDetail: deleteFormDetail,
 
     getInput,
-    getAllInput: getAllInput,
-    getInputById,
     deleteInputById: deleteInputById,
 
     // text input
@@ -856,10 +791,6 @@ module.exports = {
     updateDropdown,
     addDataDropdown,
     deleteDataDropdown,
-
-    createPack: createPack,
-    getAllPack: getAllPack,
-    deletePackById: deletePackById,
 
     fetchData: fetchData
 }

@@ -29,6 +29,10 @@ module.exports = {
             payRef: {
                 type: Sequelize.STRING,
             },
+            emailStatus: {
+                type: Sequelize.STRING,
+                allowNull: false,
+            },
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE

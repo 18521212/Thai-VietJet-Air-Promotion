@@ -4,57 +4,46 @@ const { resolveObj, func } = require('../utils');
 let createBody = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!func.CHECK_HAS_VALUE(data.name)) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
-            }
-            await db.sequelize.transaction(async (t) => {
-                await db.Content_Body.create({
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _cre_cb = await db.Content_Body.create({
                     name: data.name,
                     contentEn: data.contentEn,
                     contentTh: data.contentTh,
                     markdownEn: data.markdownEn,
                     markdownTh: data.markdownTh
-                }, { transaction: t })
-            })
-            resolve(resolveObj.CREATE_SUCCEED())
-        } catch (e) {
-            reject(e);
-        }
-    })
-}
-
-let getAllContentBody = () => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            let data = await db.Content_Body.findAll()
-            resolve(resolveObj.GET(data))
-        } catch (e) {
-            reject(e);
-        }
-    })
-}
-
-let getContentBodyById = (id) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            if (!id) {
-                resolve({
-                    errCode: 0,
-                    errMessage: 'Missing required parameters'
                 })
-            } else {
-                let data = await db.Content_Body.findOne({
-                    where: {
-                        id: id
-                    }
-                })
-                resolve({
-                    errCode: 0,
-                    errMessage: 'Ok',
-                    data
-                })
+                if (_cre_cb) {
+                    _response = resolveObj.CREATE_SUCCEED()
+                } else {
+                    _response = resolveObj.CREATE_UNSUCCEED()
+                }
             }
+            resolve(_response)
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
+let getContentBody = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let _response
+            let _data
+            if (id) {
+                _data = await db.Content_Body
+                    .cache(id)
+                    .findByPk(id)
+            } else {
+                _data = await db.Content_Body
+                    .cache('all')
+                    .findAll()
+            }
+            _response = resolveObj.GET(_data)
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -64,21 +53,28 @@ let getContentBodyById = (id) => {
 let updateBody = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!func.CHECK_HAS_VALUE(data.id, data.name)) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let body = await db.Content_Body
+                    .findOne({ where: { id: data.id } })
+                let _upd_b = await body
+                    .cache()
+                    .update({
+                        name: data.name,
+                        contentEn: data.contentEn,
+                        contentTh: data.contentTh,
+                        markdownEn: data.markdownEn,
+                        markdownTh: data.markdownTh
+                    })
+                if (_upd_b) {
+                    _response = resolveObj.UPDATE_SUCCEED()
+                } else {
+                    _response = resolveObj.UPDATE_UNSUCCEED()
+                }
             }
-            await db.sequelize.transaction(async (t) => {
-                let body = await db.Content_Body.findOne({ where: { id: data.id } }, { transaction: t })
-                await body.update({
-                    name: data.name,
-                    contentEn: data.contentEn,
-                    contentTh: data.contentTh,
-                    markdownEn: data.markdownEn,
-                    markdownTh: data.markdownTh
-                }, { transaction: t })
-            })
-            resolve(resolveObj.UPDATE_SUCCEED())
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -88,17 +84,29 @@ let updateBody = (data) => {
 let deleteBody = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!func.CHECK_HAS_VALUE(id)) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _content_body = await db.Content_Body
+                    .findByPk(id)
+                if (_content_body) {
+                    let _del_cb = await _content_body
+                        .cache()
+                        .destroy({
+                            where: { id: id },
+                            transaction: t
+                        })
+                    if (_del_cb) {
+                        _response = resolveObj.DELETE_SUCCEED()
+                    } else {
+                        _response = resolveObj.DELETE_UNSUCCEED()
+                    }
+                } else {
+                    _response = resolveObj.NOT_FOUND()
+                }
             }
-            await db.sequelize.transaction(async (t) => {
-                await db.Content_Body.destroy({
-                    where: { id: id },
-                    transaction: t
-                })
-            })
-            resolve(resolveObj.DELETE_SUCCEED())
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -107,8 +115,7 @@ let deleteBody = (id) => {
 
 module.exports = {
     createBody,
-    getAllContentBody: getAllContentBody,
-    getContentBodyById: getContentBodyById,
+    getContentBody,
     updateBody,
     deleteBody,
 }

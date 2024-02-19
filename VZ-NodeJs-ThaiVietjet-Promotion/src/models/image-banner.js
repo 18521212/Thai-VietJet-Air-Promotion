@@ -1,4 +1,5 @@
 'use strict';
+import { delKey } from '../utils';
 const {
     Model
 } = require('sequelize');
@@ -20,6 +21,17 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         sequelize,
         modelName: 'Image_Banner',
+        hooks: {
+            afterCreate: (item, options) => {
+                delKey(`model:${'Banner'}:${item.bannerId}`)
+            },
+            afterUpdate: (item, options) => {
+                delKey(`model:${'Banner'}:${item.bannerId}`)
+            },
+            afterDestroy: (item, options) => {
+                delKey(`model:${'Banner'}:${item.bannerId}`)
+            }
+        },
     });
     return Image_Banner;
 };

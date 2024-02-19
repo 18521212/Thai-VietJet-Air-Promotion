@@ -39,15 +39,18 @@ let checkHasValueAndOr = (config, data) => {
 let create = (config, data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!checkHasValueAndOr(config, data)) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return;
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _cre = await db[config.table].create(data)
+                if (_cre) {
+                    _response = resolveObj.CREATE_SUCCEED()
+                } else {
+                    _response = resolveObj.CREATE_UNSUCCEED()
+                }
             }
-            console.log('ta', config.table)
-            await db.sequelize.transaction(async (t) => {
-                await db[config.table].create(data)
-            })
-            resolve(resolveObj.CREATE_SUCCEED())
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -65,12 +68,18 @@ let get = (config, param) => {
         try {
             let query = config?.query
             let data
+            let _response
             if (param?.id) {
-                data = await db[config.table].findOne({ where: { id: param.id }, ...query })
+                data = await db[config.table]
+                    .cache(param.id)
+                    .findOne({ where: { id: param.id }, ...query })
             } else {
-                data = await db[config.table].findAll(query)
+                data = await db[config.table]
+                    .cache('all')
+                    .findAll(query)
             }
-            resolve(resolveObj.GET(data))
+            _response = resolveObj.GET(data)
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -89,15 +98,21 @@ let get = (config, param) => {
 let update = (config, data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!checkHasValueAndOr(config, data)) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return;
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _get_dt = await db[config.table].findOne({ where: { id: data.id } })
+                let _upd_dt = await _get_dt
+                    .cache()
+                    .update(data)
+                if (_upd_dt) {
+                    _response = resolveObj.UPDATE_SUCCEED()
+                } else {
+                    _response = resolveObj.UPDATE_UNSUCCEED()
+                }
             }
-            await db.sequelize.transaction(async (t) => {
-                let table = await db[config.table].findOne({ where: { id: data.id } })
-                await table.update(data)
-            })
-            resolve(resolveObj.UPDATE_SUCCEED())
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -112,11 +127,10 @@ let update = (config, data) => {
 let deleteData = (config, data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!func.CHECK_HAS_VALUE(data.id)) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
-            }
-            await db.sequelize.transaction(async (t) => {
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
                 let checkRef = true
                 if (config?.ref?.length > 0) {
                     for (let i = 0; i < config.ref.length; i++) {
@@ -129,16 +143,20 @@ let deleteData = (config, data) => {
                     }
                 }
                 if (!checkRef) {
-                    resolve(resolveObj.EXIST_REF_KEY)
-                    throw new Error()
+                    _response = resolveObj.EXIST_REF_KEY
+                } else {
+                    let _get_dt = await db[config.table].findByPk(data.id)
+                    let _del_dt = await _get_dt
+                        .cache()
+                        .destroy()
+                    if (_del_dt >= 1) {
+                        _response = resolveObj.DELETE_SUCCEED()
+                    } else {
+                        _response = resolveObj.DELETE_UNSUCCEED()
+                    }
                 }
-                let deleted = await db[config.table].destroy({ where: { id: data.id } })
-                if (deleted === 0) {
-                    resolve(resolveObj.DELETE_UNSUCCEED())
-                    throw new Error()
-                }
-            })
-            resolve(resolveObj.DELETE_SUCCEED())
+            }
+            resolve(_response)
         } catch (e) {
             reject(e);
         }

@@ -109,9 +109,9 @@ let deleteFormDetail = async (req, res, next) => {
 let getInput = async (req, res, next) => {
     let id = req.params.id
     if (id) {
-        controller.CONTROLLER(req, res, next, formService.getInputById, id)
+        controller.CONTROLLER(req, res, next, formService.getInput, id)
     } else {
-        controller.CONTROLLER(req, res, next, formService.getAllInput)
+        controller.CONTROLLER(req, res, next, formService.getInput)
     }
 }
 

@@ -25,7 +25,8 @@ module.exports = (sequelize, DataTypes) => {
         totalPriceInVat: DataTypes.FLOAT,
         totalVatFee: DataTypes.FLOAT,
         status: DataTypes.STRING,
-        payRef: DataTypes.STRING
+        payRef: DataTypes.STRING,
+        emailStatus: DataTypes.STRING,
     }, {
         sequelize,
         modelName: 'Order',

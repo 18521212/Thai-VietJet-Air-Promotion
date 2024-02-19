@@ -1,22 +1,27 @@
 const db = require('../models');
 const { resolveObj, func, association } = require('../utils');
 import isBase64 from 'is-base64'
+import { delKey } from '../utils';
 
 // banner
 
 let createBanner = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!data.name) {
-                resolve(resolveObj.MISSING_PARAMETERS)
+                _response = resolveObj.MISSING_PARAMETERS
             } else {
-                await db.sequelize.transaction(async (t) => {
-                    await db.Banner.create({
-                        name: data.name,
-                    })
+                let _cre_b = await db.Banner.create({
+                    name: data.name,
                 })
-                resolve(resolveObj.CREATE_SUCCEED('Banner'))
+                if (_cre_b) {
+                    _response = resolveObj.CREATE_SUCCEED()
+                } else {
+                    _response = resolveObj.CREATE_UNSUCCEED()
+                }
             }
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -41,17 +46,23 @@ let getBanner = (id) => {
     }
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             let data
             if (id) {
-                data = await db.Banner.findOne({ where: { id: id }, ...query })
+                data = await db.Banner
+                    .cache(id)
+                    .findOne({ where: { id: id }, ...query })
                 decodeImageProperty(data)
             } else {
-                data = await db.Banner.findAll(query)
-                data && data.map((item) => {
-                    decodeImageProperty(item)
-                })
+                data = await db.Banner.cache('all').findAll(query)
+                data &&
+                    data
+                        .map((item) => {
+                            decodeImageProperty(item)
+                        })
             }
-            resolve(resolveObj.GET(data))
+            _response = resolveObj.GET(data)
+            resolve(_response)
         } catch (e) {
             reject(e)
         }
@@ -61,17 +72,23 @@ let getBanner = (id) => {
 let updateBanner = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!func.CHECK_HAS_VALUE(data.id, data.name)) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
-            }
-            await db.sequelize.transaction(async (t) => {
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
                 let banner = await db.Banner.findOne({ where: { id: data.id } })
-                await banner.update({
-                    name: data.name,
-                })
-            })
-            resolve(resolveObj.UPDATE_SUCCEED('Banner'))
+                let _upd_b = await banner
+                    .cache(data.id)
+                    .update({
+                        name: data.name,
+                    })
+                if (_upd_b) {
+                    _response = resolveObj.UPDATE_SUCCEED()
+                } else {
+                    _response = resolveObj.UPDATE_UNSUCCEED()
+                }
+            }
+            resolve(_response)
         } catch (e) {
             reject(e)
         }
@@ -81,20 +98,30 @@ let updateBanner = (data) => {
 let deleteBanner = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!data.id) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
-            }
-            await db.sequelize.transaction(async (t) => {
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
                 let campaign = await db.Campaign.findOne({ where: { bannerId: data.id } })
                 if (campaign) {
-                    resolve(resolveObj.EXIST_REF_KEY)
-                    throw new Error()
+                    _response = resolveObj.EXIST_REF_KEY
+                } else {
+                    let _transaction_status = false
+                    await db.sequelize.transaction(async (t) => {
+                        await db.Image_Banner.destroy({ where: { bannerId: data.id }, transaction: t })
+                        await db.Banner
+                            .cache()
+                            .destroy({ where: { id: data.id }, transaction: t })
+                        _transaction_status = true
+                    })
+                    if (_transaction_status) {
+                        _response = resolveObj.DELETE_SUCCEED()
+                    } else {
+                        _response = resolveObj.DELETE_UNSUCCEED()
+                    }
                 }
-                await db.Image_Banner.destroy({ where: { bannerId: data.id } })
-                await db.Banner.destroy({ where: { id: data.id } })
-            })
-            resolve(resolveObj.DELETE_SUCCEED())
+            }
+            resolve(_response)
         } catch (e) {
             reject(e)
         }
@@ -106,22 +133,26 @@ let deleteBanner = (data) => {
 let createImageBanner = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!data.bannerId || !data.image) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
-            }
-            await db.sequelize.transaction(async (t) => {
-                if (isBase64(data.image)) {
-                    resolve({ errCode: 1, errMessage: 'image is not base64 type' })
-                    throw new Error()
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                if (!isBase64(data.image)) {
+                    _response = { errCode: 1, errMessage: 'image is not base64 type' }
+                } else {
+                    let _cre_ib = await db.Image_Banner.create({
+                        bannerId: data.bannerId,
+                        image: data.image,
+                        type: data.type ? data.type : undefined
+                    })
+                    if (_cre_ib) {
+                        _response = resolveObj.CREATE_SUCCEED()
+                    } else {
+                        _response = resolveObj.CREATE_UNSUCCEED()
+                    }
                 }
-                await db.Image_Banner.create({
-                    bannerId: data.bannerId,
-                    image: data.image,
-                    type: data.type ? data.type : undefined
-                })
-            })
-            resolve(resolveObj.CREATE_SUCCEED())
+            }
+            resolve(_response)
         } catch (e) {
             reject(e)
         }
@@ -131,14 +162,18 @@ let createImageBanner = (data) => {
 let deleteImageBanner = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!data.id) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _del_ib = await db.Image_Banner.destroy({ where: { id: data.id } })
+                if (_del_ib) {
+                    _response = resolveObj.DELETE_SUCCEED()
+                } else {
+                    _response = resolveObj.DELETE_UNSUCCEED()
+                }
             }
-            await db.sequelize.transaction(async (t) => {
-                await db.Image_Banner.destroy({ where: { id: data.id } })
-            })
-            resolve(resolveObj.DELETE_SUCCEED())
+            resolve(_response)
         } catch (e) {
             reject(e)
         }

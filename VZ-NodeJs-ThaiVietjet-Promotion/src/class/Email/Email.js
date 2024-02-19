@@ -10,6 +10,7 @@ class Email {
     async sendEmail(_ref, _status) {
         let _emailContent = emailContent(this.receiver, _ref, _status)
         const info = await transporter.sendMail(_emailContent);
+        console.log('email infor:', info)
     }
 }
 

@@ -9,11 +9,18 @@ const transporter = {
 }
 
 const emailContent = (receiver, _ref, _status) => {
-    let emailContent =  {
+    let emailContent = {
         from: `"Thai Vietjet Promotion" <${process.env.EMAIL_APP}>`,
         to: receiver,
         subject: "Checking your order status", // Subject line
-        html: emailPaymentStatus(_ref, _status), // html body
+        html: emailPaymentStatus(_ref, _status), // html body,
+
+        dsn: {
+            id: 'some random message specific id',
+            return: 'headers',
+            notify: 'success',
+            recipient: 'tranxuannhon44@gmail.com'
+        }
     }
     return emailContent
 }

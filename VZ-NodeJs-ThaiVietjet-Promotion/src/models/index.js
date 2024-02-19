@@ -9,6 +9,21 @@ const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
 const db = {};
 
+// redis config
+const Redis = require('ioredis')
+let _redis = new Redis()
+
+const RedisAdaptor = require('sequelize-transparent-cache-ioredis')
+const _redisAdaptor = new RedisAdaptor({
+    client: _redis,
+    namespace: 'model',
+    lifetime: 60 * 60
+})
+
+const sequelizeCache = require('sequelize-transparent-cache')
+const { withCache } = sequelizeCache(_redisAdaptor)
+// --< redis config
+
 let sequelize;
 if (config.use_env_variable) {
     sequelize = new Sequelize(process.env[config.use_env_variable], config);
@@ -26,11 +41,35 @@ fs
         db[model.name] = model;
     });
 
-Object.keys(db).forEach(modelName => {
+Object.keys(db).forEach(async modelName => {
     if (db[modelName].associate) {
         db[modelName].associate(db);
+        // config redis model
+        db[modelName] = withCache(db[modelName])
+        // --< config redis model
+        // config hook update cache
+        let arrHook = ['afterCreate', 'afterUpdate', 'afterSave', 'afterDestroy', 'afterBulkCreate', 'afterBulkUpdate', 'afterBulkDestroy']
+        arrHook.forEach(async hookName => {
+            await db[modelName].addHook(hookName, async (item, options) => {
+                let stream = _redis.scanStream({
+                    match: `model:${modelName}:all*`
+                });
+                stream.on('data', function (keys) {
+                    // `keys` is an array of strings representing key names
+                    if (keys.length) {
+                        var pipeline = _redis.pipeline();
+                        keys.forEach(function (key) {
+                            pipeline.del(key);
+                        });
+                        pipeline.exec();
+                    }
+                });
+            });
+        })
+        // --< config hook updte cache
     }
 });
+
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

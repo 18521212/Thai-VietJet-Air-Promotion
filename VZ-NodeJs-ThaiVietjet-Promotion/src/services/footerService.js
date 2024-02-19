@@ -55,23 +55,27 @@ let deleteFooter = (data) => {
 let createFooterText = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!data.footerId || !data.title || !data.link) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return;
-            }
-            await db.sequelize.transaction(async (t) => {
-                let footer = await db.Footer.findOne({ where: { id: data.footerId } })
-                if (!footer) {
-                    resolve(resolveObj.NOT_FOUND('Footer'))
-                    throw new Error()
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _footer = await db.Footer.findOne({ where: { id: data.footerId } })
+                if (!_footer) {
+                    _response = resolveObj.NOT_FOUND('Footer')
+                } else {
+                    let _cre_f = await db.Footer_Text.create({
+                        footerId: data.footerId,
+                        title: data.title,
+                        link: data.link
+                    })
+                    if (_cre_f) {
+                        _response = resolveObj.CREATE_SUCCEED()
+                    } else {
+                        _response = resolveObj.CREATE_UNSUCCEED()
+                    }
                 }
-                await db.Footer_Text.create({
-                    footerId: data.footerId,
-                    title: data.title,
-                    link: data.link
-                }, { transaction: t })
-            })
-            resolve(resolveObj.CREATE_SUCCEED())
+            }
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -81,8 +85,16 @@ let createFooterText = (data) => {
 let getAllFooterText = (footerId) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let dataApi = await db.Footer_Text.findAll({ where: { footerId: footerId } })
-            resolve(resolveObj.GET(dataApi))
+            let _response
+            if (!footerId) {
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _get_ft = await db.Footer_Text
+                    .cache(`all/Footer/${footerId}`)
+                    .findAll({ where: { footerId: footerId } })
+                _response = resolveObj.GET(_get_ft)
+            }
+            resolve(_response)
         } catch (e) {
             reject(e)
         }
@@ -92,23 +104,26 @@ let getAllFooterText = (footerId) => {
 let updateFooterText = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!data.id || !data.title || !data.link) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return;
-            }
-
-            await db.sequelize.transaction(async (t) => {
-                let footer_text = await db.Footer_Text.findOne({ where: { id: data.id } })
-                if (!footer_text) {
-                    resolve(resolveObj.NOT_FOUND('Footer Text'))
-                    throw new Error()
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _get_ft = await db.Footer_Text.findByPk(data.id)
+                if (!_get_ft) {
+                    _response = resolveObj.NOT_FOUND('Footer Text')
+                } else {
+                    let _upd_ft = await footer_text.update({
+                        title: data.title,
+                        link: data.link
+                    })
+                    if (_upd_ft) {
+                        _response = resolveObj.UPDATE_SUCCEED()
+                    } else {
+                        _response = resolveObj.UPDATE_UNSUCCEED()
+                    }
                 }
-                await footer_text.update({
-                    title: data.title,
-                    link: data.link
-                }, { transaction: t })
-            })
-            resolve(resolveObj.UPDATE_SUCCEED('Footer_Text'))
+            }
+            resolve(_response)
         } catch (e) {
             reject(e)
         }
@@ -118,14 +133,18 @@ let updateFooterText = (data) => {
 let deleteFooterText = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!id) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return;
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _del_ft = await db.Footer_Text.destroy({ where: { id: id } })
+                if (_del_ft) {
+                    _response = resolveObj.DELETE_SUCCEED()
+                } else {
+                    _response = resolveObj.DELETE_UNSUCCEED()
+                }
             }
-            await db.sequelize.transaction(async (t) => {
-                await db.Footer_Text.destroy({ where: { id: id } })
-            })
-            resolve(resolveObj.DELETE_SUCCEED('Footer Text'))
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -135,12 +154,11 @@ let deleteFooterText = (id) => {
 let createMarkdown = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!func.CHECK_HAS_VALUE(data.titleEn, data.contentEn, data.markdownEn)) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return;
-            }
-            await db.sequelize.transaction(async (t) => {
-                await db.Markdown.create({
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _cre_m = await db.Markdown.create({
                     titleEn: data.titleEn,
                     titleTh: data.titleTh ? data.titleTh : data.titleEn,
                     contentEn: data.contentEn,
@@ -148,8 +166,13 @@ let createMarkdown = (data) => {
                     markdownEn: data.markdownEn,
                     markdownTh: data.markdownTh ? data.markdownTh : data.markdownEn
                 })
-            })
-            resolve(resolveObj.CREATE_SUCCEED())
+                if (_cre_m) {
+                    _response = resolveObj.CREATE_SUCCEED()
+                } else {
+                    _response = resolveObj.CREATE_UNSUCCEED()
+                }
+            }
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -160,12 +183,14 @@ let getMarkdown = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
             let data
+            let _response
             if (id) {
                 data = await db.Markdown.findOne({ where: { id: id } })
             } else {
                 data = await db.Markdown.findAll()
             }
-            resolve(resolveObj.GET(data))
+            _response = resolveObj.GET(data)
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -175,25 +200,27 @@ let getMarkdown = (id) => {
 let updateMarkdown = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!func.CHECK_HAS_VALUE(data.id)
                 || !func.CHECK_HAS_VALUE_OR(data.titleEn, data.titleTh,
                     data.contentEn, data.contentTh,
                     data.markdownEn, data.markdownTh)
             ) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _get_m = await db.Markdown.findByPk(data.id)
+                if (_get_m) {
+                    let _upd_m = await markdown.update(data)
+                    if (_upd_m) {
+                        _response = resolveObj.UPDATE_SUCCEED()
+                    } else {
+                        _response = resolveObj.UPDATE_UNSUCCEED()
+                    }
+                } else {
+                    _response = resolveObj.NOT_FOUND()
+                }
             }
-            await db.sequelize.transaction(async (t) => {
-                let markdown = await db.Markdown.findOne({ where: { id: data.id } })
-                // await markdown.update({
-                //     titleEn: data.titleEn,
-                //     titleTh: data.titleTh,
-                //     contentEn: data.contentEn,
-                //     contentTh: data.contentTh
-                // })
-                await markdown.update(data)
-            })
-            resolve(resolveObj.UPDATE_SUCCEED())
+            resolve(_response)
         } catch (e) {
             reject(e);
         }

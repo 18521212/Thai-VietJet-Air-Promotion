@@ -20,13 +20,11 @@ module.exports = {
 
         // add column
         queryInterface.addColumn(
-            'Order_Details',
-            'vat',
+            'Orders',
+            'emailStatus',
             {
-                type: Sequelize.FLOAT,
+                type: Sequelize.STRING,
                 allowNull: false,
-                defaultValue: 0,
-                min: 0
             }
         );
 
@@ -52,8 +50,8 @@ module.exports = {
         // )
 
         queryInterface.removeColumn(
-            'Order_Details',
-            'vat',
+            'Orders',
+            'emailStatus',
         );
 
         // add column

@@ -21,13 +21,9 @@ let createUpdateDeleteBody = async (req, res, next) => {
 
 let getBody = async (req, res, next) => {
     try {
-        let data
-        if (req.params.id) {
-            data = await bodyService.getContentBodyById(req.params.id)
-        } else {
-            data = await bodyService.getAllContentBody()
-        }
-        res.data=data
+        let _id = req.params.id
+        let data = await bodyService.getContentBody(_id)
+        res.data = data
         next()
     } catch (e) {
         console.log(e);

@@ -1,4 +1,5 @@
 'use strict';
+const { delKey } = require('../utils');
 const {
     Model
 } = require('sequelize');
@@ -20,6 +21,20 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         sequelize,
         modelName: 'Footer_Text',
+        hooks: {
+            afterCreate: (item, options) => {
+                delKey(`model:Footer:all*`)
+                delKey(`model:Footer:${item.footerId}`)
+            },
+            afterUpdate: (item, options) => {
+                delKey(`model:Footer:all*`)
+                delKey(`model:Footer:${item.footerId}`)
+            },
+            afterDestroy: (item, options) => {
+                delKey(`model:Footer:all*`)
+                delKey(`model:Footer:${item.footerId}`)
+            }
+        }
     });
     return Footer_Text;
 };
