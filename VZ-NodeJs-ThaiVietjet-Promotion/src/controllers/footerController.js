@@ -1,5 +1,5 @@
 import footerService from '../services/footerService';
-import { controller } from '../utils';
+import { controller, resolveObj } from '../utils';
 
 // footer
 
@@ -7,13 +7,10 @@ let createFooter = async (req, res, next) => {
     try {
         let data = await footerService.createFooter(req.body);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -25,13 +22,10 @@ let updateFooter = async (req, res, next) => {
     try {
         let data = await footerService.updateFooter(req.body);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -39,13 +33,10 @@ let deleteFooter = async (req, res, next) => {
     try {
         let data = await footerService.deleteFooter(req.body);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -55,13 +46,10 @@ let createFooterText = async (req, res, next) => {
     try {
         let data = await footerService.createFooterText(req.body);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -69,13 +57,10 @@ let getAllFooterText = async (req, res, next) => {
     try {
         let data = await footerService.getAllFooterText(req.params.id);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -83,13 +68,10 @@ let updateFooterText = async (req, res, next) => {
     try {
         let data = await footerService.updateFooterText(req.body);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -97,13 +79,10 @@ let deleteFooterText = async (req, res, next) => {
     try {
         let data = await footerService.deleteFooterText(req.body.id);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 

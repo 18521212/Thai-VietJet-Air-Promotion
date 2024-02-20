@@ -46,12 +46,12 @@ let getHeader = (id) => {
             // TODO: response too long for cache [decode image]
             if (id) {
                 data = await db.Header
-                    // .cache(id)
-                    .findOne({ where: { id: id } })
+                    // .cache()
+                    .findByPk(id)
                 decodeImageOfHeader(data)
             } else {
                 data = await db.Header
-                    .cache('all')
+                    // .cache('all')
                     .findAll();
                 if (data) data.map(item => {
                     decodeImageOfHeader(item)

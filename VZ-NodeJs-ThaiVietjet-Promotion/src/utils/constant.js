@@ -146,23 +146,23 @@ export const controller = {
     //     update: promotionService.updatePromotion,
     //     delete: promotionService.deletePromotion,
     // })
-    SWITCH_CONTROLLER: (req, res, next, func, option) => {
+    SWITCH_CONTROLLER: (req, res, next, func) => {
         let method = req.method
         switch (method) {
             case 'POST':
-                func?.create && controller.CONTROLLER(req, res, next, func.create, req.body, option)
+                func?.create && controller.CONTROLLER(req, res, next, func.create, req.body)
                 break;
             case 'PUT':
-                func?.update && controller.CONTROLLER(req, res, next, func.update, req.body, option)
+                func?.update && controller.CONTROLLER(req, res, next, func.update, req.body)
                 break;
             case 'DELETE':
-                func?.delete && controller.CONTROLLER(req, res, next, func.delete, req.body, option)
+                func?.delete && controller.CONTROLLER(req, res, next, func.delete, req.body)
                 break;
             default:
                 break;
         }
     },
-    CONTROLLER: async (req, res, next, func, dataFunc = undefined, option={}) => {
+    CONTROLLER: async (req, res, next, func, dataFunc = undefined) => {
         try {
             let data
             if (dataFunc) {
@@ -170,12 +170,7 @@ export const controller = {
             } else {
                 data = await func()
             }
-            if (option?.next == false) {
-                return res.status(200).json(data)
-            } else {
-                res.data = data
-                next()
-            }
+            return res.status(200).json(data)
         } catch (e) {
             console.log(e)
             return res.status(200).json(resolveObj.ERROR_SERVER)

@@ -50,11 +50,13 @@ let getBanner = (id) => {
             let data
             if (id) {
                 data = await db.Banner
-                    .cache(id)
+                    // .cache(id)
                     .findOne({ where: { id: id }, ...query })
                 decodeImageProperty(data)
             } else {
-                data = await db.Banner.cache('all').findAll(query)
+                data = await db.Banner
+                    // .cache('all')
+                    .findAll(query)
                 data &&
                     data
                         .map((item) => {
@@ -130,6 +132,55 @@ let deleteBanner = (data) => {
 
 // image banner
 
+let configImage = {
+    mobile: { width: 1040, height: 1040 },
+    desktop: { width: 1920, height: 520 },
+}
+
+let validateImage = async (_image, _typeImage) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let _response
+            let base64String = _image
+            if (!base64String || !_typeImage) {
+                _response = {
+                    errCode: 1,
+                    errMessage: 'missing image or image type'
+                }
+            } else {
+                const base64Image = base64String.split(';base64,').pop()
+                const imageBuffer = Buffer.from(base64Image, 'base64')
+                const sharp = require('sharp');
+                const metadata = await sharp(imageBuffer).metadata();
+                let valid = false
+                if (_typeImage === 'mobile') {
+                    if (metadata.width == configImage.mobile.width || metadata.height == configImage.mobile.height) {
+                        valid = true
+                    }
+                } else if (_typeImage === 'desktop') {
+                    if (metadata.width == configImage.desktop.width || metadata.height == configImage.desktop.height) {
+                        valid = true
+                    }
+                }
+                if (valid) {
+                    _response = {
+                        errCode: 0,
+                        errMessage: 'ok'
+                    }
+                } else {
+                    _response = {
+                        errCode: 1,
+                        errMessage: 'invalid image size'
+                    }
+                }
+            }
+            resolve(_response)
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
 let createImageBanner = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -137,7 +188,7 @@ let createImageBanner = (data) => {
             if (!data.bannerId || !data.image) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                if (!isBase64(data.image)) {
+                if (isBase64(data.image)) {
                     _response = { errCode: 1, errMessage: 'image is not base64 type' }
                 } else {
                     let _cre_ib = await db.Image_Banner.create({
@@ -186,6 +237,7 @@ module.exports = {
     updateBanner,
     deleteBanner,
 
+    validateImage,
     createImageBanner,
     deleteImageBanner,
 }

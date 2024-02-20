@@ -9,10 +9,21 @@ import routePayment from './route-payment'
 import routeDatafeed from './route-datafeed'
 import { validateFrontEndApp } from "../middleware/validateFrontEndApp";
 import { logFile } from '../middleware/logFile'
-import { response } from '../middleware/response'
 
 let mergeRoute = (app) => {
     // app.use('*', validateFrontEndApp);
+    // -- log file
+    app.use(
+        (req, res, next) => {
+            res.on("finish",
+                function () {
+                    // TODO: log req
+                    console.log(res.data);
+                });
+            next();
+        }
+    );
+    // --< log file
 
     routeBanner(app)
     routeCampaign(app)
@@ -23,8 +34,6 @@ let mergeRoute = (app) => {
     routeFooter(app)
     routePayment(app)
     routeDatafeed(app)
-
-    app.use('*', logFile, response)
 }
 
 module.exports = mergeRoute;

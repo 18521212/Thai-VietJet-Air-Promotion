@@ -74,7 +74,7 @@ let paymentPromotion = async (req, res, next) => {
         // paymentService.sendEmail(dataCreate.data.order.id, reconfigData.customer.email) // plain ref
         data.data.customer = reconfigCustomer
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e);
         return res.status(200).json(resolveObj.ERROR_SERVER)
@@ -85,7 +85,7 @@ let updateStatusOrder = async (req, res, next) => {
     try {
         let data = await paymentService.updateStatusOrder({ orderRef: req.body.orderRef })
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e);
         return res.status(200).json(resolveObj.ERROR_SERVER)
@@ -96,7 +96,7 @@ let updateProcessingOrder = async (req, res, next) => {
     try {
         let data = await paymentService.updateProcessingOrder(req.body)
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e);
         return res.status(200).json(resolveObj.ERROR_SERVER)
@@ -108,8 +108,8 @@ let dataFeed = async (req, res, next) => {
         console.log('datafeed controller', req.body)
         let data = await paymentService.dataFeed(req.body)
         let responseData = data.datafeedStatus == 0 ? 'OK' : ''
-        res.data=responseData
-        next()
+        res.data = responseData
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e);
         return res.status(200).json(resolveObj.ERROR_SERVER)
@@ -120,7 +120,7 @@ let getOrder = async (req, res, next) => {
     try {
         let data = await paymentService.getOrder(req.params)
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e);
         return res.status(200).json(resolveObj.ERROR_SERVER)

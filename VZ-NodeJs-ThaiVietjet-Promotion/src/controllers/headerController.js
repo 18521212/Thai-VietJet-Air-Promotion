@@ -55,13 +55,10 @@ let createMenu = async (req, res, next) => {
     try {
         let data = await headerService.createMenu(req.body);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -73,13 +70,10 @@ let updateMenu = async (req, res, next) => {
     try {
         let data = await headerService.updateMenu(req.body);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -87,13 +81,10 @@ let deleteMenu = async (req, res, next) => {
     try {
         let data = await headerService.deleteMenu(req.body);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -103,13 +94,10 @@ let createMenuItem = async (req, res, next) => {
     try {
         let data = await headerService.createMenuItem(req.body);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -117,13 +105,10 @@ let getAllMenuItemByMenuId = async (req, res, next) => {
     try {
         let data = await headerService.getAllMenuItemByMenuId(req.params.id);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -131,13 +116,10 @@ let updateMenuItemById = async (req, res, next) => {
     try {
         let data = await headerService.updateMenuItemById(req.body);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -145,13 +127,10 @@ let deleteMenuItemById = async (req, res, next) => {
     try {
         let data = await headerService.deleteMenuItemById(req.body.id);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -161,13 +140,10 @@ let createSubMenu = async (req, res, next) => {
     try {
         let data = await headerService.createSubMenu(req.body);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -175,13 +151,10 @@ let getAllSubMenuByMenuItemId = async (req, res, next) => {
     try {
         let data = await headerService.getAllSubMenuByMenuItemId(req.params.id);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -189,26 +162,21 @@ let updateSubMenu = async (req, res, next) => {
     try {
         let data = await headerService.updateSubMenu(req.body);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
 let deleteSubMenuById = async (req, res) => {
     try {
         let data = await headerService.deleteSubMenuById(req.body.id);
-        return res.status(200).json(data)
+        res.data=data
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 

@@ -21,7 +21,7 @@ let createUpdateDeleteForm = async (req, res, next) => {
                 break;
         }
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e);
         return res.status(200).json(resolveObj.ERROR_SERVER)
@@ -38,13 +38,10 @@ let getAllFormDetail = async (req, res, next) => {
     try {
         let data = await formService.getAllFormDetail();
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e)
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -52,13 +49,10 @@ let getFormDetailByFormId = async (req, res, next) => {
     try {
         let data = await formService.getFormDetailByFormId(req.params.formId);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e)
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -66,13 +60,10 @@ let addInputIntoForm = async (req, res, next) => {
     try {
         let data = await formService.addInputIntoForm(req.body);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e)
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -80,13 +71,10 @@ let updateFormDetail = async (req, res, next) => {
     try {
         let data = await formService.updateFormDetail(req.body);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e)
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -94,13 +82,10 @@ let deleteFormDetail = async (req, res, next) => {
     try {
         let data = await formService.deleteFormDetail(req.body);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e)
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -119,7 +104,7 @@ let deleteInputById = async (req, res, next) => {
     try {
         let data = await formService.deleteInputById(req.body.id);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e)
         return res.status(200).json(resolveObj.ERROR_SERVER)
@@ -132,13 +117,10 @@ let createTextInput = async (req, res, next) => {
     try {
         let data = await formService.createTextInput(req.body);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e)
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -146,13 +128,10 @@ let getAllTextInput = async (req, res, next) => {
     try {
         let data = await formService.getAllTextInput();
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e)
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -174,29 +153,16 @@ let createUpdateDropdown = async (req, res, next) => {
         default:
             break;
     }
-    // try {
-    //     let data = await formService.createDropdown(req.body);
-    //     return res.status(200).json(data)
-    // } catch (e) {
-    //     console.log(e)
-    //     return res.status(200).json({
-    //         errCode: -1,
-    //         errMessage: 'Error from the server'
-    //     })
-    // }
 }
 
 let getDropdownById = async (req, res, next) => {
     try {
         let data = await formService.getDropdownById(req.params.id);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e)
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -218,7 +184,7 @@ let addDataDropdown = async (req, res, next) => {
     try {
         let data = await formService.addDataDropdown(req.body);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e)
         return res.status(200).json(resolveObj.ERROR_SERVER)
@@ -231,13 +197,10 @@ let createPack = async (req, res, next) => {
     try {
         let data = await formService.createPack(req.body);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e)
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -245,13 +208,10 @@ let getAllPack = async (req, res, next) => {
     try {
         let data = await formService.getAllPack();
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e)
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -259,13 +219,10 @@ let deletePackById = async (req, res, next) => {
     try {
         let data = await formService.deletePackById(req.params.id);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e)
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -273,13 +230,10 @@ let fetchData = async (req, res, next) => {
     try {
         let data = await formService.fetchData();
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e)
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 

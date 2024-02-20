@@ -14,8 +14,7 @@ let routeBanner = (app) => {
 
     router.post(route.IMAGE_BANNERS,
         validateAuth,
-        bannerController.validateImage,
-        bannerController.createUpdateDeleteImageBanner
+        bannerController.createImageBanner
     )
     router.delete(route.IMAGE_BANNERS, validateAuth, bannerController.createUpdateDeleteImageBanner)
 

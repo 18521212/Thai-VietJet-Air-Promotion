@@ -12,7 +12,7 @@ let createUpdateDeleteBody = async (req, res, next) => {
             data = await bodyService.deleteBody(req.body.id)
         }
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e);
         return res.status(200).json(resolveObj.ERROR_SERVER)
@@ -24,7 +24,7 @@ let getBody = async (req, res, next) => {
         let _id = req.params.id
         let data = await bodyService.getContentBody(_id)
         res.data = data
-        next()
+        return res.status(200).json(data)
     } catch (e) {
         console.log(e);
         return res.status(200).json(resolveObj.ERROR_SERVER)
