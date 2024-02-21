@@ -10,6 +10,8 @@ const config = require(__dirname + '/../config/config.json')[env];
 const db = {};
 
 // redis config
+import { delKey } from '../utils';
+
 const Redis = require('ioredis')
 let _redis = new Redis()
 

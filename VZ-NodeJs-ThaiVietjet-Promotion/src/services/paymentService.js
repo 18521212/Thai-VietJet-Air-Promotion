@@ -126,35 +126,41 @@ let createOrder_OrderDetail_Customer = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
             let orderCreate = {}
-            let successTrans = 1
-            await db.sequelize.transaction(async (t) => {
-                // create customer
-                let customerSent = data.customer
-                let response_customer = await createCustomer(customerSent, t)
-                if (response_customer.errCode != 0) {
-                    throw new Error()
-                }
-                let customer = response_customer.data
-                // create order
-                let orderSent = data.order
-                orderCreate = await db.Order.create({
-                    customerId: customer.id,
-                    totalPriceInVat: orderSent.totalPriceInVat,
-                    totalVatFee: orderSent.totalVatFee,
-                    payRef: data.payRef,
-                    status: 'Draft'
-                }, { transaction: t })
-                // create order detail
-                let orderDetailSent = data.orderDetail
-                for (let i = 0; i < orderDetailSent.length; i++) {
-                    let item = orderDetailSent[i]
-                    item.orderId = orderCreate.id
-                }
-                let orderDetail_create = await db.Order_Detail.bulkCreate(orderDetailSent, { transaction: t })
-                successTrans = 0
-            })
+            let _transaction_status = false
+            try {
+                await db.sequelize.transaction(async (t) => {
+                    // create customer
+                    let customerSent = data.customer
+                    let response_customer = await createCustomer(customerSent, t)
+                    // TODO: check rollback transaction status
+                    if (response_customer.errCode != 0) {
+                        throw new Error()
+                    }
+                    let customer = response_customer.data
+                    // create order
+                    let orderSent = data.order
+                    orderCreate = await db.Order.create({
+                        customerId: customer.id,
+                        totalPriceInVat: orderSent.totalPriceInVat,
+                        totalVatFee: orderSent.totalVatFee,
+                        payRef: data.payRef,
+                        status: 'Draft'
+                    }, { transaction: t })
+                    // create order detail
+                    let orderDetailSent = data.orderDetail
+                    for (let i = 0; i < orderDetailSent.length; i++) {
+                        let item = orderDetailSent[i]
+                        item.orderId = orderCreate.id
+                    }
+                    let orderDetail_create = await db.Order_Detail.bulkCreate(orderDetailSent, { transaction: t })
+                })
+                _transaction_status = true
+            } catch (e) {
+                _transaction_status = false
+            }
+
             let _response = ''
-            if (successTrans == 0) {
+            if (_transaction_status) {
                 _response = {
                     errCode: 0,
                     errMessage: text.CREATE_SUCCEED('Order, OrderDetail, Customer'),
@@ -192,7 +198,6 @@ let updateStatusOrder = (data) => {
                             datafeedStatus: 0
                         }
                     } else {
-                        // TODO: move config API
                         let prefixOrderId = orderRef// length <= 35
                         let dataIPAY = await axios.get(process.env.LINK_API, {
                             params: {

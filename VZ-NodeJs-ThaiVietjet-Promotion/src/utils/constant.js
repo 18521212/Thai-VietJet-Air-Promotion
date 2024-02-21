@@ -35,7 +35,7 @@ export const text = {
         return `Delete data in ${data_table} succeed`
     },
 
-    NOT_FOUND: (data_table) => {
+    NOT_FOUND: (data_table = '') => {
         return `Data in table ${data_table} not found`
     },
     EXIST_REF_KEY: 'Alter data unsucceed, exist reference key from other table',
@@ -170,7 +170,8 @@ export const controller = {
             } else {
                 data = await func()
             }
-            return res.status(200).json(data)
+            res.data = data
+            return res.status(200).json(res.data)
         } catch (e) {
             console.log(e)
             return res.status(200).json(resolveObj.ERROR_SERVER)

@@ -15,8 +15,6 @@ let getBanner = async (req, res, next) => {
     controller.CONTROLLER(req, res, next, bannerService.getBanner, req?.params?.id)
 }
 
-//TODO: Middleware DOING
-
 let createImageBanner = async (req, res, next) => {
     try {
         let _validate_image = await bannerService.validateImage(req.body.image, req.body.type)

@@ -18,7 +18,8 @@ let mergeRoute = (app) => {
             res.on("finish",
                 function () {
                     // TODO: log req
-                    console.log(res.data);
+                    // console.log(req.url, req.method)
+                    // console.log(res.data);
                 });
             next();
         }

@@ -93,10 +93,7 @@ let deleteBody = (id) => {
                 if (_content_body) {
                     let _del_cb = await _content_body
                         .cache()
-                        .destroy({
-                            where: { id: id },
-                            transaction: t
-                        })
+                        .destroy()
                     if (_del_cb) {
                         _response = resolveObj.DELETE_SUCCEED()
                     } else {

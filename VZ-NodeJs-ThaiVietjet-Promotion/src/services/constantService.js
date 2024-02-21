@@ -63,6 +63,16 @@ let create = (config, data) => {
 //     query: '',
 // }, id)
 
+let cacheKey = (query) => {
+    query.include.forEach(association => {
+        let _model_name = association.model.name
+        console.log('model name', _model_name)
+        if (association.include) {
+            cacheKey(association)
+        }
+    });
+}
+
 let get = (config, param) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -70,9 +80,11 @@ let get = (config, param) => {
             let data
             let _response
             if (param?.id) {
+                // TODO: key redis relationship DOING, attach key ref id to key redis
+                cacheKey(query)
                 data = await db[config.table]
-                    .cache(param.id)
-                    .findOne({ where: { id: param.id }, ...query })
+                    .cache()
+                    .findByPk(param.id, query)
             } else {
                 data = await db[config.table]
                     .cache('all')
@@ -146,13 +158,17 @@ let deleteData = (config, data) => {
                     _response = resolveObj.EXIST_REF_KEY
                 } else {
                     let _get_dt = await db[config.table].findByPk(data.id)
-                    let _del_dt = await _get_dt
-                        .cache()
-                        .destroy()
-                    if (_del_dt >= 1) {
-                        _response = resolveObj.DELETE_SUCCEED()
+                    if (_get_dt) {
+                        let _del_dt = await _get_dt
+                            .cache()
+                            .destroy()
+                        if (_del_dt) {
+                            _response = resolveObj.DELETE_SUCCEED()
+                        } else {
+                            _response = resolveObj.DELETE_UNSUCCEED()
+                        }
                     } else {
-                        _response = resolveObj.DELETE_UNSUCCEED()
+                        _response = resolveObj.NOT_FOUND()
                     }
                 }
             }

@@ -109,13 +109,18 @@ let deleteBanner = (data) => {
                     _response = resolveObj.EXIST_REF_KEY
                 } else {
                     let _transaction_status = false
-                    await db.sequelize.transaction(async (t) => {
-                        await db.Image_Banner.destroy({ where: { bannerId: data.id }, transaction: t })
-                        await db.Banner
-                            .cache()
-                            .destroy({ where: { id: data.id }, transaction: t })
+                    try {
+                        await db.sequelize.transaction(async (t) => {
+                            await db.Image_Banner
+                                .destroy({ where: { bannerId: data.id }, transaction: t })
+                            await db.Banner
+                                .cache()
+                                .destroy({ where: { id: data.id }, transaction: t });
+                        })
                         _transaction_status = true
-                    })
+                    } catch (e) {
+                        _transaction_status = false
+                    }
                     if (_transaction_status) {
                         _response = resolveObj.DELETE_SUCCEED()
                     } else {
@@ -217,7 +222,10 @@ let deleteImageBanner = (data) => {
             if (!data.id) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let _del_ib = await db.Image_Banner.destroy({ where: { id: data.id } })
+                let _get_ib = await db.Image_Banner
+                    .findByPk(data.id)
+                let _del_ib = await _get_ib
+                    .destroy()
                 if (_del_ib) {
                     _response = resolveObj.DELETE_SUCCEED()
                 } else {

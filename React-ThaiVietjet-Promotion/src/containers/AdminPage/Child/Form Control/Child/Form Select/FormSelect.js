@@ -56,7 +56,7 @@ class FormSelect extends Component {
                                     onClick={() => func.NAV(this, '../input-select', { form: data })}>View Input</button>
                                 :
                                 <button type="button" className="btn btn-success mx-1"
-                                    onClick={() => func.NAV(this, '../form-manage', { footer: data })}>Add Input</button>
+                                    onClick={() => func.NAV(this, '../form-detail', { form: data })}>Add Input</button>
                             }
                             <button type="button" className="btn btn-warning mx-1"
                                 onClick={() => this.handleUpdate(data)}>Update</button>

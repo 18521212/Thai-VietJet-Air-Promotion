@@ -51,8 +51,8 @@ let deleteCampaign = async (req, res, next) => {
 }
 
 module.exports = {
-    getCampaign: getCampaign,
-    createCampaign: createCampaign,
-    updateCampaign: updateCampaign,
-    deleteCampaign: deleteCampaign
+    getCampaign,
+    createCampaign,
+    updateCampaign,
+    deleteCampaign
 }

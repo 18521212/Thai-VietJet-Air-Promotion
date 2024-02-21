@@ -43,7 +43,6 @@ let getHeader = (id) => {
         try {
             let data
             let _response
-            // TODO: response too long for cache [decode image]
             if (id) {
                 data = await db.Header
                     // .cache()
@@ -275,8 +274,8 @@ let createMenuItem = (data) => {
                             text: Text_Translation.id,
                             highlight: data.highlight,
                             link: data.link
-                        })
-                        _transaction_status = true
+                        });
+                        ({ transaction: t }) => { _transaction_status = true }
                     })
                     if (_transaction_status) {
                         _response = resolveObj.CREATE_SUCCEED()
@@ -336,28 +335,32 @@ let updateMenuItemById = (data) => {
             } else {
                 let _transaction_status = false
                 let _get_mi = await db.Menu_Item.findByPk(data.id)
-                await db.sequelize.transaction(async (t) => {
-                    await _get_mi.update({
-                        order: data.order,
-                        link: data.link,
-                        highlight: data.highlight
-                    }, { transaction: t })
-                    if (data.valueEn || data.valueTh) {
-                        let _get_tt = await db.Text_Translation.findByPk(menu_item.text)
-                        await _get_tt.update({
-                            valueEn: data.valueEn,
-                            valueTh: data.valueTh
+                try {
+                    await db.sequelize.transaction(async (t) => {
+                        await _get_mi.update({
+                            order: data.order,
+                            link: data.link,
+                            highlight: data.highlight
                         }, { transaction: t })
-                    }
+                        if (data.valueEn || data.valueTh) {
+                            let _get_tt = await db.Text_Translation.findByPk(menu_item.text)
+                            await _get_tt.update({
+                                valueEn: data.valueEn,
+                                valueTh: data.valueTh
+                            }, { transaction: t })
+                        };
+                    })
                     _transaction_status = true
-                })
+                } catch (e) {
+                    _transaction_status = false
+                }
                 if (_transaction_status) {
                     _response = resolveObj.UPDATE_SUCCEED()
                 } else {
                     _response = resolveObj.UPDATE_UNSUCCEED()
                 }
             }
-            resolve(_responses)
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -385,24 +388,30 @@ let deleteMenuItemById = (id) => {
                     _response = resolveObj.EXIST_REF_KEY
                 } else {
                     let _transaction_status = false
-                    const result = await db.sequelize.transaction(async (t) => {
-                        // delete text_translation menu_item
-                        await db.Text_Translation.destroy({
-                            where: {
-                                id: [menu_item.text]
-                            },
-                            transaction: t
-                        })
-                        // delete menu_item
-                        await db.Menu_Item.destroy({
-                            where: {
-                                id: id
-                            },
-                            transaction: t
-                        })
+                    try {
+                        await db.sequelize.transaction(async (t) => {
+                            await db.Text_Translation.destroy({
+                                where: {
+                                    id: [menu_item.text]
+                                },
+                                transaction: t
+                            })
+                            await db.Menu_Item.destroy({
+                                where: {
+                                    id: id
+                                },
+                                transaction: t
+                            })
+                        });
                         _transaction_status = true
-                    });
-                    _response = resolveObj.DELETE_SUCCEED()
+                    } catch (e) {
+                        _transaction_status = false
+                    }
+                    if (_transaction_status) {
+                        _response = resolveObj.DELETE_SUCCEED()
+                    } else {
+                        _response = resolveObj.DELETE_UNSUCCEED()
+                    }
                 }
             }
             resolve(_response)
@@ -422,20 +431,23 @@ let createSubMenu = (data) => {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
                 let _transaction_status = false
-                await db.sequelize.transaction(async (t) => {
-                    let Text_Translation = await db.Text_Translation.create({
-                        valueEn: data.valueEn,
-                        valueTh: data.valueTh ? data.valueTh : data.valueEn
-                    }, { transaction: t })
-
-                    await db.Sub_Menu.create({
-                        menuParentId: data.menuParentId,
-                        order: data.order && data.order,
-                        text: Text_Translation.id,
-                        link: data.link
-                    }, { transaction: t })
+                try {
+                    await db.sequelize.transaction(async (t) => {
+                        let Text_Translation = await db.Text_Translation.create({
+                            valueEn: data.valueEn,
+                            valueTh: data.valueTh ? data.valueTh : data.valueEn
+                        }, { transaction: t })
+                        await db.Sub_Menu.create({
+                            menuParentId: data.menuParentId,
+                            order: data.order && data.order,
+                            text: Text_Translation.id,
+                            link: data.link
+                        }, { transaction: t })
+                    })
                     _transaction_status = true
-                })
+                } catch (e) {
+                    _transaction_status = false
+                }
                 if (_transaction_status) {
                     _response = resolveObj.CREATE_SUCCEED()
                 } else {
@@ -483,20 +495,24 @@ let updateSubMenu = (data) => {
                     _response = resolveObj.NOT_FOUND('Menu Item')
                 } else {
                     let _transaction_status = false
-                    const result = await db.sequelize.transaction(async (t) => {
-                        await _get_sm.update({
-                            order: data.order,
-                            link: data.link
-                        }, { transaction: t })
-                        if (data.valueEn || data.valueTh) {
-                            let _get_tt = await db.Text_Translation.findOne({ where: { id: sub_menu.text } })
-                            await _get_tt.update({
-                                valueEn: data.valueEn,
-                                valueTh: data.valueTh
+                    try {
+                        await db.sequelize.transaction(async (t) => {
+                            await _get_sm.update({
+                                order: data.order,
+                                link: data.link
                             }, { transaction: t })
-                        }
+                            if (data.valueEn || data.valueTh) {
+                                let _get_tt = await db.Text_Translation.findOne({ where: { id: sub_menu.text } })
+                                await _get_tt.update({
+                                    valueEn: data.valueEn,
+                                    valueTh: data.valueTh
+                                }, { transaction: t })
+                            }
+                        })
                         _transaction_status = true
-                    })
+                    } catch (e) {
+                        _transaction_status = false
+                    }
                     if (_transaction_status) {
                         _response = resolveObj.UPDATE_SUCCEED()
                     } else {
@@ -523,24 +539,26 @@ let deleteSubMenuById = (id) => {
                     _response = resolveObj.NOT_FOUND('Menu Item')
                 } else {
                     let _transaction_status = false
-                    const result = await db.sequelize.transaction(async (t) => {
-                        // remove text_translation sub_menu
-                        await db.Text_Translation.destroy({
-                            where: {
-                                id: sub_menu.text
-                            },
-                            transaction: t
-                        })
+                    try {
+                        await db.sequelize.transaction(async (t) => {
+                            await db.Text_Translation.destroy({
+                                where: {
+                                    id: sub_menu.text
+                                },
+                                transaction: t
+                            })
 
-                        // remove sub_menu
-                        await db.Sub_Menu.destroy({
-                            where: {
-                                id: id
-                            },
-                            transaction: t
+                            await db.Sub_Menu.destroy({
+                                where: {
+                                    id: id
+                                },
+                                transaction: t
+                            })
                         })
                         _transaction_status = true
-                    })
+                    } catch (e) {
+                        _transaction_status = false
+                    }
                     if (_transaction_status) {
                         _response = resolveObj.DELETE_SUCCEED()
                     } else {
@@ -556,24 +574,24 @@ let deleteSubMenuById = (id) => {
 }
 
 module.exports = {
-    createHeader: createHeader,
+    createHeader,
     getHeader,
-    deleteHeader: deleteHeader,
-    updateHeader: updateHeader,
+    deleteHeader,
+    updateHeader,
 
-    createMenu: createMenu,
+    createMenu,
     getMenu,
-    updateMenu: updateMenu,
-    deleteMenu: deleteMenu,
+    updateMenu,
+    deleteMenu,
 
-    createMenuItem: createMenuItem,
-    bulkCreateMenuItem: bulkCreateMenuItem,
-    getAllMenuItemByMenuId: getAllMenuItemByMenuId,
-    updateMenuItemById: updateMenuItemById,
-    deleteMenuItemById: deleteMenuItemById,
+    createMenuItem,
+    bulkCreateMenuItem,
+    getAllMenuItemByMenuId,
+    updateMenuItemById,
+    deleteMenuItemById,
 
-    createSubMenu: createSubMenu,
-    getAllSubMenuByMenuItemId: getAllSubMenuByMenuItemId,
-    updateSubMenu: updateSubMenu,
-    deleteSubMenuById: deleteSubMenuById,
+    createSubMenu,
+    getAllSubMenuByMenuItemId,
+    updateSubMenu,
+    deleteSubMenuById,
 }

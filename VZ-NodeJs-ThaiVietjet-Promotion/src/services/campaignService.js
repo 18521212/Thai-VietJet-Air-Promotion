@@ -5,23 +5,27 @@ const db = require('../models');
 let createCampaign = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!data.name) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return;
-            }
-            await db.sequelize.transaction(async (t) => {
-                let campaign = await db.Campaign.create({
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _cre_c = await db.Campaign.create({
                     name: data.name,
-
                     headerId: data.headerId,
                     bannerId: data.bannerId,
                     bodyId: data.bodyId,
                     formId: data.formId,
                     footerId: data.footerId,
                     promotion: data.promotionId
-                }, { transaction: t })
-            })
-            resolve(resolveObj.CREATE_SUCCEED('Campaign'))
+                })
+                if (_cre_c) {
+                    _response = resolveObj.CREATE_SUCCEED()
+                } else {
+                    _response = resolveObj.CREATE_UNSUCCEED()
+
+                }
+            }
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -31,10 +35,12 @@ let createCampaign = (data) => {
 let getAllCampaign = () => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             let data = await db.Campaign.findAll({
                 order: [['createdAt', 'DESC']],
             });
-            return resolve(resolveObj.GET(data))
+            _response = resolveObj.GET(data)
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -44,12 +50,14 @@ let getAllCampaign = () => {
 let getCampaignById = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!id) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let data = await db.Campaign.findOne({ where: { id: id } });
+                _response = resolveObj.GET(data)
             }
-            let data = await db.Campaign.findOne({ where: { id: id } });
-            resolve(resolveObj.GET(data))
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -59,45 +67,40 @@ let getCampaignById = (id) => {
 let updateCampaign = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            // notice data.property === '' different === null - if have variable but don't 
-            // -- have value, it's equal to '', not equal to null
+            let _response
             if (!data.id ||
                 !(data.name || data.headerId || data.bannerId
                     || data.bodyId || data.formId || data.footerId || data.promotionId)
             ) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return;
-            }
-
-            await db.sequelize.transaction(async (t) => {
-                let check = await checkChildTableDataExist(data); // does not pass data does not mean it is null 
-                // -- must use compare data !== null
-                // console.log(!data.headerId)
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let check = await checkChildTableDataExist(data);
                 if (check.result !== true) {
-                    resolve(resolveObj.NOT_FOUND(check.table_name))
-                    throw new Error();
+                    _response = resolveObj.NOT_FOUND(check.table_name)
+                } else {
+                    let _get_c = await db.Campaign.findByPk(data.id)
+                    if (!_get_c) {
+                        _response = resolveObj.NOT_FOUND('Campaign')
+                    } else {
+                        let _upd_c = await _get_c
+                            .update({
+                                name: data.name,
+                                headerId: data.headerId ? data.headerId : null,
+                                bannerId: data.bannerId ? data.bannerId : null,
+                                bodyId: data.bodyId ? data.bodyId : null,
+                                formId: data.formId ? data.formId : null,
+                                footerId: data.footerId ? data.footerId : null,
+                                promotionId: data.promotionId ? data.promotionId : null
+                            })
+                        if (_upd_c) {
+                            _response = resolveObj.UPDATE_SUCCEED()
+                        } else {
+                            _response = resolveObj.UPDATE_UNSUCCEED()
+                        }
+                    }
                 }
-
-                let dataApi = await db.Campaign.findOne({
-                    where: { id: data.id }
-                })
-
-                if (!dataApi) {
-                    resolve(resolveObj.NOT_FOUND('Campaign'))
-                    throw new Error();
-                } // resolve specific error - does not effect rollback flow
-
-                let dataUpdate = await dataApi.update({
-                    name: data.name,
-                    headerId: data.headerId ? data.headerId : null,
-                    bannerId: data.bannerId ? data.bannerId : null,
-                    bodyId: data.bodyId ? data.bodyId : null,
-                    formId: data.formId ? data.formId : null,
-                    footerId: data.footerId ? data.footerId : null,
-                    promotionId: data.promotionId ? data.promotionId : null
-                }, { transaction: t })
-            })
-            resolve(resolveObj.UPDATE_SUCCEED('Campaign'))
+            }
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -107,18 +110,24 @@ let updateCampaign = (data) => {
 let deleteCampaign = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!id) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-            }
-
-            const result = await db.sequelize.transaction(async (t) => {
-                let campaign = await db.Campaign.destroy({ where: { id: id }, transaction: t })
-                if (campaign === 0) {
-                    resolve(resolveObj.DELETE_UNSUCCEED('Campaign'))
-                    throw new Error()
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _get_c = await db.Campaign.findByPk(id)
+                let _del_c = await _get_c
+                    .cache()
+                    .destroy()
+                // TODO: RESULTED model.destroy trigger as afterBulkDestroy hook, instance.destroy
+                // trigger as afterDestroy hook
+                // TODO: IMPORTANCE change validate instance.destroy
+                if (_del_c) {
+                    _response = resolveObj.DELETE_SUCCEED()
+                } else {
+                    _response = resolveObj.DELETE_UNSUCCEED()
                 }
-            })
-            resolve(resolveObj.DELETE_SUCCEED())
+            }
+            resolve(_response)
         } catch (e) {
             reject(e);
         }

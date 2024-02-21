@@ -36,20 +36,34 @@ let getForm = (id) => {
                     { model: db.Form_Detail, as: 'form_detail' }
                 ]
             }
-            let data
+            let _b = false
+            try {
+                let _rsl = await db.sequelize.transaction(async (t) => {
+                    throw new Error()
+                    return true
+                })
+                _b = _rsl
+                console.log('t succ', _rsl)
+            } catch (e) {
+                console.log('t err', _b)
+            }
+            console.log('t o', _b)
+            let _data
+            let _response
             if (id) {
-                data = await db.Form
+                _data = await db.Form
                     .cache(id)
                     .findOne({
                         where: { id: id },
                         ...query
                     })
             } else {
-                data = await db.Form
-                    .cache('all')
+                _data = await db.Form
+                    // .cache('all')
                     .findAll(query)
             }
-            resolve(resolveObj.GET(data))
+            _response = resolveObj.GET(_data)
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -92,25 +106,25 @@ let deleteForm = (id) => {
             } else {
                 let _form = await db.Form.findByPk(id)
                 if (_form) {
-                    await db.sequelize.transaction(async (t) => {
-                        let dataDelete_FD = await db.Form_Detail.destroy({ where: { formId: id }, transaction: t })
-                        let formDetail = await db.Form_Detail.findAll({ where: { formId: id } })
-                        if (formDetail.length > 0) {
-                            _response = resolveObj.EXIST_REF_KEY
-                            throw new Error()
-                        }
-                        let dataDelete = await _form
-                            // cache() method  for instance destroy() method only
-                            .cache()
-                            // .destroy({ where: { id: id }, transaction: t })
-                            .destroy({ transaction: t })
-                        if (dataDelete >= 1) {
-                            _response = resolveObj.DELETE_SUCCEED()
-                        } else {
-                            _response = resolveObj.DELETE_UNSUCCEED()
-                            throw new Error()
-                        }
-                    })
+                    let _transaction_status = false
+                    try {
+                        await db.sequelize.transaction(async (t) => {
+                            let _del_fd = await db.Form_Detail
+                                .destroy({ where: { formId: id }, transaction: t })
+                            let _del_f = await _form
+                                .cache()
+                                .destroy({ transaction: t });
+                        })
+                        // if the execution reaches this line, the transaction has been committed
+                        _transaction_status = true
+                    } catch (e) {
+                        _transaction_status = false
+                    }
+                    if (_transaction_status) {
+                        _response = resolveObj.DELETE_SUCCEED()
+                    } else {
+                        _response = resolveObj.DELETE_UNSUCCEED()
+                    }
                 } else {
                     _response = resolveObj.NOT_FOUND()
                 }
@@ -381,54 +395,59 @@ let deleteInputById = (inputId) => {
                         _response = resolveObj.NOT_FOUND('Input')
                     } else {
                         let _transaction_status = false
-                        await db.sequelize.transaction(async (t) => {
-                            switch (input.typeInput) {
-                                case type.TEXT:
-                                    let _del_text_translation_ti = await db.Text_Translation.destroy({
-                                        where: {
-                                            id: [input.text_input.title, input.text_input.placeHolder]
-                                        },
-                                        transaction: t
-                                    })
-                                    let _del_text_input = await db.Text_Input.destroy({
-                                        where: {
-                                            inputId: inputId
-                                        },
-                                        transaction: t
-                                    })
-                                    break;
-                                case type.DROPDOWN:
-                                    let _del_text_translation_dd = await db.Text_Translation.destroy({
-                                        where: {
-                                            id: input.dropdown.title
-                                        },
-                                        transaction: t
-                                    })
-                                    let _del_rds_dd = await db.Row_Dataset_Dropdown.destroy({
-                                        where: {
-                                            dropdownId: input.dropdown.id
-                                        },
-                                        transaction: t
-                                    })
-                                    let _del_dropdown = await db.Dropdown.destroy({
-                                        where: {
-                                            inputId: inputId
-                                        },
-                                        transaction: t
-                                    })
-                                    break;
-                                default:
-                                    // invalid type input
-                                    throw new Error()
-                                    break;
-                            }
-                            let _del_input = await db.Input.destroy({
-                                where: {
-                                    id: inputId
+                        try {
+                            await db.sequelize.transaction(async (t) => {
+                                switch (input.typeInput) {
+                                    case type.TEXT:
+                                        let _del_text_translation_ti = await db.Text_Translation.destroy({
+                                            where: {
+                                                id: [input.text_input.title, input.text_input.placeHolder]
+                                            },
+                                            transaction: t
+                                        })
+                                        let _del_text_input = await db.Text_Input.destroy({
+                                            where: {
+                                                inputId: inputId
+                                            },
+                                            transaction: t
+                                        })
+                                        break;
+                                    case type.DROPDOWN:
+                                        let _del_text_translation_dd = await db.Text_Translation.destroy({
+                                            where: {
+                                                id: input.dropdown.title
+                                            },
+                                            transaction: t
+                                        })
+                                        let _del_rds_dd = await db.Row_Dataset_Dropdown.destroy({
+                                            where: {
+                                                dropdownId: input.dropdown.id
+                                            },
+                                            transaction: t
+                                        })
+                                        let _del_dropdown = await db.Dropdown.destroy({
+                                            where: {
+                                                inputId: inputId
+                                            },
+                                            transaction: t
+                                        })
+                                        break;
+                                    default:
+                                        // invalid type input
+                                        throw new Error()
+                                        break;
                                 }
-                            }, { transaction: t })
+                                let _del_input = await db.Input.destroy({
+                                    where: {
+                                        id: inputId
+                                    },
+                                    transaction: t
+                                });
+                            })
                             _transaction_status = true
-                        })
+                        } catch (e) {
+                            _transaction_status = false
+                        }
                         if (_transaction_status) {
                             _response = resolveObj.DELETE_SUCCEED()
                         } else {
@@ -463,27 +482,31 @@ let createTextInput = (data) => {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
                 let _transaction_status = false
-                await db.sequelize.transaction(async (t) => {
-                    let input = await db.Input.create({
-                        typeInput: 'text'
-                    }, { transaction: t });
-                    let titleText_Translation = await db.Text_Translation.create({
-                        valueEn: data.titleEn,
-                        valueTh: data.titleTh ? data.titleTh : data.titleEn
-                    }, { transaction: t })
+                try {
+                    await db.sequelize.transaction(async (t) => {
+                        let input = await db.Input.create({
+                            typeInput: 'text'
+                        }, { transaction: t });
+                        let titleText_Translation = await db.Text_Translation.create({
+                            valueEn: data.titleEn,
+                            valueTh: data.titleTh ? data.titleTh : data.titleEn
+                        }, { transaction: t })
 
-                    let placeHolderText_Translation = await db.Text_Translation.create({
-                        valueEn: data.placeHolderEn,
-                        valueTh: data.placeHolderTh ? data.placeHolderTh : data.placeHolderEn
-                    }, { transaction: t })
-                    let textInput = await db.Text_Input.create({
-                        title: titleText_Translation.id,
-                        placeHolder: placeHolderText_Translation.id,
-                        typeText: data.typeText,
-                        inputId: input.id
-                    }, { transaction: t })
+                        let placeHolderText_Translation = await db.Text_Translation.create({
+                            valueEn: data.placeHolderEn,
+                            valueTh: data.placeHolderTh ? data.placeHolderTh : data.placeHolderEn
+                        }, { transaction: t })
+                        let textInput = await db.Text_Input.create({
+                            title: titleText_Translation.id,
+                            placeHolder: placeHolderText_Translation.id,
+                            typeText: data.typeText,
+                            inputId: input.id
+                        }, { transaction: t });
+                    })
                     _transaction_status = true
-                })
+                } catch (e) {
+                    _transaction_status = false
+                }
                 if (_transaction_status) {
                     _response = resolveObj.CREATE_SUCCEED()
                 } else {
@@ -520,27 +543,31 @@ let updateTextInput = (data) => {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
                 let _transaction_status = false
-                await db.sequelize.transaction(async (t) => {
-                    let textInput = await db.Text_Input.findOne({ where: { id: data.id } })
-                    await textInput.update({
-                        typeText: data.typeText
-                    }, { transaction: t })
-                    if (func.CHECK_HAS_VALUE_OR(data.titleEn, data.titleTh)) {
-                        let titleTextTranslation = await db.Text_Translation.findOne({ where: { id: textInput.title } })
-                        await titleTextTranslation.update({
-                            valueEn: data.titleEn,
-                            valueTh: data.titleTh ? data.titleTh : data.titleEn
+                try {
+                    await db.sequelize.transaction(async (t) => {
+                        let textInput = await db.Text_Input.findOne({ where: { id: data.id } })
+                        await textInput.update({
+                            typeText: data.typeText
                         }, { transaction: t })
-                    }
-                    if (func.CHECK_HAS_VALUE_OR(data.placeHolderEn, data.placeHolderTh)) {
-                        let placeHolderTextTranslation = await db.Text_Translation.findOne({ where: { id: textInput.placeHolder } })
-                        await placeHolderTextTranslation.update({
-                            valueEn: data.placeHolderEn,
-                            valueTh: data.placeHolderTh ? data.placeHolderTh : data.placeHolderEn
-                        }, { transaction: t })
-                    }
+                        if (func.CHECK_HAS_VALUE_OR(data.titleEn, data.titleTh)) {
+                            let titleTextTranslation = await db.Text_Translation.findOne({ where: { id: textInput.title } })
+                            await titleTextTranslation.update({
+                                valueEn: data.titleEn,
+                                valueTh: data.titleTh ? data.titleTh : data.titleEn
+                            }, { transaction: t })
+                        }
+                        if (func.CHECK_HAS_VALUE_OR(data.placeHolderEn, data.placeHolderTh)) {
+                            let placeHolderTextTranslation = await db.Text_Translation.findOne({ where: { id: textInput.placeHolder } })
+                            await placeHolderTextTranslation.update({
+                                valueEn: data.placeHolderEn,
+                                valueTh: data.placeHolderTh ? data.placeHolderTh : data.placeHolderEn
+                            }, { transaction: t })
+                        }
+                    })
                     _transaction_status = true
-                })
+                } catch (e) {
+                    _transaction_status = false
+                }
                 if (_transaction_status) {
                     _response = resolveObj.UPDATE_SUCCEED('Text_Input')
                 } else {
@@ -565,20 +592,24 @@ let createDropdown = (data) => {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
                 let _transaction_status = false
-                await db.sequelize.transaction(async (t) => {
-                    let input = await db.Input.create({
-                        typeInput: type.DROPDOWN
-                    }, { transaction: t });
-                    let titleText_Translation = await db.Text_Translation.create({
-                        valueEn: data.titleEn,
-                        valueTh: data.titleTh ? data.titleTh : data.titleEn
-                    }, { transaction: t })
-                    await db.Dropdown.create({
-                        title: titleText_Translation.id,
-                        inputId: input.id
-                    }, { transaction: t })
+                try {
+                    await db.sequelize.transaction(async (t) => {
+                        let input = await db.Input.create({
+                            typeInput: type.DROPDOWN
+                        }, { transaction: t });
+                        let titleText_Translation = await db.Text_Translation.create({
+                            valueEn: data.titleEn,
+                            valueTh: data.titleTh ? data.titleTh : data.titleEn
+                        }, { transaction: t })
+                        await db.Dropdown.create({
+                            title: titleText_Translation.id,
+                            inputId: input.id
+                        }, { transaction: t })
+                    })
                     _transaction_status = true
-                })
+                } catch (e) {
+                    _transaction_status = false
+                }
                 if (_transaction_status) {
                     _response = resolveObj.CREATE_SUCCEED()
                 } else {
@@ -764,33 +795,33 @@ let fetchData = () => {
 }
 
 module.exports = {
-    createForm: createForm,
+    createForm,
     getForm,
     updateForm,
     deleteForm,
 
-    getAllFormDetail: getAllFormDetail,
+    getAllFormDetail,
     getFormDetailByFormId,
-    addInputIntoForm: addInputIntoForm,
-    updateFormDetail: updateFormDetail,
-    deleteFormDetail: deleteFormDetail,
+    addInputIntoForm,
+    updateFormDetail,
+    deleteFormDetail,
 
     getInput,
-    deleteInputById: deleteInputById,
+    deleteInputById,
 
     // text input
-    createTextInput: createTextInput,
-    getAllTextInput: getAllTextInput,
+    createTextInput,
+    getAllTextInput,
     updateTextInput,
 
     // dropdown
-    createDropdown: createDropdown,
-    getDropdownById: getDropdownById,
+    createDropdown,
+    getDropdownById,
 
     // data dropdown
     updateDropdown,
     addDataDropdown,
     deleteDataDropdown,
 
-    fetchData: fetchData
+    fetchData
 }

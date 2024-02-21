@@ -210,7 +210,7 @@ let updateMarkdown = (data) => {
             } else {
                 let _get_m = await db.Markdown.findByPk(data.id)
                 if (_get_m) {
-                    let _upd_m = await markdown.update(data)
+                    let _upd_m = await _get_m.update(data)
                     if (_upd_m) {
                         _response = resolveObj.UPDATE_SUCCEED()
                     } else {
@@ -228,21 +228,6 @@ let updateMarkdown = (data) => {
 }
 
 let deleteMarkdown = (data) => {
-    // return new Promise(async (resolve, reject) => {
-    //     try {
-    //         if (!func.CHECK_HAS_VALUE(data.id)) {
-    //             resolve(resolveObj.MISSING_PARAMETERS)
-    //             return
-    //         }
-    //         await db.sequelize.transaction(async (t) => {
-    //             // check  onDelete Restrict
-    //             await db.Markdown.destroy({ where: { id: data.id } })
-    //         })
-    //         resolve(resolveObj.DELETE_SUCCEED())
-    //     } catch (e) {
-    //         reject(e);
-    //     }
-    // })
     return deleteData({
         table: 'Markdown',
         ref: [

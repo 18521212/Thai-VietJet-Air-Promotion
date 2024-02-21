@@ -7,13 +7,10 @@ let createHeader = async (req, res, next) => {
     try {
         let data = await headerService.createHeader(req.body);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -25,13 +22,10 @@ let updateHeader = async (req, res, next) => {
     try {
         let data = await headerService.updateHeader(req.body);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -39,13 +33,10 @@ let deleteHeader = async (req, res, next) => {
     try {
         let data = await headerService.deleteHeader(req.body.id);
         res.data = data
-        next()
+        return res.status(200).json(res.data)
     } catch (e) {
         console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
+        return res.status(200).json(resolveObj.ERROR_SERVER)
     }
 }
 
@@ -181,23 +172,23 @@ let deleteSubMenuById = async (req, res) => {
 }
 
 module.exports = {
-    createHeader: createHeader,
-    getHeader: getHeader,
-    deleteHeader: deleteHeader,
-    updateHeader: updateHeader,
+    createHeader,
+    getHeader,
+    deleteHeader,
+    updateHeader,
 
-    createMenu: createMenu,
+    createMenu,
     getMenu,
-    updateMenu: updateMenu,
-    deleteMenu: deleteMenu,
+    updateMenu,
+    deleteMenu,
 
-    createMenuItem: createMenuItem,
-    getAllMenuItemByMenuId: getAllMenuItemByMenuId,
-    updateMenuItemById: updateMenuItemById,
-    deleteMenuItemById: deleteMenuItemById,
+    createMenuItem,
+    getAllMenuItemByMenuId,
+    updateMenuItemById,
+    deleteMenuItemById,
 
-    createSubMenu: createSubMenu,
-    getAllSubMenuByMenuItemId: getAllSubMenuByMenuItemId,
-    updateSubMenu: updateSubMenu,
-    deleteSubMenuById: deleteSubMenuById,
+    createSubMenu,
+    getAllSubMenuByMenuItemId,
+    updateSubMenu,
+    deleteSubMenuById,
 }
