@@ -10,11 +10,12 @@ let createForm = (data) => {
             if (!data.name) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let createData = await db.Form
-                    .cache()
-                    .create({
-                        name: data.name,
-                    })
+                let createData =
+                    await db.Form
+                        .cache()
+                        .create({
+                            name: data.name,
+                        })
                 if (createData) {
                     _response = resolveObj.CREATE_SUCCEED()
                 } else {
@@ -36,31 +37,21 @@ let getForm = (id) => {
                     { model: db.Form_Detail, as: 'form_detail' }
                 ]
             }
-            let _b = false
-            try {
-                let _rsl = await db.sequelize.transaction(async (t) => {
-                    throw new Error()
-                    return true
-                })
-                _b = _rsl
-                console.log('t succ', _rsl)
-            } catch (e) {
-                console.log('t err', _b)
-            }
-            console.log('t o', _b)
             let _data
             let _response
             if (id) {
-                _data = await db.Form
-                    .cache(id)
-                    .findOne({
-                        where: { id: id },
-                        ...query
-                    })
+                _data =
+                    await db.Form
+                        .cache(id)
+                        .findOne({
+                            where: { id: id },
+                            ...query
+                        })
             } else {
-                _data = await db.Form
-                    // .cache('all')
-                    .findAll(query)
+                _data =
+                    await db.Form
+                        // .cache('all')
+                        .findAll(query)
             }
             _response = resolveObj.GET(_data)
             resolve(_response)
@@ -77,12 +68,15 @@ let updateForm = data => {
             if (!func.CHECK_HAS_VALUE(data.id, data.name)) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let form = await db.Form.findOne({ where: { id: data.id } })
+                let form =
+                    await db.Form
+                        .findOne({ where: { id: data.id } })
                 let dataUpdate
                 if (form) {
-                    dataUpdate = await form
-                        .cache()
-                        .update({ name: data.name })
+                    dataUpdate =
+                        await form
+                            .cache()
+                            .update({ name: data.name })
                 }
                 if (dataUpdate) {
                     _response = resolveObj.UPDATE_SUCCEED()
@@ -104,7 +98,9 @@ let deleteForm = (id) => {
             if (!id) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let _form = await db.Form.findByPk(id)
+                let _form =
+                    await db.Form
+                        .findByPk(id)
                 if (_form) {
                     let _transaction_status = false
                     try {
@@ -141,9 +137,10 @@ let deleteForm = (id) => {
 let getAllFormDetail = () => {
     return new Promise(async (resolve, reject) => {
         try {
-            let data = await db.Form_Detail
-                .cache('all')
-                .findAll()
+            let data =
+                await db.Form_Detail
+                    .cache('all')
+                    .findAll()
             let _response = resolveObj.GET(data)
             resolve(_response)
         } catch (e) {
@@ -159,33 +156,34 @@ let getFormDetailByFormId = (formId) => {
             if (!formId) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let data = await db.Form_Detail
-                    .cache(`all/${db.Form.name}/${formId}`)
-                    .findAll({
-                        where: { formId: formId },
-                        order: [['order', 'asc']],
-                        include: [
-                            {
-                                model: db.Input, as: 'input',
-                                include: [
-                                    {
-                                        model: db.Text_Input, as: 'text_input',
-                                        include: [
-                                            { model: db.Text_Translation, as: 'titleDataText_Input' },
-                                            { model: db.Text_Translation, as: 'placeHolderDataText_Input' }
-                                        ]
-                                    },
-                                    {
-                                        model: db.Dropdown, as: 'dropdown',
-                                        include: [
-                                            { model: db.Text_Translation, as: 'titleDataDropdown' },
-                                            { model: db.Row_Dataset_Dropdown, as: 'dataDropdown' },
-                                        ]
-                                    },
-                                ]
-                            }
-                        ]
-                    })
+                let data =
+                    await db.Form_Detail
+                        .cache(`all/${db.Form.name}/${formId}`)
+                        .findAll({
+                            where: { formId: formId },
+                            order: [['order', 'asc']],
+                            include: [
+                                {
+                                    model: db.Input, as: 'input',
+                                    include: [
+                                        {
+                                            model: db.Text_Input, as: 'text_input',
+                                            include: [
+                                                { model: db.Text_Translation, as: 'titleDataText_Input' },
+                                                { model: db.Text_Translation, as: 'placeHolderDataText_Input' }
+                                            ]
+                                        },
+                                        {
+                                            model: db.Dropdown, as: 'dropdown',
+                                            include: [
+                                                { model: db.Text_Translation, as: 'titleDataDropdown' },
+                                                { model: db.Row_Dataset_Dropdown, as: 'dataDropdown' },
+                                            ]
+                                        },
+                                    ]
+                                }
+                            ]
+                        })
                 _response = resolveObj.GET(data)
             }
             resolve(_response)
@@ -202,16 +200,18 @@ let addInputIntoForm = (data) => {
             if (!data.formId || !data.inputId || !data.nameApi) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let form = await db.Form.findOne({
-                    where: {
-                        id: data.formId
-                    }
-                })
-                let input = await db.Input.findOne({
-                    where: {
-                        id: data.inputId
-                    },
-                })
+                let form =
+                    await db.Form.findOne({
+                        where: {
+                            id: data.formId
+                        }
+                    })
+                let input =
+                    await db.Input.findOne({
+                        where: {
+                            id: data.inputId
+                        },
+                    })
                 if (!form || !input) {
                     if (!form) {
                         _response = resolveObj.NOT_FOUND('Form')
@@ -219,15 +219,16 @@ let addInputIntoForm = (data) => {
                         _response = resolveObj.NOT_FOUND('Input')
                     }
                 } else {
-                    let _form_detail_create = await db.Form_Detail
-                        .create({
-                            formId: data.formId,
-                            inputId: data.inputId,
-                            order: data.order ? data.order : undefined,
-                            widthMdScreen: data.widthMdScreen ? data.widthMdScreen : undefined,
-                            required: data.required,
-                            nameApi: data.nameApi
-                        })
+                    let _form_detail_create =
+                        await db.Form_Detail
+                            .create({
+                                formId: data.formId,
+                                inputId: data.inputId,
+                                order: data.order ? data.order : undefined,
+                                widthMdScreen: data.widthMdScreen ? data.widthMdScreen : undefined,
+                                required: data.required,
+                                nameApi: data.nameApi
+                            })
                     if (_form_detail_create) {
                         _response = resolveObj.CREATE_SUCCEED()
                     } else {
@@ -249,28 +250,32 @@ let updateFormDetail = (data) => {
             if (!data.id || (!data.order && !data.widthMdScreen && !data.inputId && !data.nameApi)) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let formDetail = await db.Form_Detail.findOne({
-                    where: { id: data.id },
-                })
+                let formDetail =
+                    await db.Form_Detail
+                        .findByPk(data.id)
                 if (!formDetail) {
                     _response = resolveObj.NOT_FOUND('Form Detail')
                 } else {
                     let _validInput = true
                     if (data.inputId) {
-                        let input = await db.findOne({ where: { id: data.inputId } })
+                        let input =
+                            await db
+                                .findByPk(data.inputId)
                         if (!input) {
                             _validInput = false
                             _response = resolveObj.NOT_FOUND('Input')
                         }
                     }
                     if (_validInput) {
-                        let _form_detail_update = await formDetail.update({
-                            inputId: data.inputId,
-                            order: data.order && data.order,
-                            widthMdScreen: data.widthMdScreen && data.widthMdScreen,
-                            required: data.required,
-                            nameApi: data.nameApi
-                        })
+                        let _form_detail_update =
+                            await formDetail
+                                .update({
+                                    inputId: data.inputId,
+                                    order: data.order && data.order,
+                                    widthMdScreen: data.widthMdScreen && data.widthMdScreen,
+                                    required: data.required,
+                                    nameApi: data.nameApi
+                                })
                         if (_form_detail_update) {
                             _response = resolveObj.UPDATE_SUCCEED()
                         } else {
@@ -293,12 +298,13 @@ let deleteFormDetail = (data) => {
             if (!data.id) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let _delete_form_detail = await db.Form_Detail.destroy({
-                    where: {
-                        id: data.id
-                    }
-                })
-                if (_delete_form_detail >= 1) {
+                let _get_fd =
+                    await db.Form_Detail
+                        .findByPk(data.id)
+                let _del_fd =
+                    await _get_fd
+                        .destroy()
+                if (_del_fd) {
                     _response = resolveObj.DELETE_SUCCEED()
                 } else {
                     _response = resolveObj.DELETE_UNSUCCEED()
@@ -339,18 +345,21 @@ let getInput = (id) => {
             let _response
             if (id) {
                 if (id.length > 0) {
-                    data = await db.Input
-                        .cache('all/<Id><Array>')
-                        .findAll({ where: { id: id }, ..._queryInput })
+                    data =
+                        await db.Input
+                            .cache('all/<Id><Array>')
+                            .findAll({ where: { id: id }, ..._queryInput })
                 } else {
-                    data = await db.Input
-                        .cache(id)
-                        .findOne({ where: { id: id }, ..._queryInput })
+                    data =
+                        await db.Input
+                            .cache(id)
+                            .findOne({ where: { id: id }, ..._queryInput })
                 }
             } else {
-                data = await db.Input
-                    .cache('all')
-                    .findAll(_queryInput)
+                data =
+                    await db.Input
+                        .cache('all')
+                        .findAll(_queryInput)
             }
             _response = resolveObj.GET(data)
             resolve(_response)
@@ -368,29 +377,33 @@ let deleteInputById = (inputId) => {
             if (!inputId) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let formDetail = await db.Form_Detail.findOne({
-                    where: {
-                        inputId: inputId
-                    }
-                })
+                let formDetail =
+                    await db.Form_Detail
+                        .findOne({
+                            where: {
+                                inputId: inputId
+                            }
+                        })
                 if (formDetail) {
                     _response = resolveObj.EXIST_REF_KEY
                 } else {
-                    let input = await db.Input.findOne({
-                        where: {
-                            id: inputId
-                        },
-                        include: [
-                            {
-                                model: db.Text_Input,
-                                as: 'text_input'
-                            },
-                            {
-                                model: db.Dropdown,
-                                as: 'dropdown'
-                            }
-                        ]
-                    })
+                    let input =
+                        await db.Input
+                            .findOne({
+                                where: {
+                                    id: inputId
+                                },
+                                include: [
+                                    {
+                                        model: db.Text_Input,
+                                        as: 'text_input'
+                                    },
+                                    {
+                                        model: db.Dropdown,
+                                        as: 'dropdown'
+                                    }
+                                ]
+                            })
                     if (!input) {
                         _response = resolveObj.NOT_FOUND('Input')
                     } else {
@@ -399,50 +412,62 @@ let deleteInputById = (inputId) => {
                             await db.sequelize.transaction(async (t) => {
                                 switch (input.typeInput) {
                                     case type.TEXT:
-                                        let _del_text_translation_ti = await db.Text_Translation.destroy({
-                                            where: {
-                                                id: [input.text_input.title, input.text_input.placeHolder]
-                                            },
-                                            transaction: t
-                                        })
-                                        let _del_text_input = await db.Text_Input.destroy({
-                                            where: {
-                                                inputId: inputId
-                                            },
-                                            transaction: t
-                                        })
+                                        let _del_text_translation_ti =
+                                            await db.Text_Translation
+                                                .destroy({
+                                                    where: {
+                                                        id: [input.text_input.title, input.text_input.placeHolder]
+                                                    },
+                                                    transaction: t
+                                                })
+                                        let _del_text_input =
+                                            await db.Text_Input
+                                                .destroy({
+                                                    where: {
+                                                        inputId: inputId
+                                                    },
+                                                    transaction: t
+                                                })
                                         break;
                                     case type.DROPDOWN:
-                                        let _del_text_translation_dd = await db.Text_Translation.destroy({
-                                            where: {
-                                                id: input.dropdown.title
-                                            },
-                                            transaction: t
-                                        })
-                                        let _del_rds_dd = await db.Row_Dataset_Dropdown.destroy({
-                                            where: {
-                                                dropdownId: input.dropdown.id
-                                            },
-                                            transaction: t
-                                        })
-                                        let _del_dropdown = await db.Dropdown.destroy({
-                                            where: {
-                                                inputId: inputId
-                                            },
-                                            transaction: t
-                                        })
+                                        let _del_text_translation_dd =
+                                            await db.Text_Translation
+                                                .destroy({
+                                                    where: {
+                                                        id: input.dropdown.title
+                                                    },
+                                                    transaction: t
+                                                })
+                                        let _del_rds_dd =
+                                            await db.Row_Dataset_Dropdown
+                                                .destroy({
+                                                    where: {
+                                                        dropdownId: input.dropdown.id
+                                                    },
+                                                    transaction: t
+                                                })
+                                        let _del_dropdown =
+                                            await db.Dropdown
+                                                .destroy({
+                                                    where: {
+                                                        inputId: inputId
+                                                    },
+                                                    transaction: t
+                                                })
                                         break;
                                     default:
-                                        // invalid type input
+                                        // TODO: invalid type input
                                         throw new Error()
                                         break;
                                 }
-                                let _del_input = await db.Input.destroy({
-                                    where: {
-                                        id: inputId
-                                    },
-                                    transaction: t
-                                });
+                                let _del_input =
+                                    await db.Input
+                                        .destroy({
+                                            where: {
+                                                id: inputId
+                                            },
+                                            transaction: t
+                                        });
                             })
                             _transaction_status = true
                         } catch (e) {
@@ -484,24 +509,32 @@ let createTextInput = (data) => {
                 let _transaction_status = false
                 try {
                     await db.sequelize.transaction(async (t) => {
-                        let input = await db.Input.create({
-                            typeInput: 'text'
-                        }, { transaction: t });
-                        let titleText_Translation = await db.Text_Translation.create({
-                            valueEn: data.titleEn,
-                            valueTh: data.titleTh ? data.titleTh : data.titleEn
-                        }, { transaction: t })
+                        let input =
+                            await db.Input
+                                .create({
+                                    typeInput: 'text'
+                                }, { transaction: t });
+                        let titleText_Translation =
+                            await db.Text_Translation
+                                .create({
+                                    valueEn: data.titleEn,
+                                    valueTh: data.titleTh ? data.titleTh : data.titleEn
+                                }, { transaction: t })
 
-                        let placeHolderText_Translation = await db.Text_Translation.create({
-                            valueEn: data.placeHolderEn,
-                            valueTh: data.placeHolderTh ? data.placeHolderTh : data.placeHolderEn
-                        }, { transaction: t })
-                        let textInput = await db.Text_Input.create({
-                            title: titleText_Translation.id,
-                            placeHolder: placeHolderText_Translation.id,
-                            typeText: data.typeText,
-                            inputId: input.id
-                        }, { transaction: t });
+                        let placeHolderText_Translation =
+                            await db.Text_Translation
+                                .create({
+                                    valueEn: data.placeHolderEn,
+                                    valueTh: data.placeHolderTh ? data.placeHolderTh : data.placeHolderEn
+                                }, { transaction: t })
+                        let textInput =
+                            await db.Text_Input
+                                .create({
+                                    title: titleText_Translation.id,
+                                    placeHolder: placeHolderText_Translation.id,
+                                    typeText: data.typeText,
+                                    inputId: input.id
+                                }, { transaction: t });
                     })
                     _transaction_status = true
                 } catch (e) {
@@ -523,7 +556,9 @@ let createTextInput = (data) => {
 let getAllTextInput = () => {
     return new Promise(async (resolve, reject) => {
         try {
-            let data = await db.Text_Input.findAll()
+            let data =
+                await db.Text_Input
+                    .findAll()
             let _response = resolveObj.GET(data)
             resolve(_response)
         } catch (e) {
@@ -545,23 +580,32 @@ let updateTextInput = (data) => {
                 let _transaction_status = false
                 try {
                     await db.sequelize.transaction(async (t) => {
-                        let textInput = await db.Text_Input.findOne({ where: { id: data.id } })
-                        await textInput.update({
-                            typeText: data.typeText
-                        }, { transaction: t })
-                        if (func.CHECK_HAS_VALUE_OR(data.titleEn, data.titleTh)) {
-                            let titleTextTranslation = await db.Text_Translation.findOne({ where: { id: textInput.title } })
-                            await titleTextTranslation.update({
-                                valueEn: data.titleEn,
-                                valueTh: data.titleTh ? data.titleTh : data.titleEn
+                        let textInput =
+                            await db.Text_Input
+                                .findOne({ where: { id: data.id } })
+                        await textInput
+                            .update({
+                                typeText: data.typeText
                             }, { transaction: t })
+                        if (func.CHECK_HAS_VALUE_OR(data.titleEn, data.titleTh)) {
+                            let titleTextTranslation =
+                                await db.Text_Translation
+                                    .findOne({ where: { id: textInput.title } })
+                            await titleTextTranslation
+                                .update({
+                                    valueEn: data.titleEn,
+                                    valueTh: data.titleTh ? data.titleTh : data.titleEn
+                                }, { transaction: t })
                         }
                         if (func.CHECK_HAS_VALUE_OR(data.placeHolderEn, data.placeHolderTh)) {
-                            let placeHolderTextTranslation = await db.Text_Translation.findOne({ where: { id: textInput.placeHolder } })
-                            await placeHolderTextTranslation.update({
-                                valueEn: data.placeHolderEn,
-                                valueTh: data.placeHolderTh ? data.placeHolderTh : data.placeHolderEn
-                            }, { transaction: t })
+                            let placeHolderTextTranslation =
+                                await db.Text_Translation
+                                    .findOne({ where: { id: textInput.placeHolder } })
+                            await placeHolderTextTranslation
+                                .update({
+                                    valueEn: data.placeHolderEn,
+                                    valueTh: data.placeHolderTh ? data.placeHolderTh : data.placeHolderEn
+                                }, { transaction: t })
                         }
                     })
                     _transaction_status = true
@@ -594,17 +638,22 @@ let createDropdown = (data) => {
                 let _transaction_status = false
                 try {
                     await db.sequelize.transaction(async (t) => {
-                        let input = await db.Input.create({
-                            typeInput: type.DROPDOWN
-                        }, { transaction: t });
-                        let titleText_Translation = await db.Text_Translation.create({
-                            valueEn: data.titleEn,
-                            valueTh: data.titleTh ? data.titleTh : data.titleEn
-                        }, { transaction: t })
-                        await db.Dropdown.create({
-                            title: titleText_Translation.id,
-                            inputId: input.id
-                        }, { transaction: t })
+                        let input =
+                            await db.Input
+                                .create({
+                                    typeInput: type.DROPDOWN
+                                }, { transaction: t });
+                        let titleText_Translation =
+                            await db.Text_Translation
+                                .create({
+                                    valueEn: data.titleEn,
+                                    valueTh: data.titleTh ? data.titleTh : data.titleEn
+                                }, { transaction: t })
+                        await db.Dropdown
+                            .create({
+                                title: titleText_Translation.id,
+                                inputId: input.id
+                            }, { transaction: t })
                     })
                     _transaction_status = true
                 } catch (e) {
@@ -630,16 +679,18 @@ let getDropdownById = (id) => {
             if (!id) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let data = await db.Dropdown.findOne({
-                    where: {
-                        id: id
-                    },
-                    include: [
-                        {
-                            model: db.Row_Dataset_Dropdown, as: 'dataDropdown'
-                        }
-                    ]
-                })
+                let data =
+                    await db.Dropdown
+                        .findOne({
+                            where: {
+                                id: id
+                            },
+                            include: [
+                                {
+                                    model: db.Row_Dataset_Dropdown, as: 'dataDropdown'
+                                }
+                            ]
+                        })
                 _response = resolveObj.GET(data)
             }
             resolve(_response)
@@ -656,12 +707,18 @@ let updateDropdown = (data) => {
             if (!func.CHECK_HAS_VALUE(data.id) || !func.CHECK_HAS_VALUE_OR(data.titleEn, data.titleTh)) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let dropdown = await db.Dropdown.findOne({ where: { id: data.id } })
-                let titleTranslation = await db.Text_Translation.findOne({ where: { id: dropdown.title } })
-                let _update_ttr = await titleTranslation.update({
-                    valueEn: data.titleEn,
-                    valueTh: data.titleTh,
-                })
+                let dropdown =
+                    await db.Dropdown
+                        .findOne({ where: { id: data.id } })
+                let titleTranslation =
+                    await db.Text_Translation
+                        .findOne({ where: { id: dropdown.title } })
+                let _update_ttr =
+                    await titleTranslation
+                        .update({
+                            valueEn: data.titleEn,
+                            valueTh: data.titleTh,
+                        })
                 if (_update_ttr) {
                     _response = resolveObj.UPDATE_SUCCEED()
                 } else {
@@ -684,17 +741,21 @@ let addDataDropdown = (data) => {
             if (!data.dropdownId || !data.value || !data.label) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let dropdown = await db.Dropdown.findOne({
-                    where: {
-                        id: data.dropdownId
-                    }
-                })
+                let dropdown =
+                    await db.Dropdown
+                        .findOne({
+                            where: {
+                                id: data.dropdownId
+                            }
+                        })
                 if (dropdown) {
-                    let _rdd = await db.Row_Dataset_Dropdown.create({
-                        value: data.value,
-                        label: data.label,
-                        dropdownId: data.dropdownId
-                    })
+                    let _rdd =
+                        await db.Row_Dataset_Dropdown
+                            .create({
+                                value: data.value,
+                                label: data.label,
+                                dropdownId: data.dropdownId
+                            })
                     if (_rdd) {
                         _response = resolveObj.CREATE_SUCCEED()
                     } else {
@@ -718,8 +779,13 @@ let deleteDataDropdown = (data) => {
             if (!data.id) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let _del_rdd = await db.Row_Dataset_Dropdown.destroy({ where: { id: data.id } })
-                if (_del_rdd >= 1) {
+                let _get_rdd =
+                    await db.Row_Dataset_Dropdown
+                        .findByPk(data.id)
+                let _del_rdd =
+                    await _get_rdd
+                        .destroy()
+                if (_del_rdd) {
                     _response = resolveObj.DELETE_SUCCEED()
                 } else {
                     _response = resolveObj.DELETE_UNSUCCEED()

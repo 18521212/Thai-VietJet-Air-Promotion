@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            // Order_Detail.hasMany(models.Image_Banner, { foreignKey: 'bannerId', as: 'image_banner' })
+            // TODO: belongsTo Order
         }
     };
     Order_Detail.init({

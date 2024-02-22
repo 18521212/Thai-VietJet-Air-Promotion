@@ -1,5 +1,5 @@
 'use strict';
-import { association } from '../utils'
+import { association, addHookRefQueryRedis } from '../utils'
 const {
     Model
 } = require('sequelize');
@@ -30,5 +30,8 @@ module.exports = (sequelize, DataTypes) => {
             // TODO: trigger reset cache ref model [Promotion, [Markdown]]
         }
     });
+    let _hooks = ['afterCreate', 'afterUpdate', 'afterDestroy']
+    let _refs = ['Promotion']
+    addHookRefQueryRedis(Pack, _hooks, _refs)
     return Pack;
 };

@@ -12,9 +12,11 @@ let createBanner = (data) => {
             if (!data.name) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let _cre_b = await db.Banner.create({
-                    name: data.name,
-                })
+                let _cre_b =
+                    await db.Banner
+                        .create({
+                            name: data.name,
+                        })
                 if (_cre_b) {
                     _response = resolveObj.CREATE_SUCCEED()
                 } else {
@@ -49,14 +51,16 @@ let getBanner = (id) => {
             let _response
             let data
             if (id) {
-                data = await db.Banner
-                    // .cache(id)
-                    .findOne({ where: { id: id }, ...query })
+                data =
+                    await db.Banner
+                        // .cache(id)
+                        .findOne({ where: { id: id }, ...query })
                 decodeImageProperty(data)
             } else {
-                data = await db.Banner
-                    // .cache('all')
-                    .findAll(query)
+                data =
+                    await db.Banner
+                        // .cache('all')
+                        .findAll(query)
                 data &&
                     data
                         .map((item) => {
@@ -78,12 +82,15 @@ let updateBanner = (data) => {
             if (!func.CHECK_HAS_VALUE(data.id, data.name)) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let banner = await db.Banner.findOne({ where: { id: data.id } })
-                let _upd_b = await banner
-                    .cache(data.id)
-                    .update({
-                        name: data.name,
-                    })
+                let banner =
+                    await db.Banner
+                        .findByPk(data.id)
+                let _upd_b =
+                    await banner
+                        .cache(data.id)
+                        .update({
+                            name: data.name,
+                        })
                 if (_upd_b) {
                     _response = resolveObj.UPDATE_SUCCEED()
                 } else {
@@ -104,7 +111,9 @@ let deleteBanner = (data) => {
             if (!data.id) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let campaign = await db.Campaign.findOne({ where: { bannerId: data.id } })
+                let campaign =
+                    await db.Campaign
+                        .findOne({ where: { bannerId: data.id } })
                 if (campaign) {
                     _response = resolveObj.EXIST_REF_KEY
                 } else {
@@ -196,11 +205,13 @@ let createImageBanner = (data) => {
                 if (isBase64(data.image)) {
                     _response = { errCode: 1, errMessage: 'image is not base64 type' }
                 } else {
-                    let _cre_ib = await db.Image_Banner.create({
-                        bannerId: data.bannerId,
-                        image: data.image,
-                        type: data.type ? data.type : undefined
-                    })
+                    let _cre_ib =
+                        await db.Image_Banner
+                            .create({
+                                bannerId: data.bannerId,
+                                image: data.image,
+                                type: data.type ? data.type : undefined
+                            })
                     if (_cre_ib) {
                         _response = resolveObj.CREATE_SUCCEED()
                     } else {
@@ -222,10 +233,12 @@ let deleteImageBanner = (data) => {
             if (!data.id) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let _get_ib = await db.Image_Banner
-                    .findByPk(data.id)
-                let _del_ib = await _get_ib
-                    .destroy()
+                let _get_ib =
+                    await db.Image_Banner
+                        .findByPk(data.id)
+                let _del_ib =
+                    await _get_ib
+                        .destroy()
                 if (_del_ib) {
                     _response = resolveObj.DELETE_SUCCEED()
                 } else {

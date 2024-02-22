@@ -16,6 +16,17 @@ let delKey = (_key_pattern) => {
     });
 }
 
+let addHookRefQueryRedis = (Model, _hooks, _refs) => {
+    _hooks.forEach(_hook => {
+        Model.addHook(_hook, async (item, options) => {
+            _refs.forEach(_ref => {
+                delKey(`model:${_ref}*`)
+            })
+        })
+    })
+}
+
 module.exports = {
-    delKey
+    delKey,
+    addHookRefQueryRedis,
 }

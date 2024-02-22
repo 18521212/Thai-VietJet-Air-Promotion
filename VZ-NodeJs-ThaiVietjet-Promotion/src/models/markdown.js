@@ -1,6 +1,6 @@
 'use strict';
 
-import { association, delKey } from '../utils'
+import { association, delKey, addHookRefQueryRedis } from '../utils'
 
 const {
     Model
@@ -30,15 +30,11 @@ module.exports = (sequelize, DataTypes) => {
         modelName: 'Markdown',
         hooks: {
             // TODO: trigger update cache redis ref model
-            // TRACE
-            afterUpdate: async (item, options) => {
-                delKey(`model:Footer*`)
-            },
-            afterDestroy: async (item, options) => {
-                delKey(`model:Footer*`)
-            }
-            // TODO: check trigger ref model cache auto update [or not]
+            // TODO: attach key ref redis DOING
         }
     });
+    let _hooks = ['afterUpdate', 'afterDestroy']
+    let _refs = ['Footer', 'Pack', 'Promotion']
+    addHookRefQueryRedis(Markdown, _hooks, _refs)
     return Markdown;
 };

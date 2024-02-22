@@ -59,15 +59,19 @@ let createFooterText = (data) => {
             if (!data.footerId || !data.title || !data.link) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let _footer = await db.Footer.findOne({ where: { id: data.footerId } })
+                let _footer =
+                    await db.Footer
+                        .findOne({ where: { id: data.footerId } })
                 if (!_footer) {
                     _response = resolveObj.NOT_FOUND('Footer')
                 } else {
-                    let _cre_f = await db.Footer_Text.create({
-                        footerId: data.footerId,
-                        title: data.title,
-                        link: data.link
-                    })
+                    let _cre_f =
+                        await db.Footer_Text
+                            .create({
+                                footerId: data.footerId,
+                                title: data.title,
+                                link: data.link
+                            })
                     if (_cre_f) {
                         _response = resolveObj.CREATE_SUCCEED()
                     } else {
@@ -89,9 +93,10 @@ let getAllFooterText = (footerId) => {
             if (!footerId) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let _get_ft = await db.Footer_Text
-                    .cache(`all/Footer/${footerId}`)
-                    .findAll({ where: { footerId: footerId } })
+                let _get_ft =
+                    await db.Footer_Text
+                        .cache(`all/Footer/${footerId}`)
+                        .findAll({ where: { footerId: footerId } })
                 _response = resolveObj.GET(_get_ft)
             }
             resolve(_response)
@@ -108,14 +113,18 @@ let updateFooterText = (data) => {
             if (!data.id || !data.title || !data.link) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let _get_ft = await db.Footer_Text.findByPk(data.id)
+                let _get_ft =
+                    await db.Footer_Text
+                        .findByPk(data.id)
                 if (!_get_ft) {
                     _response = resolveObj.NOT_FOUND('Footer Text')
                 } else {
-                    let _upd_ft = await footer_text.update({
-                        title: data.title,
-                        link: data.link
-                    })
+                    let _upd_ft =
+                        await footer_text
+                            .update({
+                                title: data.title,
+                                link: data.link
+                            })
                     if (_upd_ft) {
                         _response = resolveObj.UPDATE_SUCCEED()
                     } else {
@@ -137,7 +146,9 @@ let deleteFooterText = (id) => {
             if (!id) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let _del_ft = await db.Footer_Text.destroy({ where: { id: id } })
+                let _del_ft =
+                    await db.Footer_Text
+                        .destroy({ where: { id: id } })
                 if (_del_ft) {
                     _response = resolveObj.DELETE_SUCCEED()
                 } else {
@@ -158,14 +169,16 @@ let createMarkdown = (data) => {
             if (!func.CHECK_HAS_VALUE(data.titleEn, data.contentEn, data.markdownEn)) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let _cre_m = await db.Markdown.create({
-                    titleEn: data.titleEn,
-                    titleTh: data.titleTh ? data.titleTh : data.titleEn,
-                    contentEn: data.contentEn,
-                    contentTh: data.contentTh ? data.contentTh : data.contentEn,
-                    markdownEn: data.markdownEn,
-                    markdownTh: data.markdownTh ? data.markdownTh : data.markdownEn
-                })
+                let _cre_m =
+                    await db.Markdown
+                        .create({
+                            titleEn: data.titleEn,
+                            titleTh: data.titleTh ? data.titleTh : data.titleEn,
+                            contentEn: data.contentEn,
+                            contentTh: data.contentTh ? data.contentTh : data.contentEn,
+                            markdownEn: data.markdownEn,
+                            markdownTh: data.markdownTh ? data.markdownTh : data.markdownEn
+                        })
                 if (_cre_m) {
                     _response = resolveObj.CREATE_SUCCEED()
                 } else {
@@ -185,9 +198,13 @@ let getMarkdown = (id) => {
             let data
             let _response
             if (id) {
-                data = await db.Markdown.findOne({ where: { id: id } })
+                data =
+                    await db.Markdown
+                        .findOne({ where: { id: id } })
             } else {
-                data = await db.Markdown.findAll()
+                data =
+                    await db.Markdown
+                        .findAll()
             }
             _response = resolveObj.GET(data)
             resolve(_response)
@@ -208,9 +225,13 @@ let updateMarkdown = (data) => {
             ) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let _get_m = await db.Markdown.findByPk(data.id)
+                let _get_m =
+                    await db.Markdown
+                        .findByPk(data.id)
                 if (_get_m) {
-                    let _upd_m = await _get_m.update(data)
+                    let _upd_m =
+                        await _get_m
+                            .update(data)
                     if (_upd_m) {
                         _response = resolveObj.UPDATE_SUCCEED()
                     } else {

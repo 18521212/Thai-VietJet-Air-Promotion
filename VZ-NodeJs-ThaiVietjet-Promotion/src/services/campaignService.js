@@ -9,15 +9,17 @@ let createCampaign = (data) => {
             if (!data.name) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let _cre_c = await db.Campaign.create({
-                    name: data.name,
-                    headerId: data.headerId,
-                    bannerId: data.bannerId,
-                    bodyId: data.bodyId,
-                    formId: data.formId,
-                    footerId: data.footerId,
-                    promotion: data.promotionId
-                })
+                let _cre_c =
+                    await db.Campaign
+                        .create({
+                            name: data.name,
+                            headerId: data.headerId,
+                            bannerId: data.bannerId,
+                            bodyId: data.bodyId,
+                            formId: data.formId,
+                            footerId: data.footerId,
+                            promotion: data.promotionId
+                        })
                 if (_cre_c) {
                     _response = resolveObj.CREATE_SUCCEED()
                 } else {
@@ -36,9 +38,11 @@ let getAllCampaign = () => {
     return new Promise(async (resolve, reject) => {
         try {
             let _response
-            let data = await db.Campaign.findAll({
-                order: [['createdAt', 'DESC']],
-            });
+            let data =
+                await db.Campaign
+                    .findAll({
+                        order: [['createdAt', 'DESC']],
+                    });
             _response = resolveObj.GET(data)
             resolve(_response)
         } catch (e) {
@@ -54,7 +58,9 @@ let getCampaignById = (id) => {
             if (!id) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let data = await db.Campaign.findOne({ where: { id: id } });
+                let data =
+                    await db.Campaign
+                        .findByPk(id);
                 _response = resolveObj.GET(data)
             }
             resolve(_response)
@@ -78,20 +84,23 @@ let updateCampaign = (data) => {
                 if (check.result !== true) {
                     _response = resolveObj.NOT_FOUND(check.table_name)
                 } else {
-                    let _get_c = await db.Campaign.findByPk(data.id)
+                    let _get_c =
+                        await db.Campaign
+                            .findByPk(data.id)
                     if (!_get_c) {
                         _response = resolveObj.NOT_FOUND('Campaign')
                     } else {
-                        let _upd_c = await _get_c
-                            .update({
-                                name: data.name,
-                                headerId: data.headerId ? data.headerId : null,
-                                bannerId: data.bannerId ? data.bannerId : null,
-                                bodyId: data.bodyId ? data.bodyId : null,
-                                formId: data.formId ? data.formId : null,
-                                footerId: data.footerId ? data.footerId : null,
-                                promotionId: data.promotionId ? data.promotionId : null
-                            })
+                        let _upd_c =
+                            await _get_c
+                                .update({
+                                    name: data.name,
+                                    headerId: data.headerId ? data.headerId : null,
+                                    bannerId: data.bannerId ? data.bannerId : null,
+                                    bodyId: data.bodyId ? data.bodyId : null,
+                                    formId: data.formId ? data.formId : null,
+                                    footerId: data.footerId ? data.footerId : null,
+                                    promotionId: data.promotionId ? data.promotionId : null
+                                })
                         if (_upd_c) {
                             _response = resolveObj.UPDATE_SUCCEED()
                         } else {
@@ -114,13 +123,13 @@ let deleteCampaign = (id) => {
             if (!id) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let _get_c = await db.Campaign.findByPk(id)
-                let _del_c = await _get_c
-                    .cache()
-                    .destroy()
-                // TODO: RESULTED model.destroy trigger as afterBulkDestroy hook, instance.destroy
-                // trigger as afterDestroy hook
-                // TODO: IMPORTANCE change validate instance.destroy
+                let _get_c =
+                    await db.Campaign
+                        .findByPk(id)
+                let _del_c =
+                    await _get_c
+                        .cache()
+                        .destroy()
                 if (_del_c) {
                     _response = resolveObj.DELETE_SUCCEED()
                 } else {

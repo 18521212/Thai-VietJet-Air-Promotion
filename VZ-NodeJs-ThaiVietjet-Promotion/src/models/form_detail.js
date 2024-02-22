@@ -1,4 +1,5 @@
 'use strict';
+import { addHookRefQueryRedis } from '../utils'
 const {
     Model
 } = require('sequelize');
@@ -11,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             Form_Detail.belongsTo(models.Form, { foreignKey: 'formId', as: 'form_detail' })
-
             Form_Detail.belongsTo(models.Input, { foreignKey: 'inputId', as: 'input' })
         }
     };
@@ -26,5 +26,8 @@ module.exports = (sequelize, DataTypes) => {
         sequelize,
         modelName: 'Form_Detail',
     });
+    let _hooks = ['afterCreate', 'afterUpdate', 'afterDestroy']
+    let _refs = ['Form']
+    addHookRefQueryRedis(Form_Detail, _hooks, _refs)
     return Form_Detail;
 };

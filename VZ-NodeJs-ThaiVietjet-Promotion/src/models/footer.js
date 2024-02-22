@@ -1,5 +1,5 @@
 'use strict';
-import { association } from '../utils'
+import { association, addHookRefQueryRedis } from '../utils'
 const {
     Model
 } = require('sequelize');

@@ -1,5 +1,5 @@
 'use strict';
-const { delKey } = require('../utils');
+import { addHookRefQueryRedis } from '../utils'
 const {
     Model
 } = require('sequelize');
@@ -21,20 +21,24 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         sequelize,
         modelName: 'Footer_Text',
-        hooks: {
-            afterCreate: (item, options) => {
-                delKey(`model:Footer:all*`)
-                delKey(`model:Footer:${item.footerId}`)
-            },
-            afterUpdate: (item, options) => {
-                delKey(`model:Footer:all*`)
-                delKey(`model:Footer:${item.footerId}`)
-            },
-            afterDestroy: (item, options) => {
-                delKey(`model:Footer:all*`)
-                delKey(`model:Footer:${item.footerId}`)
-            }
-        }
+        // TODO: optimize reset cache redis
+        // hooks: {
+        //     afterCreate: (item, options) => {
+        //         delKey(`model:Footer:all*`)
+        //         delKey(`model:Footer:${item.footerId}`)
+        //     },
+        //     afterUpdate: (item, options) => {
+        //         delKey(`model:Footer:all*`)
+        //         delKey(`model:Footer:${item.footerId}`)
+        //     },
+        //     afterDestroy: (item, options) => {
+        //         delKey(`model:Footer:all*`)
+        //         delKey(`model:Footer:${item.footerId}`)
+        //     }
+        // }
     });
+    let _hooks = ['afterCreate', 'afterUpdate', 'afterDestroy']
+    let _refs = ['Footer']
+    addHookRefQueryRedis(Footer_Text, _hooks, _refs)
     return Footer_Text;
 };

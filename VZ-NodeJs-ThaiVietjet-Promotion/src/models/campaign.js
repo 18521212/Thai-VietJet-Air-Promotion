@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // Campaign.belongsTo(models.Input, { foreignKey: 'inputId' })
-
-            // Campaign.hasMany(models.Row_Dataset_Dropdown, { foreignKey: 'dropdownId', as: 'dataDropdown' })
+            // belongsTo
+            // TODO: Testing create with association with no id exist
         }
     };
     Campaign.init({

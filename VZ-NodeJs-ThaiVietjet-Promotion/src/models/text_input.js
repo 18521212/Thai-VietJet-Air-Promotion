@@ -1,4 +1,5 @@
 'use strict';
+import { addHookRefQueryRedis } from '../utils'
 const {
     Model
 } = require('sequelize');
@@ -25,5 +26,8 @@ module.exports = (sequelize, DataTypes) => {
         sequelize,
         modelName: 'Text_Input',
     });
+    let _hooks = ['afterUpdate', 'afterDestroy']
+    let _refs = ['Input']
+    addHookRefQueryRedis(Text_Input, _hooks, _refs)
     return Text_Input;
 };

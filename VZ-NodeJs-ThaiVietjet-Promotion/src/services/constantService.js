@@ -43,7 +43,9 @@ let create = (config, data) => {
             if (!checkHasValueAndOr(config, data)) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let _cre = await db[config.table].create(data)
+                let _cre =
+                    await db[config.table]
+                        .create(data)
                 if (_cre) {
                     _response = resolveObj.CREATE_SUCCEED()
                 } else {
@@ -63,15 +65,23 @@ let create = (config, data) => {
 //     query: '',
 // }, id)
 
-let cacheKey = (query) => {
-    query.include.forEach(association => {
-        let _model_name = association.model.name
-        console.log('model name', _model_name)
-        if (association.include) {
-            cacheKey(association)
-        }
-    });
-}
+// let cacheKey = (query = [], string = '') => {
+//     let _string = string
+//     query.include.forEach(association => {
+//         let _model_name = association.model.name
+//         if (!_string.includes(_model_name)) {
+//             _string = _string.concat('/' + _model_name)
+//         }
+//         if (association.include) {
+//             _string = cacheKey(association, _string)
+//         }
+//     });
+//     return _string
+// }
+
+// let appendId = (id, _string) => {
+//     return id + _string + ''
+// }
 
 let get = (config, param) => {
     return new Promise(async (resolve, reject) => {
@@ -81,14 +91,15 @@ let get = (config, param) => {
             let _response
             if (param?.id) {
                 // TODO: key redis relationship DOING, attach key ref id to key redis
-                cacheKey(query)
-                data = await db[config.table]
-                    .cache()
-                    .findByPk(param.id, query)
+                data =
+                    await db[config.table]
+                        .cache()
+                        .findByPk(param.id, query)
             } else {
-                data = await db[config.table]
-                    .cache('all')
-                    .findAll(query)
+                data =
+                    await db[config.table]
+                        .cache('all')
+                        .findAll(query)
             }
             _response = resolveObj.GET(data)
             resolve(_response)
@@ -114,10 +125,13 @@ let update = (config, data) => {
             if (!checkHasValueAndOr(config, data)) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let _get_dt = await db[config.table].findOne({ where: { id: data.id } })
-                let _upd_dt = await _get_dt
-                    .cache()
-                    .update(data)
+                let _get_dt =
+                    await db[config.table]
+                        .findOne({ where: { id: data.id } })
+                let _upd_dt =
+                    await _get_dt
+                        .cache()
+                        .update(data)
                 if (_upd_dt) {
                     _response = resolveObj.UPDATE_SUCCEED()
                 } else {
@@ -147,7 +161,13 @@ let deleteData = (config, data) => {
                 if (config?.ref?.length > 0) {
                     for (let i = 0; i < config.ref.length; i++) {
                         let item = config.ref[i]
-                        let refItem = await db[item.table].findOne({ where: { [item.refKey]: data[item.priKey ? item.priKey : 'id'] } })
+                        let refItem =
+                            await db[item.table]
+                                .findOne({
+                                    where: {
+                                        [item.refKey]: data[item.priKey ? item.priKey : 'id']
+                                    }
+                                })
                         if (refItem) {
                             checkRef = false
                             break
@@ -157,11 +177,14 @@ let deleteData = (config, data) => {
                 if (!checkRef) {
                     _response = resolveObj.EXIST_REF_KEY
                 } else {
-                    let _get_dt = await db[config.table].findByPk(data.id)
+                    let _get_dt =
+                        await db[config.table]
+                            .findByPk(data.id)
                     if (_get_dt) {
-                        let _del_dt = await _get_dt
-                            .cache()
-                            .destroy()
+                        let _del_dt =
+                            await _get_dt
+                                .cache()
+                                .destroy()
                         if (_del_dt) {
                             _response = resolveObj.DELETE_SUCCEED()
                         } else {

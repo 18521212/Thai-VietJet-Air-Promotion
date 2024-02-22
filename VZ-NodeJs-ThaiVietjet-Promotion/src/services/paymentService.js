@@ -93,20 +93,23 @@ let createCustomer = (data, _transaction = null) => {
                 return resolve(resolveObj.MISSING_PARAMETERS)
             }
             // check duplicate customer infor
-            let exist_customer = await db.Customer
-                .findOne({
-                    where: {
-                        middleGivenName: data.middleGivenName,
-                        familyName: data.familyName,
-                        passengerMiddleGivenName: data.passengerMiddleGivenName,
-                        passengerFamilyName: data.passengerFamilyName,
-                        email: data.email,
-                        phone: data.phone
-                    }
-                })
+            let exist_customer =
+                await db.Customer
+                    .findOne({
+                        where: {
+                            middleGivenName: data.middleGivenName,
+                            familyName: data.familyName,
+                            passengerMiddleGivenName: data.passengerMiddleGivenName,
+                            passengerFamilyName: data.passengerFamilyName,
+                            email: data.email,
+                            phone: data.phone
+                        }
+                    })
             let _response = ''
             if (!exist_customer) {
-                let dataCreate = await db.Customer.create(data, { transaction: _transaction })
+                let dataCreate =
+                    await db.Customer
+                        .create(data, { transaction: _transaction })
                 if (dataCreate) {
                     _response = resolveObj.GET(dataCreate)
                 } else {
@@ -132,33 +135,35 @@ let createOrder_OrderDetail_Customer = (data) => {
                     // create customer
                     let customerSent = data.customer
                     let response_customer = await createCustomer(customerSent, t)
-                    // TODO: check rollback transaction status
                     if (response_customer.errCode != 0) {
                         throw new Error()
                     }
                     let customer = response_customer.data
                     // create order
                     let orderSent = data.order
-                    orderCreate = await db.Order.create({
-                        customerId: customer.id,
-                        totalPriceInVat: orderSent.totalPriceInVat,
-                        totalVatFee: orderSent.totalVatFee,
-                        payRef: data.payRef,
-                        status: 'Draft'
-                    }, { transaction: t })
+                    orderCreate =
+                        await db.Order
+                            .create({
+                                customerId: customer.id,
+                                totalPriceInVat: orderSent.totalPriceInVat,
+                                totalVatFee: orderSent.totalVatFee,
+                                payRef: data.payRef,
+                                status: 'Draft'
+                            }, { transaction: t })
                     // create order detail
                     let orderDetailSent = data.orderDetail
                     for (let i = 0; i < orderDetailSent.length; i++) {
                         let item = orderDetailSent[i]
                         item.orderId = orderCreate.id
                     }
-                    let orderDetail_create = await db.Order_Detail.bulkCreate(orderDetailSent, { transaction: t })
+                    let orderDetail_create =
+                        await db.Order_Detail
+                            .bulkCreate(orderDetailSent, { transaction: t })
                 })
                 _transaction_status = true
             } catch (e) {
                 _transaction_status = false
             }
-
             let _response = ''
             if (_transaction_status) {
                 _response = {
@@ -187,7 +192,9 @@ let updateStatusOrder = (data) => {
                 _response = { ...resolveObj.MISSING_PARAMETERS, datafeedStatus: 1 }
             } else {
                 let orderId = delPrefixOrdId(orderRef, 'OT-')
-                let order = await db.Order.findOne({ where: { id: orderId } })
+                let order =
+                    await db.Order
+                        .findByPk(orderId)
                 if (!order) {
                     _response = { errCode: 1, errMessage: `Order doesn't exist`, datafeedStatus: 1 }
                 } else {
@@ -213,17 +220,22 @@ let updateStatusOrder = (data) => {
                         let orderUpdate
                         if (jsonObj.records.record) {
                             let orderStatus = jsonObj.records.record.orderStatus
-                            orderUpdate = await order.update({
-                                status: orderStatus
-                            })
+                            orderUpdate =
+                                await order
+                                    .update({
+                                        status: orderStatus
+                                    })
                             if (orderUpdate) {
-                                await order.reload()
+                                await order
+                                    .reload()
                                 let _datafeedStatus = 1
                                 if (['Accepted', 'Rejected', 'Cancelled'].includes(orderUpdate.status)) {
                                     _datafeedStatus = 0
 
                                     // send email
-                                    let customer = await db.Customer.findOne({ where: { id: order.customerId } })
+                                    let customer =
+                                        await db.Customer
+                                            .findOne({ where: { id: order.customerId } })
                                     let _queue = new QueueEmail()
                                     _queue.addEmailToQueue({ receiver: customer.email, ref: orderId, status: orderStatus })
                                 }
@@ -237,9 +249,9 @@ let updateStatusOrder = (data) => {
                                     datafeedStatus: 1
                                 }
                             }
-                            // TODO: Handle update payRef
                             if (!order?.payRef) {
-                                await order.update({ payRef: jsonObj.records.record.payRef })
+                                await order
+                                    .update({ payRef: jsonObj.records.record.payRef })
                             }
                         }
                     }
@@ -266,7 +278,9 @@ let updateProcessingOrder = (_data) => {
                 if (encode != token) {
                     _response = { errCode: 1, errMessage: 'unmatch transaction' }
                 } else {
-                    let order = await db.Order.findOne({ where: { id: orderRef } })
+                    let order =
+                        await db.Order
+                            .findOne({ where: { id: orderRef } })
                     if (order) {
                         if (order.status != 'Draft') {
                             _response = { errCode: 0, errMessage: 'Order already processing' }
@@ -321,12 +335,14 @@ let getOrder = async (data) => {
             if (!ref) {
                 return resolve(resolveObj.MISSING_PARAMETERS)
             }
-            let order = await db.Order.findOne({
-                where: { id: delPrefixOrdId(ref, 'OT-') },
-                attributes: {
-                    exclude: ['customerId']
-                }
-            })
+            let order =
+                await db.Order
+                    .findOne({
+                        where: { id: delPrefixOrdId(ref, 'OT-') },
+                        attributes: {
+                            exclude: ['customerId']
+                        }
+                    })
             resolve(resolveObj.GET(order))
         } catch (e) {
             reject(e)
@@ -345,16 +361,18 @@ let monitorOrder = () => {
         }
         taskRunning = true
         console.log('monitor at', new Date())
-        let orders = await db.Order.findAll({
-            where:
-            {
-                status: {
-                    [db.Sequelize.Op.notIn]: ['Accepted', 'Rejected', 'Cancelled', 'Draft']
-                },
-            },
-            order: [['createdAt', 'DESC']],
-            limit: 5
-        })
+        let orders =
+            await db.Order
+                .findAll({
+                    where:
+                    {
+                        status: {
+                            [db.Sequelize.Op.notIn]: ['Accepted', 'Rejected', 'Cancelled', 'Draft']
+                        },
+                    },
+                    order: [['createdAt', 'DESC']],
+                    limit: 5
+                })
         console.log(orders.length) // length
         if (orders.length > 0) {
             for (let i = 0; i < orders.length; i++) {

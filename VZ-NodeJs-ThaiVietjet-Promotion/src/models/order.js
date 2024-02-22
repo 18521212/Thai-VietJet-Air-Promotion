@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            // Order.hasMany(models.Image_Banner, { foreignKey: 'bannerId', as: 'image_banner' })
+            // TODO: belongsTo Customer
+            // TODO: hasMany Order Detail
         }
     };
     Order.init({

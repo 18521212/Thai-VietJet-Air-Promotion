@@ -1,4 +1,5 @@
 'use strict';
+import { addHookRefQueryRedis } from '../utils'
 const {
     Model
 } = require('sequelize');
@@ -11,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             Menu.hasMany(models.Header, { foreignKey: 'menuId', as: 'menu' })
-
             Menu.hasMany(models.Menu_Item, { foreignKey: 'menuId', as: 'menu_item' })
         }
     };
@@ -21,5 +21,8 @@ module.exports = (sequelize, DataTypes) => {
         sequelize,
         modelName: 'Menu',
     });
+    let _hooks = ['afterUpdate', 'afterDestroy']
+    let _refs = ['Header']
+    addHookRefQueryRedis(Menu, _hooks, _refs)
     return Menu;
 };

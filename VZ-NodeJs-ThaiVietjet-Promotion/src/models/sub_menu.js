@@ -1,4 +1,5 @@
 'use strict';
+import { addHookRefQueryRedis } from '../utils'
 const {
     Model
 } = require('sequelize');
@@ -24,5 +25,8 @@ module.exports = (sequelize, DataTypes) => {
         sequelize,
         modelName: 'Sub_Menu',
     });
+    let _hooks = ['afterCreate', 'afterUpdate', 'afterDestroy']
+    let _refs = ['Menu', 'Menu_Item']
+    addHookRefQueryRedis(Sub_Menu, _hooks, _refs)
     return Sub_Menu;
 };

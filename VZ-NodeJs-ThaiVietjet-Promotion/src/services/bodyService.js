@@ -1,5 +1,6 @@
 const db = require('../models');
 const { resolveObj, func } = require('../utils');
+import {cacheKey} from './constantService'
 
 let createBody = (data) => {
     return new Promise(async (resolve, reject) => {
@@ -8,13 +9,15 @@ let createBody = (data) => {
             if (!func.CHECK_HAS_VALUE(data.name)) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let _cre_cb = await db.Content_Body.create({
-                    name: data.name,
-                    contentEn: data.contentEn,
-                    contentTh: data.contentTh,
-                    markdownEn: data.markdownEn,
-                    markdownTh: data.markdownTh
-                })
+                let _cre_cb =
+                    await db.Content_Body
+                        .create({
+                            name: data.name,
+                            contentEn: data.contentEn,
+                            contentTh: data.contentTh,
+                            markdownEn: data.markdownEn,
+                            markdownTh: data.markdownTh
+                        })
                 if (_cre_cb) {
                     _response = resolveObj.CREATE_SUCCEED()
                 } else {
@@ -34,13 +37,15 @@ let getContentBody = (id) => {
             let _response
             let _data
             if (id) {
-                _data = await db.Content_Body
-                    .cache()
-                    .findByPk(id)
+                _data =
+                    await db.Content_Body
+                        .cache()
+                        .findByPk(id)
             } else {
-                _data = await db.Content_Body
-                    .cache('all')
-                    .findAll()
+                _data =
+                    await db.Content_Body
+                        .cache('all')
+                        .findAll()
             }
             _response = resolveObj.GET(_data)
             resolve(_response)
@@ -57,17 +62,19 @@ let updateBody = (data) => {
             if (!func.CHECK_HAS_VALUE(data.id, data.name)) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let _get_b = await db.Content_Body
-                    .findOne({ where: { id: data.id } })
-                let _upd_b = await _get_b
-                    .cache()
-                    .update({
-                        name: data.name,
-                        contentEn: data.contentEn,
-                        contentTh: data.contentTh,
-                        markdownEn: data.markdownEn,
-                        markdownTh: data.markdownTh
-                    })
+                let _get_b =
+                    await db.Content_Body
+                        .findOne({ where: { id: data.id } })
+                let _upd_b =
+                    await _get_b
+                        .cache()
+                        .update({
+                            name: data.name,
+                            contentEn: data.contentEn,
+                            contentTh: data.contentTh,
+                            markdownEn: data.markdownEn,
+                            markdownTh: data.markdownTh
+                        })
                 if (_upd_b) {
                     _response = resolveObj.UPDATE_SUCCEED()
                 } else {
@@ -88,12 +95,14 @@ let deleteBody = (id) => {
             if (!func.CHECK_HAS_VALUE(id)) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
-                let _content_body = await db.Content_Body
-                    .findByPk(id)
+                let _content_body =
+                    await db.Content_Body
+                        .findByPk(id)
                 if (_content_body) {
-                    let _del_cb = await _content_body
-                        .cache()
-                        .destroy()
+                    let _del_cb =
+                        await _content_body
+                            .cache()
+                            .destroy()
                     if (_del_cb) {
                         _response = resolveObj.DELETE_SUCCEED()
                     } else {
