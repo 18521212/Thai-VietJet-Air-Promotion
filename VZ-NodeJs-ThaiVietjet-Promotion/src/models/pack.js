@@ -26,9 +26,6 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         sequelize,
         modelName: 'Pack',
-        hooks: {
-            // TODO: trigger reset cache ref model [Promotion, [Markdown]]
-        }
     });
     let _hooks = ['afterCreate', 'afterUpdate', 'afterDestroy']
     let _refs = ['Promotion']

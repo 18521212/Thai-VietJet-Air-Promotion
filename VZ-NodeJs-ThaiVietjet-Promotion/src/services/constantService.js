@@ -90,7 +90,6 @@ let get = (config, param) => {
             let data
             let _response
             if (param?.id) {
-                // TODO: key redis relationship DOING, attach key ref id to key redis
                 data =
                     await db[config.table]
                         .cache()

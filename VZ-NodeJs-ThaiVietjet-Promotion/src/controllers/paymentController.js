@@ -55,13 +55,12 @@ let paymentPromotion = async (req, res, next) => {
         let reconfigCustomer = reconfigKeyCustomer(payment.customer)
         let reconfigPrice = reconfigKeyPrice(payment.price)
         let reconfigOrderDetail = reconfigKeyOrderDetail(payment.pack, payment.unitPricesPack, payment.vatPack)
-        console.log('reconf pr', reconfigPrice)
         reconfigData = {
             customer: reconfigCustomer,
             order: reconfigPrice,
             orderDetail: reconfigOrderDetail
         }
-        let dataCreate = await paymentService.createOrder_OrderDetail_Customer(reconfigData); // create order, order detail, customer
+        let dataCreate = await paymentService.createOrder_OrderDetail_Customer(reconfigData);
         if (dataCreate.errCode != 0) {
             return res.status(200).json(resolveObj.CREATE_UNSUCCEED('Order, Order_Detail, Customer'))
         }
@@ -71,7 +70,6 @@ let paymentPromotion = async (req, res, next) => {
         console.log('res', dataCreate.data.order.id, 'len', dataCreate.data.order.id.length)
         let data = await paymentService.paymentPromotion(res);
         // send email
-        // paymentService.sendEmail(dataCreate.data.order.id, reconfigData.customer.email) // plain ref
         data.data.customer = reconfigCustomer
         res.data = data
         return res.status(200).json(res.data)
@@ -105,7 +103,6 @@ let updateProcessingOrder = async (req, res, next) => {
 
 let dataFeed = async (req, res, next) => {
     try {
-        console.log('datafeed controller', req.body)
         let data = await paymentService.dataFeed(req.body)
         let responseData = data.datafeedStatus == 0 ? 'OK' : ''
         res.data = responseData

@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             // Campaign.belongsTo(models.Input, { foreignKey: 'inputId' })
             // belongsTo
-            // TODO: Testing create with association with no id exist
+            // TODO: Testing create with association with no id exist DOING
         }
     };
     Campaign.init({

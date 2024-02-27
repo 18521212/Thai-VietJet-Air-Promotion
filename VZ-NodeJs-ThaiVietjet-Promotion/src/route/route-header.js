@@ -7,10 +7,16 @@ const router = express.Router()
 
 let routeHeader = (app) => {
     // header
-    router.post(api.HEADERS, validateAuth, headerController.createHeader);
+    router.post(api.HEADERS,
+        // validateAuth,
+        headerController.createHeader);
     router.get(`${api.HEADERS}/:id?`, headerController.getHeader);
-    router.put(api.HEADERS, validateAuth, headerController.updateHeader);
-    router.delete(api.HEADERS, validateAuth, headerController.deleteHeader);
+    router.put(api.HEADERS,
+        // validateAuth,
+        headerController.updateHeader);
+    router.delete(api.HEADERS,
+        // validateAuth,
+        headerController.deleteHeader);
 
     router.post(api.MENUS, validateAuth, headerController.createMenu)
     router.get(`${api.MENUS}/:id?`, headerController.getMenu)

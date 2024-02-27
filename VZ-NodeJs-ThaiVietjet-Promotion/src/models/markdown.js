@@ -28,10 +28,6 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         sequelize,
         modelName: 'Markdown',
-        hooks: {
-            // TODO: trigger update cache redis ref model
-            // TODO: attach key ref redis DOING
-        }
     });
     let _hooks = ['afterUpdate', 'afterDestroy']
     let _refs = ['Footer', 'Pack', 'Promotion']

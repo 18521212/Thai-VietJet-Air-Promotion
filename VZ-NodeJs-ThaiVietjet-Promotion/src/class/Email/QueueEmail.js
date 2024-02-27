@@ -7,16 +7,23 @@ class QueueEmail {
         this.queueEmail = new Queue('email')
 
         this.queueEmail.process(async (job, done) => {
-            console.log('data job')
             let { receiver, ref, status } = job.data
             let email = new Email(receiver)
-            await email.sendEmail(ref, status)
-            done()
+            let _rsl_em = await email.sendEmail(ref, status)
+            if(_rsl_em){
+                done()
+            }else{
+                done(new Error())
+            }
         })
     }
 
     async addEmailToQueue(_data) {
-        await this.queueEmail.add(_data)
+        let _options = {
+            // attempts: Number.MAX_SAFE_INTEGER,
+            attempts: 3,
+        }
+        await this.queueEmail.add(_data, _options)
     }
 }
 

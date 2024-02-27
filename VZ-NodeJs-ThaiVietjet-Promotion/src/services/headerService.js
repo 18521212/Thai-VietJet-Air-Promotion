@@ -69,6 +69,7 @@ let getHeader = (id) => {
 }
 
 let updateHeader = (data) => {
+    // TODO: update result with cache and no cache
     return new Promise(async (resolve, reject) => {
         try {
             let _response
@@ -118,8 +119,10 @@ let deleteHeader = (id) => {
             if (!id) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
+                // TODO: check key cache exist DOING
                 let _get_h =
                     await db.Header
+                        .cache()
                         .findByPk(id)
                 let _del_h =
                     await _get_h

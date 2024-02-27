@@ -1,8 +1,6 @@
-const { waitForDebugger } = require('inspector');
 const db = require('../models');
 const { resolveObj, func, type, text } = require('../utils');
 const axios = require('axios');
-import { Email } from '../class/Email/Email';
 import { QueueEmail } from '../class/Email/QueueEmail'
 
 const { XMLParser, XMLValidator } = require('fast-xml-parser');
@@ -47,12 +45,15 @@ let addStrAtIndex = (str, char, position) => {
 }
 
 let delPrefixOrdId = (orderRef, prefix = '') => {
-    let orderId = orderRef.replace(prefix, '')
-    orderId = addStrAtIndex(orderId, '-', 20)
-    orderId = addStrAtIndex(orderId, '-', 16)
-    orderId = addStrAtIndex(orderId, '-', 12)
-    orderId = addStrAtIndex(orderId, '-', 8)
-    console.log('del pre ord', orderId)
+    let orderId = orderRef
+    if (orderRef.includes(prefix)) {
+        orderId = orderRef.replace(prefix, '')
+        orderId = addStrAtIndex(orderId, '-', 20)
+        orderId = addStrAtIndex(orderId, '-', 16)
+        orderId = addStrAtIndex(orderId, '-', 12)
+        orderId = addStrAtIndex(orderId, '-', 8)
+        console.log('del pre ord', orderId)
+    }
     return orderId
 }
 
@@ -148,7 +149,8 @@ let createOrder_OrderDetail_Customer = (data) => {
                                 totalPriceInVat: orderSent.totalPriceInVat,
                                 totalVatFee: orderSent.totalVatFee,
                                 payRef: data.payRef,
-                                status: 'Draft'
+                                status: 'Draft',
+                                emailStatus: 'unsend'
                             }, { transaction: t })
                     // create order detail
                     let orderDetailSent = data.orderDetail
@@ -236,8 +238,11 @@ let updateStatusOrder = (data) => {
                                     let customer =
                                         await db.Customer
                                             .findOne({ where: { id: order.customerId } })
+                                    // opt 1
                                     let _queue = new QueueEmail()
                                     _queue.addEmailToQueue({ receiver: customer.email, ref: orderId, status: orderStatus })
+                                    // --< opt 1
+                                    // --< send email
                                 }
                                 _response = {
                                     ...resolveObj.UPDATE_SUCCEED(),
@@ -350,12 +355,38 @@ let getOrder = async (data) => {
     })
 }
 
+let updateEmailStatus = async (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            // update email status: 'sent' status by default
+            let ref = data.ref
+            let _response
+            if (!ref) {
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _get_o = await db.Order.findByPk(ref)
+                let _upd_o = await _get_o.update({
+                    emailStatus: 'sent'
+                })
+                if (_upd_o) {
+                    _response = resolveObj.UPDATE_SUCCEED()
+                } else {
+                    _response = resolveObj.UPDATE_UNSUCCEED()
+                }
+            }
+            resolve(_response)
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
 let monitorOrder = () => {
     const schedule = require('node-schedule');
 
     let taskRunning = false
 
-    const job = schedule.scheduleJob('*/5 * * * *', async () => {
+    const job = schedule.scheduleJob('*/1 * * * *', async () => {
         if (taskRunning) {
             return
         }
@@ -383,6 +414,7 @@ let monitorOrder = () => {
     });
 }
 
+// TODO: vestigate all cycle import/export
 module.exports = {
     paymentPromotion,
 
@@ -391,7 +423,11 @@ module.exports = {
     updateProcessingOrder,
 
     dataFeed,
-    getOrder,
+    // getOrder,
+    // updateEmailStatus,
 
     monitorOrder,
 }
+
+exports.getOrder = getOrder
+exports.updateEmailStatus = updateEmailStatus
