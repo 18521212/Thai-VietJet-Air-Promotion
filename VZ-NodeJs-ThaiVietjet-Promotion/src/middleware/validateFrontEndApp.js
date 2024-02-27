@@ -9,7 +9,8 @@ let validateFrontEndApp = (req, res, next) => {
         return res.status(200).send('ok')
     }
     if (req.headers['x-request-key'] !== process.env.REQUEST_KEY) {
-        return res.status(403).send('denied')
+        res.data = 'denied'
+        return res.status(403).send(res.data)
     }
     next();
 }

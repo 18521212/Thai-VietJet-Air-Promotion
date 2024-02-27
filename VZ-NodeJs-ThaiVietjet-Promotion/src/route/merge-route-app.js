@@ -11,7 +11,6 @@ import { validateFrontEndApp } from "../middleware/validateFrontEndApp";
 import { Logger } from '../class/Logger/Logger'
 
 let mergeRoute = (app) => {
-    // app.use('*', validateFrontEndApp);
     // -- log file
     app.use(
         (req, res, next) => {
@@ -24,6 +23,7 @@ let mergeRoute = (app) => {
         }
     );
     // --< log file
+    app.use(validateFrontEndApp);
 
     routeBanner(app)
     routeCampaign(app)
