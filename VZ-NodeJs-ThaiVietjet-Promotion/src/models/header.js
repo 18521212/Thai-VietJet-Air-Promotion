@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             Header.belongsTo(models.Menu, { foreignKey: 'menuId', as: 'menu' })
+            Header.hasMany(models.Campaign, {foreignKey: 'headerId'})
         }
     };
     Header.init({

@@ -10,9 +10,13 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            // Campaign.belongsTo(models.Input, { foreignKey: 'inputId' })
-            // belongsTo
-            // TODO: Testing create with association with no id exist DOING
+            // TODO: Testing create with association with no id exist RESULTED doesnt effect
+            Campaign.belongsTo(models.Promotion, { foreignKey: 'promotionId' })
+            Campaign.belongsTo(models.Header, { foreignKey: 'headerId' })
+            Campaign.belongsTo(models.Banner, { foreignKey: 'bannerId' })
+            Campaign.belongsTo(models.Content_Body, { foreignKey: 'bodyId' })
+            Campaign.belongsTo(models.Form, { foreignKey: 'formId' })
+            Campaign.belongsTo(models.Footer, { foreignKey: 'footerId' })
         }
     };
     Campaign.init({

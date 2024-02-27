@@ -8,7 +8,7 @@ import routeFooter from './route-footer'
 import routePayment from './route-payment'
 import routeDatafeed from './route-datafeed'
 import { validateFrontEndApp } from "../middleware/validateFrontEndApp";
-import { logFile } from '../middleware/logFile'
+import { Logger } from '../class/Logger/Logger'
 
 let mergeRoute = (app) => {
     // app.use('*', validateFrontEndApp);
@@ -17,9 +17,8 @@ let mergeRoute = (app) => {
         (req, res, next) => {
             res.on("finish",
                 function () {
-                    // TODO: log req
-                    // console.log(req.url, req.method)
-                    // console.log(res.data);
+                    let _logger = new Logger(req, res)
+                    _logger.consoleLog()
                 });
             next();
         }

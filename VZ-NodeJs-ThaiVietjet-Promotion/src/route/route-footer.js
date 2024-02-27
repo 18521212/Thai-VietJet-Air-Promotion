@@ -7,10 +7,16 @@ const router = express.Router()
 
 let routeFooter = (app) => {
     // footer
-    router.post(api.FOOTERS, validateAuth, footerController.createFooter)
+    router.post(api.FOOTERS,
+        // validateAuth,
+        footerController.createFooter)
     router.get(`${api.FOOTERS}/:id?`, footerController.getFooter)
-    router.put(api.FOOTERS, validateAuth, footerController.updateFooter)
-    router.delete(api.FOOTERS, validateAuth, footerController.deleteFooter)
+    router.put(api.FOOTERS,
+        // validateAuth,
+        footerController.updateFooter)
+    router.delete(api.FOOTERS,
+        // validateAuth,
+        footerController.deleteFooter)
 
     // footer text
     router.post('/api/footer-texts', validateAuth, footerController.createFooterText)

@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             Form.hasMany(models.Form_Detail, { foreignKey: 'formId', as: 'form_detail' }) // many input
+            Form.hasMany(models.Campaign, { foreignKey: 'formId' })
         }
     };
     Form.init({

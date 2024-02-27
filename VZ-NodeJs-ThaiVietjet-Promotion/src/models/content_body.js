@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // TODO: ? merge with markdown table
+            Content_Body.hasMany(models.Campaign, { foreignKey: 'bodyId' })
         }
     };
     Content_Body.init({

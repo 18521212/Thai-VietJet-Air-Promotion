@@ -28,40 +28,32 @@ const capitalizeString = (str) => {
 
 const validateCustomerInput = async (req, res, next) => {
     try {
-        // console.log('payment infor:', req.body)
         let customer = req.body?.payment?.customer
-        // console.log('cus', customer) //
         if (!customer) { return res.status(200).json(resolveObj.MISSING_PARAMETERS) }
         let keyArr = Object.getOwnPropertyNames(customer)
-        // console.log('keyrr', keyArr)
         let idArr = getIdArr(keyArr)
-        // console.log('idrr', idArr)
         let inputs = await getInput(idArr)
-        // console.log('inputs', inputs.data)
         let validateInput = true
         let errMessage = ''
         for (let i = 0; i < keyArr.length; i++) {
             let typeInput = inputs.data[i].typeInput
             let valueText = customer[keyArr[i]]
-            // console.log('val', valueText, _.upperCase(valueText))
             if (typeInput === 'text') {
                 let typeText = inputs.data[i].text_input.typeText
-                console.log('type', typeText)
                 if (typeText === 'email') {
                     // validate email
+                    // TODO: verify existence of email
                     if (validator.isEmail(valueText) === false) {
                         validateInput = false
                         errMessage = 'invalid email'
                         break
                     }
                 } else if (typeText === 'phone') {
-                    // if (validator.isNumeric(valueText) === false || valueText.length !== 10) {
-                    //     validateInput = false
-                    //     errMessage = 'invalid phone'
-                    //     break
-                    // }
                     console.log('phone', valueText.startsWith('+66'), valueText.length)
-                    if(!((valueText.startsWith('0')&&valueText.length == 10)||(valueText.startsWith('+66')&&valueText.length==12))){
+                    if (
+                        validator.isNumeric(valueText) == false
+                        || !((valueText.startsWith('0') && valueText.length == 10) || (valueText.startsWith('+66') && valueText.length == 12))
+                    ) {
                         validateInput = false
                         errMessage = 'invalid phone'
                         break
@@ -83,10 +75,11 @@ const validateCustomerInput = async (req, res, next) => {
             }
         }
         if (validateInput === false) {
-            return res.status(200).json({
+            res.data = {
                 errCode: 1,
                 errMessage: errMessage
-            })
+            }
+            return res.status(200).json(res.data)
         }
         next()
     } catch (e) {
@@ -118,10 +111,11 @@ const validatePack = async (req, res, next) => {
     let packArr = new PackArray(packObjArr)
     let validatePackNum = packArr.checkQuantityPack()
     if (validatePackNum[0] === false) {
-        return res.status(200).json({
+        res.data = {
             errCode: 1,
             errMessage: validatePackNum[1]
-        })
+        }
+        return res.status(200).json(res.data)
     }
 
     // re calculate
@@ -129,10 +123,11 @@ const validatePack = async (req, res, next) => {
     price.total = roundNumber(price.total, 2)
     price.vat = roundNumber(price.vat, 2)
     if (packArr.totalPriceInVat !== price.total || packArr.totalVatFee !== price.vat) {
-        return res.status(200).json({
+        res.data = {
             errCode: 1,
             errMessage: 'total, vat incorrect'
-        })
+        }
+        return res.status(200).json(res.data)
     }
     let validatePayment = {
         totalPriceInVat: packArr.totalPriceInVat,

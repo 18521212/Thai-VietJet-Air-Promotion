@@ -15,11 +15,7 @@ let createCampaign = async (req, res, next) => {
 let getCampaign = async (req, res, next) => {
     try {
         let data
-        if (!req.params.id) {
-            data = await campaignService.getAllCampaign();
-        } else {
-            data = await campaignService.getCampaignById(req.params.id);
-        }
+        data = await campaignService.getCampaign(req.params?.id)
         res.data = data
         return res.status(200).json(res.data)
     } catch (e) {

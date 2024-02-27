@@ -178,6 +178,7 @@ let deleteData = (config, data) => {
                 } else {
                     let _get_dt =
                         await db[config.table]
+                            .cache()
                             .findByPk(data.id)
                     if (_get_dt) {
                         let _del_dt =

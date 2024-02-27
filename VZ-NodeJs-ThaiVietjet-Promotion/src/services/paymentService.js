@@ -19,13 +19,12 @@ let secureHash = (totalPriceInVat, orderId) => {
     let MID = process.env.MID
     let MREF = orderId // order id
     let currencyCode = 764 // THB
-    let amount = totalPriceInVat // total price included vat
+    let amount = totalPriceInVat
     let paymentType = 'N' // normal
     let secretKey = process.env.SECRET_KEY
     let string = `${MID}|${MREF}|${currencyCode}|${amount}|${paymentType}|${secretKey}`
     let crypto = new Crypto()
     let encode = crypto.sha512(string)
-    // let encode = sha512(string)
     return encode
 }
 

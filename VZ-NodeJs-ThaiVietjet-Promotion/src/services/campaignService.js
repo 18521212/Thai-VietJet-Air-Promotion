@@ -34,38 +34,30 @@ let createCampaign = (data) => {
     })
 }
 
-let getAllCampaign = () => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            let _response
-            let data =
-                await db.Campaign
-                    .findAll({
-                        order: [['createdAt', 'DESC']],
-                    });
-            _response = resolveObj.GET(data)
-            resolve(_response)
-        } catch (e) {
-            reject(e);
-        }
-    })
-}
+// TODO: get campaign route name
 
-let getCampaignById = (id) => {
+let getCampaign = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
             let _response
-            if (!id) {
-                _response = resolveObj.MISSING_PARAMETERS
-            } else {
-                let data =
+            let _data
+            if (id) {
+                _data =
                     await db.Campaign
+                        .cache()
                         .findByPk(id);
-                _response = resolveObj.GET(data)
+            } else {
+                _data =
+                    await db.Campaign
+                        .cache('all')
+                        .findAll({
+                            order: [['createdAt', 'DESC']],
+                        });
             }
+            _response = resolveObj.GET(_data)
             resolve(_response)
         } catch (e) {
-            reject(e);
+            reject(e)
         }
     })
 }
@@ -125,6 +117,7 @@ let deleteCampaign = (id) => {
             } else {
                 let _get_c =
                     await db.Campaign
+                        .cache()
                         .findByPk(id)
                 let _del_c =
                     await _get_c
@@ -146,12 +139,12 @@ let deleteCampaign = (id) => {
 // check reference table exist
 
 let checkChildTableDataExist = async (data) => {
+    // TODO: onCreate, onDelete, onUpdate constraint
     let result = true;
     let table_name;
     if (data.headerId) {
         let dataApi = await db.Header.findOne({ where: { id: data.headerId } })
         if (!dataApi) {
-            console.log('error')
             result = false
             table_name = 'Header'
         }
@@ -195,9 +188,8 @@ let checkChildTableDataExist = async (data) => {
 }
 
 module.exports = {
-    createCampaign: createCampaign,
-    getAllCampaign: getAllCampaign,
-    getCampaignById: getCampaignById,
-    updateCampaign: updateCampaign,
-    deleteCampaign: deleteCampaign
+    createCampaign,
+    getCampaign,
+    updateCampaign,
+    deleteCampaign
 }

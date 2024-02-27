@@ -407,76 +407,79 @@ let deleteInputById = (inputId) => {
                     if (!input) {
                         _response = resolveObj.NOT_FOUND('Input')
                     } else {
-                        let _transaction_status = false
-                        try {
-                            await db.sequelize.transaction(async (t) => {
-                                switch (input.typeInput) {
-                                    case type.TEXT:
-                                        let _del_text_translation_ti =
-                                            await db.Text_Translation
-                                                .destroy({
-                                                    where: {
-                                                        id: [input.text_input.title, input.text_input.placeHolder]
-                                                    },
-                                                    transaction: t
-                                                })
-                                        let _del_text_input =
-                                            await db.Text_Input
-                                                .destroy({
-                                                    where: {
-                                                        inputId: inputId
-                                                    },
-                                                    transaction: t
-                                                })
-                                        break;
-                                    case type.DROPDOWN:
-                                        let _del_text_translation_dd =
-                                            await db.Text_Translation
-                                                .destroy({
-                                                    where: {
-                                                        id: input.dropdown.title
-                                                    },
-                                                    transaction: t
-                                                })
-                                        let _del_rds_dd =
-                                            await db.Row_Dataset_Dropdown
-                                                .destroy({
-                                                    where: {
-                                                        dropdownId: input.dropdown.id
-                                                    },
-                                                    transaction: t
-                                                })
-                                        let _del_dropdown =
-                                            await db.Dropdown
-                                                .destroy({
-                                                    where: {
-                                                        inputId: inputId
-                                                    },
-                                                    transaction: t
-                                                })
-                                        break;
-                                    default:
-                                        // TODO: invalid type input
-                                        throw new Error()
-                                        break;
-                                }
-                                let _del_input =
-                                    await db.Input
-                                        .destroy({
-                                            where: {
-                                                id: inputId
-                                            },
-                                            transaction: t
-                                        });
-                            })
-                            _transaction_status = true
-                        } catch (e) {
-                            _transaction_status = false
-                        }
-                        if (_transaction_status) {
-                            _response = resolveObj.DELETE_SUCCEED()
+                        if ([type.TEXT, type.DROPDOWN].includes(input.typeInput)) {
+                            let _transaction_status = false
+                            try {
+                                await db.sequelize.transaction(async (t) => {
+                                    switch (input.typeInput) {
+                                        case type.TEXT:
+                                            let _del_text_translation_ti =
+                                                await db.Text_Translation
+                                                    .destroy({
+                                                        where: {
+                                                            id: [input.text_input.title, input.text_input.placeHolder]
+                                                        },
+                                                        transaction: t
+                                                    })
+                                            let _del_text_input =
+                                                await db.Text_Input
+                                                    .destroy({
+                                                        where: {
+                                                            inputId: inputId
+                                                        },
+                                                        transaction: t
+                                                    })
+                                            break;
+                                        case type.DROPDOWN:
+                                            let _del_text_translation_dd =
+                                                await db.Text_Translation
+                                                    .destroy({
+                                                        where: {
+                                                            id: input.dropdown.title
+                                                        },
+                                                        transaction: t
+                                                    })
+                                            let _del_rds_dd =
+                                                await db.Row_Dataset_Dropdown
+                                                    .destroy({
+                                                        where: {
+                                                            dropdownId: input.dropdown.id
+                                                        },
+                                                        transaction: t
+                                                    })
+                                            let _del_dropdown =
+                                                await db.Dropdown
+                                                    .destroy({
+                                                        where: {
+                                                            inputId: inputId
+                                                        },
+                                                        transaction: t
+                                                    })
+                                            break;
+                                        default:
+                                            // TODO: invalid type input
+                                            break;
+                                    }
+                                    let _del_input =
+                                        await db.Input
+                                            .destroy({
+                                                where: {
+                                                    id: inputId
+                                                },
+                                                transaction: t
+                                            });
+                                })
+                                _transaction_status = true
+                            } catch (e) {
+                                _transaction_status = false
+                            }
+                            if (_transaction_status) {
+                                _response = resolveObj.DELETE_SUCCEED()
+                            } else {
+                                _response = resolveObj.DELETE_UNSUCCEED()
+                            }
                         } else {
-                            _response = resolveObj.DELETE_UNSUCCEED()
+                            _response = {errCode: 1, errMessage: 'invalid type input'}
                         }
                     }
                 }

@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             Banner.hasMany(models.Image_Banner, { foreignKey: 'bannerId', as: 'image_banner' })
+            Banner.hasMany(models.Campaign, {foreignKey: 'bannerId'})
         }
     };
     Banner.init({

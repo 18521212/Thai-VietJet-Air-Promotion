@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            // TODO: belongsTo Customer
-            // TODO: hasMany Order Detail
+            Order.belongsTo(models.Customer, { foreignKey: 'customerId' })
+            Order.hasMany(models.Order_Detail, { foreignKey: 'orderId' })
         }
     };
     Order.init({
@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
 
             },
             afterUpdate: (item, options) => {
-                
+
             }
         },
     });
