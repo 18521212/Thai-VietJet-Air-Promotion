@@ -1,3 +1,4 @@
+// logger implement specific log action
 class Logger {
     constructor(_req = undefined, _res = undefined) {
         this.req = _req

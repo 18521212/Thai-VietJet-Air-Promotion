@@ -127,6 +127,7 @@ let deletePromotion = (data) => {
     })
 }
 
+// validate price, vat is in valid range
 let validatePack = (data) => {
     let validate = true
     if (data.price <= 0 || data.vat < 0 || data.vat > 1 || data.maxNumber <= 0) {

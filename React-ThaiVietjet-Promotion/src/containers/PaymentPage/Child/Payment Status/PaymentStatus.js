@@ -3,10 +3,6 @@ import { Component } from 'react';
 import withRouter from 'components/withRouter/withRouter';
 import { connect } from 'react-redux';
 import * as actions from 'store/actions';
-import {
-    Routes,
-    Route,
-} from "react-router-dom";
 import { updateOrderStatus } from 'services/paymentService';
 import { Link } from 'react-router-dom';
 
@@ -31,16 +27,28 @@ class PaymentStatus extends Component {
         let objectText = {}
         switch (type) {
             case 'Success.js':
-                objectText.status = 'Succeed'
+                objectText.status = 'Success'
                 objectText.linkText = 'Go back to Homepage to pay more'
+                objectText.icon = {
+                    class: 'fas fa-check-circle',
+                    color: '#54c05b'
+                }
                 break
             case 'Fail.js':
                 objectText.status = 'Failed'
                 objectText.linkText = 'Go back to Homepage to try again'
+                objectText.icon = {
+                    class: 'fas fa-times-circle',
+                    color: '#ee5d5d'
+                }
                 break
             case 'Cancel.js':
                 objectText.status = 'Cancelled'
                 objectText.linkText = 'Go back to Homepage to pay again'
+                objectText.icon = {
+                    class: 'fas fa-times-circle',
+                    color: '#fbd960'
+                }
                 break
             default:
                 break
@@ -56,22 +64,27 @@ class PaymentStatus extends Component {
         return (
             <>
                 <div className='d-flex justify-content-center pt-5'>
-                    <p>
-                        Dear Customers,
-                        <br></br>
-                        <br></br>
-                        Order Id: <b>{this.props.searchParams.get('Ref')}</b>
-                        <br></br>
-                        Transaction Status: <b>{objectText?.status}</b>
-                        <br></br>
-                        <br></br>
-                        Thanks for your purchasing
-                        <br></br>
-                        Please check your email for more detail.
-                        <br></br>
-                        <br></br>
-                        <Link to='/'>{objectText?.linkText}.</Link>
-                    </p>
+                    <div>
+                        <div className='d-flex justify-content-center pt-5'>
+                            <i class={objectText.icon.class} style={{ color: objectText.icon.color, fontSize: '4rem' }}></i>
+                        </div>
+                        <p style={{ fontSize: '1.5rem' }}>
+                            Dear Customers,
+                            <br></br>
+                            <br></br>
+                            Order Id: <b>{this.props.searchParams.get('Ref')}</b>
+                            <br></br>
+                            Transaction Status: <b style={{ color: objectText?.icon?.color }}>{objectText?.status}</b>
+                            <br></br>
+                            <br></br>
+                            Please check your email for more details.
+                            <br></br>
+                            Thanks for your purchasing.
+                            <br></br>
+                            <br></br>
+                            <Link to='/'>{objectText?.linkText}.</Link>
+                        </p>
+                    </div>
                 </div>
             </>
         )

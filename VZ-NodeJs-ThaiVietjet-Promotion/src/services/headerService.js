@@ -276,7 +276,7 @@ let deleteMenu = (data) => {
 }
 
 // menu item
-
+// add option to menu
 let createMenuItem = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -463,7 +463,6 @@ let deleteMenuItemById = (id) => {
 }
 
 // sub menu
-
 let createSubMenu = (data) => {
     return new Promise(async (resolve, reject) => {
         try {

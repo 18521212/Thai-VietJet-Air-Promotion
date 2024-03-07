@@ -10,6 +10,7 @@ import routeDatafeed from './route-datafeed'
 import { validateFrontEndApp } from "../middleware/validateFrontEndApp";
 import { Logger } from '../class/Logger/Logger'
 
+// EXPLAIN: merge all route and global middleware to app
 let mergeRoute = (app) => {
     // -- log file
     app.use(
@@ -25,6 +26,7 @@ let mergeRoute = (app) => {
     // --< log file
     app.use(validateFrontEndApp);
 
+    // add route
     routeBanner(app)
     routeCampaign(app)
     routeHeader(app)

@@ -71,7 +71,6 @@ class PackArray {
         this.totalVatFee = this.calcTotalVatFee()
     }
 
-
     checkQuantityPack() {
         let validatePack = true
         let errMessage = ''

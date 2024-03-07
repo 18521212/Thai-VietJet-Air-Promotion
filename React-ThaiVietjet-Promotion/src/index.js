@@ -13,7 +13,7 @@ import IntlProviderWrapper from "./hoc/IntlProviderWrapper";
 import { Provider } from 'react-redux';
 import reduxStore, { persistor } from './redux';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot( document.getElementById('root'));
 root.render(
     <Provider store={reduxStore}>
         <IntlProviderWrapper>

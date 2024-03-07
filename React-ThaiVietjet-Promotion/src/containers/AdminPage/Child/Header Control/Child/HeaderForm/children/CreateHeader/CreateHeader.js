@@ -118,7 +118,7 @@ class CreateHeader extends Component {
                                 />
                                 <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
                             </div>
-                            <img src={this.state.imageLogoInput} />
+                            <img alt="Image Logo" src={this.state.imageLogoInput} />
                         </div>
                         <div class="form-group col-md-6">
                             <label for="inputPassword4">Background Image</label>
@@ -128,7 +128,7 @@ class CreateHeader extends Component {
                                 />
                                 <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
                             </div>
-                            <img src={this.state.imageBackgroundInput} />
+                            <img alt="Image Background" src={this.state.imageBackgroundInput} />
                         </div>
                         <Select className="select-menu col-md-4 form-group"
                             value={this.state.selectedMenu}

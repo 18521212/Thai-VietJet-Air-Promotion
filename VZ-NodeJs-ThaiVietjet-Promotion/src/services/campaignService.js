@@ -137,7 +137,6 @@ let deleteCampaign = (id) => {
 }
 
 // check reference table exist
-
 let checkChildTableDataExist = async (data) => {
     // TODO: onCreate, onDelete, onUpdate constraint
     let result = true;

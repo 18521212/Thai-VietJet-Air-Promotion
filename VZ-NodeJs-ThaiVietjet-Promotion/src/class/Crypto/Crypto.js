@@ -1,5 +1,7 @@
 var crypto = require('crypto');
 
+// reference link: https://nodejs.org/api/crypto.html#crypto
+
 class Crypto {
     constructor() {
 

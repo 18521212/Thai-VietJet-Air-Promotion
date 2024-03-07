@@ -1,5 +1,7 @@
 const { Sequelize } = require('sequelize');
 
+// reference link: https://sequelize.org/docs/v6/getting-started/
+
 // Option 3: Passing parameters separately (other dialects)
 const sequelize = new Sequelize('thaivietjet promotion', 'root', null, {
     host: 'localhost',

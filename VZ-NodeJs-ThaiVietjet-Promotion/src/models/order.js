@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
         }
     };
     Order.init({
+        // add definition id property if use UUID type
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,

@@ -3,6 +3,8 @@ import { association, func } from '../utils'
 
 const db = require('../models');
 
+// PURPOSE: generalize function for [Create, Get, Update, Delete, ...] actions
+
 let checkHasValueAndOr = (config, data) => {
     let and = true
     if (config?.required?.and?.length > 0) {
@@ -27,7 +29,7 @@ let checkHasValueAndOr = (config, data) => {
     return and && or
 }
 
-// usage
+// USAGE: create();
 // create({
 //     table: '',
 //     required: {
@@ -59,7 +61,7 @@ let create = (config, data) => {
     })
 }
 
-// usage
+// USAGE: get();
 // get({
 //     table: '',
 //     query: '',
@@ -108,7 +110,7 @@ let get = (config, param) => {
     })
 }
 
-// usage
+// USAGE: update();
 // update({
 //     table: '',
 //     required: {
@@ -144,7 +146,7 @@ let update = (config, data) => {
     })
 }
 
-// usage
+// USAGE: deleteData();
 // deleteData({
 //     table: ''
 // }, data)

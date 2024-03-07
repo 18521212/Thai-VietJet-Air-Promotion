@@ -134,6 +134,8 @@ let deleteForm = (id) => {
 
 // form detail
 
+// TODO: getFormDetail()
+
 let getAllFormDetail = () => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -193,6 +195,7 @@ let getFormDetailByFormId = (formId) => {
     })
 }
 
+// add input to form detail (or Create form_detail): schema: Form(formId) <- Form_Detail(formId, inputId) -> Input(inputId)
 let addInputIntoForm = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -492,7 +495,7 @@ let deleteInputById = (inputId) => {
 }
 
 // text input
-
+// validate type property of text input
 let checkTypeText = (type) => {
     if (!type) {
         return true
@@ -736,7 +739,7 @@ let updateDropdown = (data) => {
 }
 
 // data dropdown
-
+// add option to dropdown
 let addDataDropdown = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -801,6 +804,7 @@ let deleteDataDropdown = (data) => {
     })
 }
 
+// add testing data
 let fetchData = () => {
     return new Promise(async (resolve, reject) => {
         try {

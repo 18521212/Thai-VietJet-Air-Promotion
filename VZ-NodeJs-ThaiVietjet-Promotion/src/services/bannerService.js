@@ -145,7 +145,7 @@ let deleteBanner = (data) => {
 }
 
 // image banner
-
+// config size allowed image
 let configImage = {
     mobile: { width: 1040, height: 1040 },
     desktop: { width: 1920, height: 520 },
@@ -202,6 +202,7 @@ let createImageBanner = (data) => {
             if (!data.bannerId || !data.image) {
                 _response = resolveObj.MISSING_PARAMETERS
             } else {
+                // USAGE isBase64(): isBase64(any_image) == true -> image type isn't 'base64'
                 if (isBase64(data.image)) {
                     _response = { errCode: 1, errMessage: 'image is not base64 type' }
                 } else {

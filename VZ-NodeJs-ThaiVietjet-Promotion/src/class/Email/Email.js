@@ -4,6 +4,8 @@ import { transporter as _transporter, emailContent } from "../../config/email";
 const transporter = nodemailer.createTransport(_transporter);
 import { getOrder, updateEmailStatus } from '../../services/paymentService'
 
+// reference link: https://nodemailer.com/smtp/
+
 class Email {
     constructor(receiver) {
         this.receiver = receiver

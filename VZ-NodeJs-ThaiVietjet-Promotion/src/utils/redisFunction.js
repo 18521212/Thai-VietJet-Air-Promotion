@@ -1,6 +1,7 @@
 const Redis = require('ioredis')
 let _redis = new Redis()
 
+// delete specific key Redis
 let delKey = (_key_pattern) => {
     let stream = _redis.scanStream({
         match: _key_pattern // example: `model:${modelName}:all*`
@@ -16,6 +17,7 @@ let delKey = (_key_pattern) => {
     });
 }
 
+// delete key in specific Sequelize model's hook
 let addHookRefQueryRedis = (Model, _hooks, _refs) => {
     _hooks.forEach(_hook => {
         Model.addHook(_hook, async (item, options) => {

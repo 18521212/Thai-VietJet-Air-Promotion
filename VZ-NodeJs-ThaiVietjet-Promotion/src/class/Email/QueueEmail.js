@@ -2,6 +2,10 @@ import { Email } from '../Email/Email'
 
 const Queue = require('bull');
 
+// reference link:
+//  queue: https://github.com/OptimalBits/bull
+//  retry failing job: https://docs.bullmq.io/guide/retrying-failing-jobs
+
 class QueueEmail {
     constructor() {
         this.queueEmail = new Queue('email')

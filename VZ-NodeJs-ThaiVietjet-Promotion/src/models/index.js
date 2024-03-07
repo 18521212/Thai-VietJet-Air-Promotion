@@ -9,8 +9,10 @@ const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
 const db = {};
 
-// redis config
 import { delKey } from '../utils';
+
+// redis config
+// reference link: https://github.com/sequelize-transparent-cache/sequelize-transparent-cache
 
 const Redis = require('ioredis')
 let _redis = new Redis()
@@ -68,10 +70,9 @@ Object.keys(db).forEach(async modelName => {
                 });
             });
         })
-        // --< config hook updte cache
+        // --< config hook update cache
     }
 });
-
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

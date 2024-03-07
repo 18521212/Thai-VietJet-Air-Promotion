@@ -28,6 +28,7 @@ let secureHash = (totalPriceInVat, orderId) => {
     return encode
 }
 
+// add prefix to orderId for testing prevent duplicate orderRef because can't delete data in iPay API
 let prefixOrdId = (orderId, prefix = '') => {
     if (orderId.startsWith(prefix) && orderId.length == 35) {
         return orderId
@@ -56,28 +57,30 @@ let delPrefixOrdId = (orderRef, prefix = '') => {
     return orderId
 }
 
+// response necessary info for redering in Cart page
 let paymentPromotion = (_data) => {
     return new Promise((resolve, reject) => {
         try {
             let orderId = _data?.createdData?.order?.id // data.createdData.id: order.id (order id)
             let prefixOrderId = prefixOrdId(orderId, 'OT-') // length <= 35
+            let _response
             if (!orderId) {
-                resolve(resolveObj.MISSING_PARAMETERS)
-                return
-            }
-            let _secureHash = secureHash(_data.validatePayment.totalPriceInVat, prefixOrderId)
-
-            resolve({
-                errCode: 0,
-                errMessage: 'Validate  payment success',
-                data: {
-                    validatePayment: _data.validatePayment,
-                    productArr: _data.productArr,
-                    secureHash: _secureHash,
-                    prefixOrderId: prefixOrderId,
-                    orderId: orderId
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let _secureHash = secureHash(_data.validatePayment.totalPriceInVat, prefixOrderId)
+                _response = {
+                    errCode: 0,
+                    errMessage: 'Validate  payment success',
+                    data: {
+                        validatePayment: _data.validatePayment,
+                        productArr: _data.productArr,
+                        secureHash: _secureHash,
+                        prefixOrderId: prefixOrderId,
+                        orderId: orderId
+                    }
                 }
-            })
+            }
+            resolve(_response)
         } catch (e) {
             reject(e);
         }
@@ -319,7 +322,7 @@ let dataFeed = (data) => {
             let string = `${src}|${prc}|${successcode}|${Ref}|${payRef}|${Cur}|${Amt}|${payerAuth}|${secretKey}`
             let encode = sha512(string)
             let _response
-            if (encode != secureHash) {
+            if (encode == secureHash) {
                 update_result = await updateStatusOrder({ orderRef: Ref })
                 _response = update_result
             } else {
@@ -354,10 +357,10 @@ let getOrder = async (data) => {
     })
 }
 
+// update email status: 'sent' status by default
 let updateEmailStatus = async (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            // update email status: 'sent' status by default
             let ref = data.ref
             let _response
             if (!ref) {
@@ -380,12 +383,13 @@ let updateEmailStatus = async (data) => {
     })
 }
 
+// run cron process period time to checking order's status
 let monitorOrder = () => {
     const schedule = require('node-schedule');
 
     let taskRunning = false
 
-    const job = schedule.scheduleJob('*/1 * * * *', async () => {
+    const job = schedule.scheduleJob('*/5 * * * *', async () => {
         if (taskRunning) {
             return
         }

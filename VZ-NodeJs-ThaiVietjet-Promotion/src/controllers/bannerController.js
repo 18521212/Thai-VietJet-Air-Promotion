@@ -19,7 +19,7 @@ let createImageBanner = async (req, res, next) => {
     try {
         let _validate_image = await bannerService.validateImage(req.body.image, req.body.type)
         if (_validate_image.errCode != 0) {
-            res.data=_validate_image
+            res.data = _validate_image
             return res.status(200).json(_validate_image)
         } else {
             let _create_image = await bannerService.createImageBanner(req.body)

@@ -13,6 +13,26 @@ class Header extends Component {
         this.state = {
 
         }
+        this.menu = [
+            { text: 'Campaign', route: 'campaign', type: '' },
+            { text: 'Header', route: 'header', type: '' },
+            { text: 'Banner', route: 'banner', type: '' },
+            { text: 'Body', route: 'body', type: '' },
+            {
+                text: 'Form', type: 'dropdown',
+                sub_route: [
+                    { text: 'Form', route: 'form' },
+                    { text: 'Input', route: 'input' },
+                ]
+            },
+            { text: 'Promotion', route: 'promotion', type: '' },
+            {
+                text: 'Global', type: 'dropdown',
+                sub_route: [
+                    { text: 'Markdown', route: 'markdown' },
+                ]
+            },
+        ]
     }
 
     // componentDidUpdate(prevProps) {
@@ -52,156 +72,58 @@ class Header extends Component {
                         <div className="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul className="nav navbar-nav mr-auto nav-pills"
                             >
-                                <li className="nav-item">
-                                    <Link className={`nav-link ${(route === 'campaign' || !route) && 'active' || ''}`} to='/admin/campaign'
-                                        data-toggle='pill'
-                                    // data-toggle='collapse'
-                                    // data-target=".navbar-collapse.show"
-                                    >
-                                        <div
-                                            data-toggle='collapse'
-                                            data-target=".navbar-collapse.show"
-                                        >
-                                            Campaign
-                                        </div>
-                                    </Link>
-                                </li>
-                                <li className="nav-item">
-                                    <Link className={`nav-link ${route === 'header' && 'active' || ''}`} to='/admin/header'
-                                        data-toggle='pill'
-                                    >
-                                        <div
-                                            data-toggle='collapse'
-                                            data-target=".navbar-collapse.show"
-                                        >
-                                            Header
-                                        </div>
-                                    </Link>
-                                </li>
-                                <li className="nav-item">
-                                    <Link className={`nav-link ${route === 'banner' && 'active' || ''}`} to='/admin/banner'
-                                        data-toggle='pill'
-                                    >
-                                        <div
-                                            data-toggle='collapse'
-                                            data-target=".navbar-collapse.show"
-                                        >
-                                            Banner
-                                        </div>
-                                    </Link>
-                                </li>
-                                <li className="nav-item">
-                                    <Link className={`nav-link ${route === 'body' && 'active' || ''}`} to='/admin/body'
-                                        data-toggle='pill'
-                                    >
-                                        <div
-                                            data-toggle='collapse'
-                                            data-target=".navbar-collapse.show"
-                                        >
-                                            Body
-                                        </div>
-                                    </Link>
-                                </li>
-                                <li className="nav-item dropdown">
-                                    <a
-                                        className={`nav-link dropdown-toggle ${(route === 'form' || route === 'input') && 'active' || ''}`}
-                                        data-toggle="dropdown"
-                                        role="button"
-                                        id="navbarDropdown"
-                                    >
-                                        Form
-                                    </a>
-                                    <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <Link className={`dropdown-item ${route === 'form' && 'active' || ''}`} to='/admin/form'
-                                            data-toggle='pill'
-                                        >
-                                            <div
-                                                data-toggle='collapse'
-                                                data-target=".navbar-collapse.show"
-                                            >
-                                                Form
-                                            </div>
-                                        </Link>
-                                        <Link className={`dropdown-item ${route === 'input' && 'active' || ''}`} to='/admin/input'
-                                            data-toggle='pill'
-                                        >
-                                            <div
-                                                data-toggle='collapse'
-                                                data-target=".navbar-collapse.show"
-                                            >
-                                                Input
-                                            </div>
-                                        </Link>
-                                    </div>
-                                </li>
-                                <li className="nav-item dropdown">
-                                    <a
-                                        className={`nav-link dropdown-toggle 
-                                        ${(route === 'footer' || route === 'faq') && 'active' || ''}`}
-                                        data-toggle="dropdown"
-                                        role="button"
-                                        id="navbarDropdown"
-                                    >
-                                        Footer
-                                    </a>
-                                    <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <Link className={`dropdown-item ${route === 'footer' && 'active' || ''}`} to='/admin/footer'
-                                            data-toggle='pill'
-                                        >
-                                            <div
-                                                data-toggle='collapse'
-                                                data-target=".navbar-collapse.show"
-                                            >
-                                                Footer
-                                            </div>
-                                        </Link>
-                                        <Link className={`dropdown-item ${route === 'faq' && 'active' || ''}`} to='/admin/faq'
-                                            data-toggle='pill'
-                                        >
-                                            <div
-                                                data-toggle='collapse'
-                                                data-target=".navbar-collapse.show"
-                                            >
-                                                FAQ
-                                            </div>
-                                        </Link>
-                                    </div>
-                                </li>
-                                <li className="nav-item">
-                                    <Link className={`nav-link ${route === 'promotion' && 'active' || ''}`} to='/admin/promotion'
-                                        data-toggle='pill'
-                                    >
-                                        <div
-                                            data-toggle='collapse'
-                                            data-target=".navbar-collapse.show"
-                                        >
-                                            Promotion
-                                        </div>
-                                    </Link>
-                                </li>
-                                <li className="nav-item dropdown">
-                                    <a
-                                        className={`nav-link dropdown-toggle 
-                                        ${(route === 'markdown') && 'active' || ''}`}
-                                        data-toggle="dropdown"
-                                        role="button"
-                                        id="navbarDropdown"
-                                    >
-                                        Global
-                                    </a>
-                                    <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <Link className={`dropdown-item ${route === 'markdown' && 'active' || ''}`} to='/admin/markdown'
-                                            data-toggle='pill'
-                                        >
-                                            <div
-                                                data-toggle='collapse'
-                                                data-target=".navbar-collapse.show"
-                                            >
-                                                Markdown
-                                            </div>
-                                        </Link>
-                                    </div>
-                                </li>
+                                {this.menu.map((item, index) => {
+                                    let _component
+                                    let _type = item.type
+                                    if (_type == '') {
+                                        _component =
+                                            <li className="nav-item" index={index}>
+                                                <Link className={`nav-link ${(route === item.route || !route) && 'active' || ''}`} to={`/admin/${item.route}`}
+                                                    data-toggle='pill'
+                                                // data-toggle='collapse'
+                                                // data-target=".navbar-collapse.show"
+                                                >
+                                                    <div
+                                                        data-toggle='collapse'
+                                                        data-target=".navbar-collapse.show"
+                                                    >
+                                                        {item.text}
+                                                    </div>
+                                                </Link>
+                                            </li>
+                                    } else if (_type = 'dropdown') {
+                                        _component =
+                                            <li className="nav-item dropdown" index={index}>
+                                                <a
+                                                    className={`nav-link dropdown-toggle ${item.sub_route.map(i => i.route).includes(route) && 'active' || ''}`}
+                                                    data-toggle="dropdown"
+                                                    role="button"
+                                                    id="navbarDropdown"
+                                                >
+                                                    {item.text}
+                                                </a>
+                                                <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                    {item.sub_route.map((s_item, s_index) => {
+                                                        return (
+                                                            <Link className={`dropdown-item ${route === s_item.route && 'active' || ''}`} to={`/admin/${s_item.route}`}
+                                                                data-toggle='pill' index={s_index}
+                                                            >
+                                                                <div
+                                                                    data-toggle='collapse'
+                                                                    data-target=".navbar-collapse.show"
+                                                                >
+                                                                    {s_item.text}
+                                                                </div>
+                                                            </Link>
+                                                        )
+                                                    })}
+                                                </div>
+                                            </li>
+                                    }
+                                    return (
+                                        _component
+                                    )
+                                })}
                             </ul>
                             <button className="btn btn-warning mr-1" onClick={() => this.signOut()}>Sign Out</button>
                         </div>
