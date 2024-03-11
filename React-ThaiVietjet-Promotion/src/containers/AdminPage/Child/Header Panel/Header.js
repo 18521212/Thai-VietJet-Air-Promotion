@@ -77,7 +77,7 @@ class Header extends Component {
                                     let _type = item.type
                                     if (_type == '') {
                                         _component =
-                                            <li className="nav-item" index={index}>
+                                            <li className="nav-item" key={index}>
                                                 <Link className={`nav-link ${(route === item.route || !route) && 'active' || ''}`} to={`/admin/${item.route}`}
                                                     data-toggle='pill'
                                                 // data-toggle='collapse'
@@ -93,7 +93,7 @@ class Header extends Component {
                                             </li>
                                     } else if (_type = 'dropdown') {
                                         _component =
-                                            <li className="nav-item dropdown" index={index}>
+                                            <li className="nav-item dropdown" key={index}>
                                                 <a
                                                     className={`nav-link dropdown-toggle ${item.sub_route.map(i => i.route).includes(route) && 'active' || ''}`}
                                                     data-toggle="dropdown"
@@ -106,7 +106,7 @@ class Header extends Component {
                                                     {item.sub_route.map((s_item, s_index) => {
                                                         return (
                                                             <Link className={`dropdown-item ${route === s_item.route && 'active' || ''}`} to={`/admin/${s_item.route}`}
-                                                                data-toggle='pill' index={s_index}
+                                                                data-toggle='pill' key={s_index}
                                                             >
                                                                 <div
                                                                     data-toggle='collapse'

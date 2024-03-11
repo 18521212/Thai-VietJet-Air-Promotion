@@ -45,8 +45,6 @@ class Form extends Component {
                 let priceIncludeVat = priceExcludeVat + priceVat
                 totalPrice += priceIncludeVat;
                 totalVat += priceVat
-                //
-
             })
             this.setState({
                 total: totalPrice,
@@ -134,7 +132,7 @@ class Form extends Component {
             inputCustomerForm: stateCopy
         })
         //------------------
-        //cach 2
+        // option 2
         // let stateCopy1 = { ...this.state };
         // stateCopy1.inputCustomerForm[event.target.name] = event.target.value;
         // this.setState({
@@ -193,8 +191,6 @@ class Form extends Component {
         } = this.state;
         let { language } = this.props
         let footer = this.props?.footer?.data
-        // console.log('input c', inputCustomerForm)
-        // console.log('data c', dataInputCustomerForm)
         return (
             <>
                 <div className="form-container">

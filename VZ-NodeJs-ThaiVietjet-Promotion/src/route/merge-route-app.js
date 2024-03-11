@@ -23,6 +23,8 @@ let mergeRoute = (app) => {
             next();
         }
     );
+    routeDatafeed(app)
+
     // --< log file
     app.use(validateFrontEndApp);
 
@@ -35,7 +37,6 @@ let mergeRoute = (app) => {
     routePromotion(app)
     routeFooter(app)
     routePayment(app)
-    routeDatafeed(app)
 }
 
 module.exports = mergeRoute;

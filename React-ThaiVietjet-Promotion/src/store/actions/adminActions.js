@@ -53,7 +53,7 @@ export const fetchCampaign = (id) => {
                 data: res
             })
         } catch (e) {
-            console.log('fetchHeader error', e)
+            console.log('fetchCampaign error', e)
         }
     }
 }
