@@ -122,7 +122,7 @@ class Form extends Component {
     }
 
     handleOnChangeInputCustomerForm = (event) => {
-        //cach 1
+        // option 1
         let { inputCustomerForm } = this.state;
         let stateCopy = {
             ...inputCustomerForm,
@@ -147,7 +147,7 @@ class Form extends Component {
             if (properyArr[i].startsWith('option')) {
                 delete data[properyArr[i]]
             }
-            if (typeof (data[properyArr[i]]) === 'object') { // conert select {value: '', label: ''} -> select: ''
+            if (typeof (data[properyArr[i]]) === 'object') { // convert select {value: '', label: ''} -> select: ''
                 data[properyArr[i]] = data[properyArr[i]].value
             }
         }

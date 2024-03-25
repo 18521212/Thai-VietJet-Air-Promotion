@@ -3,12 +3,7 @@ import './Body.scss';
 // import banner_desktop from '../../../assets/Banner/banner.jpg';
 // import banner_mobile from '../../../assets/Banner/banner-mobile.jpg';
 import top_cloud from '../../../assets/Background/top_cloud.png';
-import Select from 'react-select';
-import PowerPack from './Child/PowerPack';
-import {
-    getAllPack
-} from "../../../services/userService";
-import { getBody } from "services/bodyService";
+import ContentBody from './Child/ContentBody';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import * as actions from 'store/actions';
@@ -41,7 +36,7 @@ class Body extends Component {
                 <section className="main-content-container mt-20"
                     style={{ paddingBottom: '10%' }}
                 >
-                    <PowerPack
+                    <ContentBody
                         packData={this.props.promotion?.data.pack}
                         contentBodyData={this.props.body.data}
                     />

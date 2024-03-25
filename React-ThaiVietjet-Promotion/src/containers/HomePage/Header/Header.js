@@ -1,8 +1,5 @@
 import { Component } from "react";
 import './Header.scss';
-import logo from '../../../assets/Logo/skyfun_logo.png';
-import Select from 'react-select'
-import { getAllMenuItemByMenuId, getHeader } from "../../../services/userService";
 import { connect } from 'react-redux';
 import { LANGUAGES } from '../../../utils';
 import { FormattedMessage } from 'react-intl';
@@ -114,7 +111,6 @@ class Header extends Component {
                                                             `${item.highlight && 'highlight'} ` +
                                                             'nav-link'
                                                         }
-                                                        key={index}
                                                         href={`${item.sub_menu.length > 0 ? '#' : item.link ? item.link : '#'}`}
                                                         {...attributes}
                                                         style={{ background: item.highlight !== 'default' ? item.highlight : false }}

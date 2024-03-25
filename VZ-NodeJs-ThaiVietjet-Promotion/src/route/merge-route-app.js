@@ -26,7 +26,7 @@ let mergeRoute = (app) => {
     routeDatafeed(app)
 
     // --< log file
-    app.use(validateFrontEndApp);
+    // app.use(validateFrontEndApp);
 
     // add route
     routeBanner(app)

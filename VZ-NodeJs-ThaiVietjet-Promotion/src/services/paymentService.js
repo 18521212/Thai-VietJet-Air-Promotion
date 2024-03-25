@@ -70,7 +70,7 @@ let paymentPromotion = (_data) => {
                 let _secureHash = secureHash(_data.validatePayment.totalPriceInVat, prefixOrderId)
                 _response = {
                     errCode: 0,
-                    errMessage: 'Validate  payment success',
+                    errMessage: 'Validate payment success',
                     data: {
                         validatePayment: _data.validatePayment,
                         productArr: _data.productArr,
@@ -90,36 +90,37 @@ let paymentPromotion = (_data) => {
 let createCustomer = (data, _transaction = null) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let _response
             if (!(data.middleGivenName && data.familyName
                 && data.passengerMiddleGivenName && data.passengerFamilyName
                 && data.email && data.phone)) {
-                return resolve(resolveObj.MISSING_PARAMETERS)
-            }
-            // check duplicate customer infor
-            let exist_customer =
-                await db.Customer
-                    .findOne({
-                        where: {
-                            middleGivenName: data.middleGivenName,
-                            familyName: data.familyName,
-                            passengerMiddleGivenName: data.passengerMiddleGivenName,
-                            passengerFamilyName: data.passengerFamilyName,
-                            email: data.email,
-                            phone: data.phone
-                        }
-                    })
-            let _response = ''
-            if (!exist_customer) {
-                let dataCreate =
-                    await db.Customer
-                        .create(data, { transaction: _transaction })
-                if (dataCreate) {
-                    _response = resolveObj.GET(dataCreate)
-                } else {
-                    _response = resolveObj.CREATE_UNSUCCEED()
-                }
+                _response = resolveObj.MISSING_PARAMETERS
             } else {
-                _response = resolveObj.GET(exist_customer)
+                // check duplicate customer infor
+                let exist_customer =
+                    await db.Customer
+                        .findOne({
+                            where: {
+                                middleGivenName: data.middleGivenName,
+                                familyName: data.familyName,
+                                passengerMiddleGivenName: data.passengerMiddleGivenName,
+                                passengerFamilyName: data.passengerFamilyName,
+                                email: data.email,
+                                phone: data.phone
+                            }
+                        })
+                if (!exist_customer) {
+                    let dataCreate =
+                        await db.Customer
+                            .create(data, { transaction: _transaction })
+                    if (dataCreate) {
+                        _response = resolveObj.GET(dataCreate)
+                    } else {
+                        _response = resolveObj.CREATE_UNSUCCEED()
+                    }
+                } else {
+                    _response = resolveObj.GET(exist_customer)
+                }
             }
             resolve(_response)
         } catch (e) {
@@ -235,7 +236,6 @@ let updateStatusOrder = (data) => {
                                 let _datafeedStatus = 1
                                 if (['Accepted', 'Rejected', 'Cancelled'].includes(orderUpdate.status)) {
                                     _datafeedStatus = 0
-
                                     // send email
                                     let customer =
                                         await db.Customer
@@ -290,7 +290,7 @@ let updateProcessingOrder = (_data) => {
                             .findOne({ where: { id: orderRef } })
                     if (order) {
                         if (order.status != 'Draft') {
-                            _response = { errCode: 0, errMessage: 'Order already processing' }
+                            _response = { errCode: 0, errMessage: 'Order already in processing' }
                         } else {
                             let _order_upate = await order.update({ status: 'Processing' })
                             if (_order_upate) {
@@ -315,7 +315,6 @@ let dataFeed = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
             let successcode = data.successcode
-            let update_result
             // secure
             let { src, prc, Ref, payRef, Cur, Amt, payerAuth, secureHash } = data
             let secretKey = process.env.SECRET_KEY
@@ -323,7 +322,7 @@ let dataFeed = (data) => {
             let encode = sha512(string)
             let _response
             if (encode == secureHash) {
-                update_result = await updateStatusOrder({ orderRef: Ref })
+                let update_result = await updateStatusOrder({ orderRef: Ref })
                 _response = update_result
             } else {
                 _response = { errCode: 1, errMessage: 'unmatch transaction', datafeedStatus: 1 }
@@ -339,18 +338,21 @@ let getOrder = async (data) => {
     return new Promise(async (resolve, reject) => {
         try {
             let ref = data?.ref // prefixed
+            let _response
             if (!ref) {
-                return resolve(resolveObj.MISSING_PARAMETERS)
+                _response = resolveObj.MISSING_PARAMETERS
+            } else {
+                let order =
+                    await db.Order
+                        .findOne({
+                            where: { id: delPrefixOrdId(ref, 'OT-') },
+                            attributes: {
+                                exclude: ['customerId']
+                            }
+                        })
+                _response = resolveObj.GET(order)
             }
-            let order =
-                await db.Order
-                    .findOne({
-                        where: { id: delPrefixOrdId(ref, 'OT-') },
-                        attributes: {
-                            exclude: ['customerId']
-                        }
-                    })
-            resolve(resolveObj.GET(order))
+            resolve(_response)
         } catch (e) {
             reject(e)
         }
@@ -390,30 +392,28 @@ let monitorOrder = () => {
     let taskRunning = false
 
     const job = schedule.scheduleJob('*/5 * * * *', async () => {
-        if (taskRunning) {
-            return
-        }
-        taskRunning = true
-        console.log('monitor at', new Date())
-        let orders =
-            await db.Order
-                .findAll({
-                    where:
-                    {
-                        status: {
-                            [db.Sequelize.Op.notIn]: ['Accepted', 'Rejected', 'Cancelled', 'Draft']
+        if (taskRunning == false) {
+            taskRunning = true
+            console.log('monitor at', new Date())
+            let orders =
+                await db.Order
+                    .findAll({
+                        where:
+                        {
+                            status: {
+                                [db.Sequelize.Op.notIn]: ['Accepted', 'Rejected', 'Cancelled', 'Draft']
+                            },
                         },
-                    },
-                    order: [['createdAt', 'DESC']],
-                    limit: 5
-                })
-        console.log(orders.length) // length
-        if (orders.length > 0) {
-            for (let i = 0; i < orders.length; i++) {
-                await updateStatusOrder({ orderRef: prefixOrdId(orders[i].id, 'OT-') })
+                        order: [['createdAt', 'DESC']],
+                        limit: 5
+                    })
+            if (orders.length > 0) {
+                for (let i = 0; i < orders.length; i++) {
+                    await updateStatusOrder({ orderRef: prefixOrdId(orders[i].id, 'OT-') })
+                }
             }
+            taskRunning = false
         }
-        taskRunning = false
     });
 }
 
@@ -426,8 +426,8 @@ module.exports = {
     updateProcessingOrder,
 
     dataFeed,
-    // getOrder,
-    // updateEmailStatus,
+    getOrder,
+    updateEmailStatus,
 
     monitorOrder,
 }

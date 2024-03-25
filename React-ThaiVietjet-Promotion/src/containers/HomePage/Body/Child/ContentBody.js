@@ -1,9 +1,9 @@
 import { Component } from "react"
-import './PowerPack.scss';
+import './ContentBody.scss';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 
-class PowerPack extends Component {
+class ContentBody extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -81,9 +81,7 @@ class PowerPack extends Component {
                                                         </div >
                                                 }
                                                 return (
-                                                    <>
-                                                        {htmlContent}
-                                                    </>
+                                                    htmlContent
                                                 )
                                             })
                                         }
@@ -112,4 +110,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PowerPack);
+export default connect(mapStateToProps, mapDispatchToProps)(ContentBody);

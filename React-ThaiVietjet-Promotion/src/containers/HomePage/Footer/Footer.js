@@ -68,7 +68,7 @@ class Footer extends Component {
                                             footer[association.FAQ_FOOTER]?.[association.FAQ_FAQID].map((item, index) => {
                                                 return (
                                                     <>
-                                                        <div className="card">
+                                                        <div className="card" key={index}>
                                                             <div className="card-header" id="headingOne"
                                                                 data-toggle="collapse"
                                                                 data-target={'#p2' + item.id}

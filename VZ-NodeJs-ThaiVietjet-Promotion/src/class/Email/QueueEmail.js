@@ -25,6 +25,7 @@ class QueueEmail {
     async addEmailToQueue(_data) {
         let _options = {
             // attempts: Number.MAX_SAFE_INTEGER,
+            // TODO: update email status: 'error'
             attempts: 3,
         }
         await this.queueEmail.add(_data, _options)

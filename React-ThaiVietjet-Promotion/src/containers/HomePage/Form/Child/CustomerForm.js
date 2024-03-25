@@ -55,6 +55,7 @@ class CustomerForm extends Component {
                                     <div
                                         className={`form-group 
                                         ${'col-md-' + item.widthMdScreen}`}
+                                        key={index}
                                     >
                                         <label>{title}</label>
                                         <Select
@@ -95,10 +96,10 @@ class CustomerForm extends Component {
                                 return (
                                     <div
                                         className={`form-group ${'col-md-' + item.widthMdScreen}`}
+                                        key={index}
                                     >
                                         <label>{title}</label>
                                         <input
-                                            key={index}
                                             className="form-control"
                                             type={typeTextInput}
                                             // pattern={typeTextInput === 'tel' && "[0-9]" || undefined}

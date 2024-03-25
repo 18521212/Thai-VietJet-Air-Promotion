@@ -15,7 +15,7 @@ class Email {
         return new Promise(async (resolve, reject) => {
             let _get_o = await getOrder({ ref: _ref })
             if (_get_o.data.emailStatus == 'sent') {
-               return resolve(true)
+                return resolve(true)
             } else {
                 let _emailContent = emailContent(this.receiver, _ref, _status)
                 const info = transporter.sendMail(_emailContent, async (err, info) => {

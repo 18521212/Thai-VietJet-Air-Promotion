@@ -12,6 +12,7 @@ let getId = (string) => {
 }
 
 let reconfigKeyCustomer = (customer) => {
+    // get array key from all property in object
     let keyArrCustomer = Object.getOwnPropertyNames(customer)
     let reconfigCustomer = {}
     for (let i = 0; i < keyArrCustomer.length; i++) {
@@ -29,6 +30,7 @@ let reconfigKeyPrice = (price) => {
 
 let reconfigKeyOrderDetail = (products, unitPrices, vats) => {
     // products: { 'pack4-1': 1, 't-2': 0 }
+    // get array key from all property in object
     let keyArr = Object.getOwnPropertyNames(products)
     let reconfigProducts = []
     for (let i = 0; i < keyArr.length; i++) {
