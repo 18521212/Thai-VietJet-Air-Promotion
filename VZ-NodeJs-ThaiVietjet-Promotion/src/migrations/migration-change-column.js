@@ -19,14 +19,14 @@ module.exports = {
         // )
 
         // add column
-        queryInterface.addColumn(
-            'Orders',
-            'emailStatus',
-            {
-                type: Sequelize.STRING,
-                allowNull: false,
-            }
-        );
+        // queryInterface.addColumn(
+        //     'Orders',
+        //     'emailStatus',
+        //     {
+        //         type: Sequelize.STRING,
+        //         allowNull: false,
+        //     }
+        // );
 
         // queryInterface.removeColumn(
         //     'Packs',
@@ -49,10 +49,10 @@ module.exports = {
         //     'number',
         // )
 
-        queryInterface.removeColumn(
-            'Orders',
-            'emailStatus',
-        );
+        // queryInterface.removeColumn(
+        //     'Orders',
+        //     'emailStatus',
+        // );
 
         // add column
         // queryInterface.addColumn(

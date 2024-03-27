@@ -46,11 +46,13 @@
 
 2. Initialize database and Sequelize
 - In xampp control, after run MySQL successfully, click Admin button at MySQL module
-- Create new database, set name is 'thaivietjet promotion'. If you set a different name, you must edit the configuration in the `config.json` and `connectDB.js` files.
+- Create new database, set name is `thaivietjet promotion`. If you set a different name, you must edit the configuration in the `config.json` and `connectDB.js` files.
 - Open the terminal in the IDE, and then run this command to create all tables in the database (for more detail: https://sequelize.org/docs/v7/cli/).
  ```sh
    npx sequelize-cli db:migrate
    ```
+> [!NOTE]
+> Only run this command after Sequelize has been successfully installed
 
 ## Running the application
 1. Clone the repository:
